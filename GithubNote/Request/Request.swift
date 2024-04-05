@@ -1,0 +1,256 @@
+//
+//  Request.swift
+//  GithubNote
+//
+//  Created by xs0521 on 2024/3/24.
+//
+
+import Foundation
+
+typealias IssueDataCallBack = ([Issue]) -> ()
+typealias IssueCreateDataCallBack = (Issue?) -> ()
+typealias IssueCommentDataCallBack = (Int, [Comment]) -> ()
+typealias CommentDataCallBack = (Comment?) -> ()
+typealias CommentCallBack = (Bool) -> ()
+
+struct Request {
+    
+    static func createIssue(title: String, body: String = "", completion: @escaping IssueCreateDataCallBack) {
+        
+        let url = URL(string: "https://api.github.com/repos/\(Account.owner)/\(Account.repo)/issues")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/vnd.github.v3+json", forHTTPHeaderField: "Accept")
+        request.setValue("token \(Account.accessToken)", forHTTPHeaderField: "Authorization")
+        
+        let parameters = ["title": title, "body": body]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: parameters)
+        
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                print("Error creating issue: \(error)")
+                completion(nil)
+                return
+            }
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode == 201, let data = data {
+                    // Comment updated successfully
+                    do {
+                        let json = try JSONSerialization.jsonObject(with: data, options: [])
+                        if let issueJson = json as? [String: Any] {
+                            let jsonData = try JSONSerialization.data(withJSONObject: issueJson, options: [])
+                            let decoder = JSONDecoder()
+                            decoder.keyDecodingStrategy = .convertFromSnakeCase
+                            let issue = try decoder.decode(Issue.self, from: jsonData)
+                            completion(issue)
+                            "Create issue successfully.".p()
+                        }
+                    } catch {
+                        "Error decoding JSON: \(error.localizedDescription)".p()
+                    }
+                } else {
+                    completion(nil)
+                    "Error: \(httpResponse.statusCode)".p()
+                }
+            }
+        }
+        
+        task.resume()
+    }
+    
+    static func createComment(issuesNumber: Int, content: String, completion: @escaping CommentDataCallBack) {
+        
+        let apiUrl = URL(string: "https://api.github.com/repos/\(Account.owner)/\(Account.repo)/issues/\(issuesNumber)/comments")!
+        
+        var request = URLRequest(url: apiUrl)
+        request.httpMethod = "POST"
+        request.addValue("token \(Account.accessToken)", forHTTPHeaderField: "Authorization")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let requestBody = ["body": content]
+        let jsonData = try! JSONSerialization.data(withJSONObject: requestBody)
+        request.httpBody = jsonData
+        
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                "Error: \(error.localizedDescription)".p()
+                return
+            }
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode == 201, let data = data {
+                    // Comment updated successfully
+                    do {
+                        let json = try JSONSerialization.jsonObject(with: data, options: [])
+                        if let comment = json as? [String: Any] {
+                            var item = Comment()
+                            item.value = comment["body"] as? String ?? ""
+                            item.commentid = comment["id"] as? Int ?? 0
+                            completion(item)
+                            "Create comment successfully.".p()
+                        }
+                    } catch {
+                        "Error decoding JSON: \(error.localizedDescription)".p()
+                    }
+                } else {
+                    completion(nil)
+                    "Error: \(httpResponse.statusCode)".p()
+                }
+            }
+        }
+        
+        task.resume()
+    }
+        
+    static func updateComment(content: String, commentId: String, completion: @escaping CommentCallBack) {
+        
+        let apiUrl = URL(string: "https://api.github.com/repos/\(Account.owner)/\(Account.repo)/issues/comments/\(commentId)")!
+        
+        var request = URLRequest(url: apiUrl)
+        request.httpMethod = "POST"
+        request.addValue("token \(Account.accessToken)", forHTTPHeaderField: "Authorization")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let requestBody = ["body": content]
+        let jsonData = try! JSONSerialization.data(withJSONObject: requestBody)
+        request.httpBody = jsonData
+        
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                "Error: \(error.localizedDescription)".p()
+                completion(false)
+                return
+            }
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode == 200 {
+                    // Comment updated successfully
+                    "Comment updated successfully.".p()
+                    completion(true)
+                } else {
+                    "Error: \(httpResponse.statusCode)".p()
+                    completion(false)
+                }
+            }
+        }
+        
+        task.resume()
+    }
+    
+    static func getRepoIssueData(completion: @escaping IssueDataCallBack) {
+        
+        let apiUrl = URL(string: "https://api.github.com/repos/\(Account.owner)/\(Account.repo)/issues")!
+        
+        var request = URLRequest(url: apiUrl)
+        request.httpMethod = "GET"
+        request.addValue("token \(Account.accessToken)", forHTTPHeaderField: "Authorization")
+        
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                "Error: \(error.localizedDescription)".p()
+                completion([])
+                return
+            }
+            
+            var list = [Issue]()
+            
+            if let data = data {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data, options: [])
+                    if let issues = json as? [[String: Any]] {
+                        for issue in issues {
+                            let jsonData = try JSONSerialization.data(withJSONObject: issue, options: [])
+                            let decoder = JSONDecoder()
+                            decoder.keyDecodingStrategy = .convertFromSnakeCase
+                            let issue = try decoder.decode(Issue.self, from: jsonData)
+                            list.append(issue)
+                        }
+                    }
+                } catch {
+                    "Error decoding JSON: \(error.localizedDescription)".p()
+                }
+            }
+            completion(list)
+        }
+        
+        task.resume()
+    }
+    
+    static func getIssueCommentsData(issuesNumber: Int, completion: @escaping IssueCommentDataCallBack) {
+        
+        let apiUrl = URL(string: "https://api.github.com/repos/\(Account.owner)/\(Account.repo)/issues/\(issuesNumber)")!
+        
+        var request = URLRequest(url: apiUrl)
+        request.httpMethod = "GET"
+        request.addValue("token \(Account.accessToken)", forHTTPHeaderField: "Authorization")
+        
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                "Error: \(error.localizedDescription)".p()
+                completion(issuesNumber, [])
+                return
+            }
+            
+            if let data = data {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data, options: [])
+                    if let issueData = json as? [String: Any] {
+                        let title = issueData["title"] as? String ?? ""
+                        let comments = issueData["comments"] as? Int ?? 0
+                        
+                        "Title: \(title)".p()
+                        "Number of Comments: \(comments)".p()
+                        
+                        // Process comments if needed
+                        if let commentsUrl = issueData["comments_url"] as? String {
+                            getComments(issuesNumber: issuesNumber, commentsUrl: commentsUrl) { issuesNumber, comments in
+                                completion(issuesNumber, comments)
+                            }
+                        }
+                    }
+                } catch {
+                    "Error decoding JSON: \(error.localizedDescription)".p()
+                }
+            }
+        }
+        
+        task.resume()
+    }
+    
+    static func getComments(issuesNumber: Int, commentsUrl: String, completion: @escaping IssueCommentDataCallBack) {
+        
+        let apiUrl = URL(string: commentsUrl)!
+        
+        var request = URLRequest(url: apiUrl)
+        request.httpMethod = "GET"
+        request.addValue("token \(Account.accessToken)", forHTTPHeaderField: "Authorization")
+        
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                "Error: \(error.localizedDescription)".p()
+                completion(issuesNumber, [])
+                return
+            }
+            
+            if let data = data {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data, options: [])
+                    if let comments = json as? [[String: Any]] {
+                        var list = [Comment]()
+                        for comment in comments {
+                            var item = Comment()
+                            item.value = comment["body"] as? String ?? ""
+                            item.commentid = comment["id"] as? Int ?? 0
+                            list.append(item)
+                        }
+                        completion(issuesNumber, list)
+                    }
+                } catch {
+                    "Error decoding JSON: \(error.localizedDescription)".p()
+                }
+            }
+        }
+        
+        task.resume()
+    }
+}
