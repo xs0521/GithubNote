@@ -23,4 +23,9 @@ extension String {
         print("#GN# \(self)")
         return self
     }
+    
+    func encrypt(_ maxLength: Int) -> String {
+        let starString = String(repeating: "*", count: self.count).prefix(maxLength)
+        return String(starString)
+    }
 }

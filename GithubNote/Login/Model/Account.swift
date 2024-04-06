@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum AccountType {
+enum AccountType: CaseIterable {
     
     case owner
     case repo
@@ -31,12 +31,16 @@ enum AccountType {
     var title: String {
         switch self {
         case .owner:
-            return "input owner name"
+            return "owner name"
         case .repo:
-            return "input repo name"
+            return "repo name"
         case .token:
-            return "input token"
+            return "access token"
         }
+    }
+    
+    func remove() -> Void {
+        UserDefaults.save(value: nil, key: key)
     }
 }
 
@@ -56,5 +60,9 @@ struct Account {
     
     static var enble: Bool {
         return !Account.owner.isEmpty && !Account.repo.isEmpty && !Account.accessToken.isEmpty
+    }
+    
+    static func reset() -> Void {
+        AccountType.allCases.forEach({$0.remove()})
     }
 }

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		B11FDA8B2BBFE8C500EC7083 /* AppConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11FDA8A2BBFE8C500EC7083 /* AppConst.swift */; };
+		B148A5BA2BC1506000B7FBA8 /* LoginOutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B148A5B92BC1506000B7FBA8 /* LoginOutView.swift */; };
+		B148A5BC2BC154FA00B7FBA8 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B148A5BB2BC154FA00B7FBA8 /* UIColor+Extension.swift */; };
 		B164626E2BB041E200F57548 /* Splash in Frameworks */ = {isa = PBXBuildFile; productRef = B164626D2BB041E200F57548 /* Splash */; };
 		B16462702BB0456300F57548 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = B164626F2BB0456300F57548 /* Request.swift */; };
 		B16462722BB0464A00F57548 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16462712BB0464A00F57548 /* Account.swift */; };
@@ -53,6 +55,8 @@
 
 /* Begin PBXFileReference section */
 		B11FDA8A2BBFE8C500EC7083 /* AppConst.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConst.swift; sourceTree = "<group>"; };
+		B148A5B92BC1506000B7FBA8 /* LoginOutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginOutView.swift; sourceTree = "<group>"; };
+		B148A5BB2BC154FA00B7FBA8 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		B164626F2BB0456300F57548 /* Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
 		B16462712BB0464A00F57548 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		B16462752BB1C63100F57548 /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
@@ -295,6 +299,7 @@
 			isa = PBXGroup;
 			children = (
 				B1EC0DF52BBE434F007975D9 /* LoginView.swift */,
+				B148A5B92BC1506000B7FBA8 /* LoginOutView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -313,6 +318,7 @@
 				B16C4AD32BB3164800F417D3 /* Binding+Extension.swift */,
 				B1EC0DE72BBB8DD4007975D9 /* String+Extension.swift */,
 				B1EC0DF72BBE47A8007975D9 /* UserDefaults+Extension.swift */,
+				B148A5BB2BC154FA00B7FBA8 /* UIColor+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -466,6 +472,7 @@
 				B16462782BB1C69D00F57548 /* WritePannelView.swift in Sources */,
 				B11FDA8B2BBFE8C500EC7083 /* AppConst.swift in Sources */,
 				B16462722BB0464A00F57548 /* Account.swift in Sources */,
+				B148A5BA2BC1506000B7FBA8 /* LoginOutView.swift in Sources */,
 				B19DC5A02BBFD51B009C7DBE /* CommentModel.swift in Sources */,
 				B1E55A4B2BBFD4F6000209ED /* CommentView.swift in Sources */,
 				B1EC0DE82BBB8DD4007975D9 /* String+Extension.swift in Sources */,
@@ -473,6 +480,7 @@
 				B1922A4D2BAFF1FB00200828 /* GithubNoteApp.swift in Sources */,
 				B1E55A422BBF96B7000209ED /* IssuesModel.swift in Sources */,
 				B1EC0DFA2BBE5124007975D9 /* EmptyModel.swift in Sources */,
+				B148A5BC2BC154FA00B7FBA8 /* UIColor+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

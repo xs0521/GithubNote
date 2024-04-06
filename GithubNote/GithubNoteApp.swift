@@ -11,6 +11,7 @@ import SwiftUI
 struct GithubNoteApp: App {
     
     @State var logined: Bool = Account.enble
+    @State var willLoginOut: Bool = false
     
     var body: some Scene {
         WindowGroup {
@@ -20,11 +21,32 @@ struct GithubNoteApp: App {
                 }
             }
             if logined {
-                ContentView()
+                ZStack {
+                    ContentView()
+                    if willLoginOut {
+                        LoginOutView(cancelCallBack: {
+                            willLoginOut = false
+                        }, loginOutCallBack: {
+                            Account.reset()
+                            logined = Account.enble
+                            willLoginOut = false
+                        })
+                    }
+                }
             }
         }
         .defaultSize(width: AppConst.defaultWidth, height: AppConst.defaultHeight)
         .windowResizability(.contentSize)
         .windowStyle(HiddenTitleBarWindowStyle())
+        .commands {
+            if logined {
+                CommandMenu("Account") {
+                    Button("Logout") {
+                        "Logout".p()
+                        willLoginOut = true
+                    }
+                }
+            }
+        }
     }
 }

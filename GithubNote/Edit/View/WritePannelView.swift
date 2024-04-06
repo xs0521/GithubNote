@@ -17,8 +17,6 @@ struct WritePannelView: View {
     @Binding var issuesNumber: Int
     
     @State var uploadState: UploadType = .normal
-//    arrow.up.circle.fill
-//    checkmark.circle.fill
     
     var body: some View {
         ZStack {

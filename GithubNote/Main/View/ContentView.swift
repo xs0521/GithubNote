@@ -27,7 +27,6 @@ struct ContentView: View {
                             viewModel.commentModel.commentList.removeAll()
                         }
                         .frame(width: issueUnfold ? AppConst.commentMaxWidth : AppConst.commentMinWidth)
-//                        .background(.blue)
                         VStack {
                             HStack {
                                 Spacer()
@@ -47,7 +46,6 @@ struct ContentView: View {
                         .padding(.bottom, 30)
                     ZStack {
                         CommentView(model: $viewModel.commentModel, selectedSideBarItem: $viewModel.issuesModel.selectedSideBarItem)
-//                            .background(.yellow)
                             .frame(width: commentUnfold ? AppConst.commentMaxWidth : AppConst.commentMinWidth)
                         VStack {
                             HStack {
@@ -66,9 +64,7 @@ struct ContentView: View {
                     }
                 }
                 .frame(width: sideWidth(), alignment: .center)
-//                .background(.red)
             }
-//            .background(.green)
             WritePannelView(markdownString: $markdownString, commentId: $commentId, issuesNumber: $issuesNumber)
             .frame(minWidth: AppConst.editMinWidth, maxWidth: .infinity, maxHeight: .infinity)
             .background(Color.white)
