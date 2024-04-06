@@ -13,25 +13,67 @@ struct ContentView: View {
     @State private var commentId: Int = 0
     @State private var issuesNumber: Int = 0
     
+    @State private var issueUnfold: Bool = true
+    @State private var commentUnfold: Bool = true
+    
     @ObservedObject var viewModel = ViewModel(issuesModel: IssuesModel(), commentModel: CommentModel())
     
     var body: some View {
         HStack {
             ZStack {
                 HStack (spacing: 0) {
-                    IssuesView(model: $viewModel.issuesModel) {
-                        viewModel.commentModel.commentList.removeAll()
+                    ZStack {
+                        IssuesView(model: $viewModel.issuesModel) {
+                            viewModel.commentModel.commentList.removeAll()
+                        }
+                        .frame(width: issueUnfold ? AppConst.commentMaxWidth : AppConst.commentMinWidth)
+//                        .background(.blue)
+                        VStack {
+                            HStack {
+                                Spacer()
+                                Button {
+                                    issueUnfold = !issueUnfold
+                                } label: {
+                                    Image(systemName: issueUnfold ? "arrow.down.right.and.arrow.up.left" : "arrow.up.left.and.arrow.down.right")
+                                        .font(.system(size: 20))
+                                }
+                                .buttonStyle(.plain)
+                                .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
+                            }
+                            Spacer()
+                        }
                     }
                     Divider()
                         .padding(.bottom, 30)
-                    CommentView(model: $viewModel.commentModel, selectedSideBarItem: $viewModel.issuesModel.selectedSideBarItem)
+                    ZStack {
+                        CommentView(model: $viewModel.commentModel, selectedSideBarItem: $viewModel.issuesModel.selectedSideBarItem)
+//                            .background(.yellow)
+                            .frame(width: commentUnfold ? AppConst.commentMaxWidth : AppConst.commentMinWidth)
+                        VStack {
+                            HStack {
+                                Spacer()
+                                Button {
+                                    commentUnfold = !commentUnfold
+                                } label: {
+                                    Image(systemName: commentUnfold ? "arrow.down.right.and.arrow.up.left" : "arrow.up.left.and.arrow.down.right")
+                                        .font(.system(size: 20))
+                                }
+                                .buttonStyle(.plain)
+                                .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
+                            }
+                            Spacer()
+                        }
+                    }
                 }
+                .frame(width: sideWidth(), alignment: .center)
+//                .background(.red)
             }
+//            .background(.green)
             WritePannelView(markdownString: $markdownString, commentId: $commentId, issuesNumber: $issuesNumber)
-            .frame(minWidth: 600, minHeight: 400, alignment: .leading)
+            .frame(minWidth: AppConst.editMinWidth, maxWidth: .infinity, maxHeight: .infinity)
             .background(Color.white)
         }
-        .frame(minWidth: 400, minHeight: 400, alignment: .leading)
+        .frame(minWidth: AppConst.minWidth, minHeight: AppConst.minHeight, alignment: .leading)
         .background(.thinMaterial)
         .onChange(of: viewModel.issuesModel.selectedSideBarItem) { oldValue, newValue in
             "contentView issue change \(oldValue.id ?? 0) \(newValue.id ?? 0)".p()
@@ -50,7 +92,58 @@ struct ContentView: View {
         }
     }
     
+    func sideWidth() -> CGFloat {
+        
+        if issueUnfold && commentUnfold {
+            return AppConst.commentMaxWidth + AppConst.issueMaxWidth
+        }
+        if !issueUnfold && !commentUnfold {
+            return AppConst.commentMinWidth + AppConst.issueMinWidth
+        }
+        
+        if issueUnfold && !commentUnfold {
+            return AppConst.commentMinWidth + AppConst.issueMaxWidth
+        }
+        
+        if !issueUnfold && commentUnfold {
+            return AppConst.commentMaxWidth + AppConst.issueMinWidth
+        }
+        
+        return AppConst.commentMaxWidth + AppConst.issueMaxWidth
+    }
 }
+
+//struct ContentView: View {
+//    var body: some View {
+//        HStack {
+//            ZStack {
+//                HStack (spacing: 0) {
+//                    HStack {
+//                        
+//                    }
+//                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                    .background(Color.blue)
+//                    Divider()
+//                        .padding(.bottom, 30)
+//                    HStack {
+//                        
+//                    }
+//                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+//                    .background(Color.yellow)
+//                }
+//            }
+//            .frame(minWidth: AppConst.issueMinWidth + AppConst.commentMinWidth, maxWidth: AppConst.commentMaxWidth + AppConst.issueMaxWidth)
+//            .background(Color.orange)
+//            HStack {
+//                
+//            }
+//            .frame(minWidth: AppConst.editMinWidth, maxWidth: .infinity, maxHeight: .infinity)
+//            .background(Color.green)
+//        }
+//        .frame(minWidth: AppConst.minWidth, minHeight: AppConst.minHeight)
+//        .background(.red)
+//    }
+//}
 
 //#Preview {
 //    ContentView()

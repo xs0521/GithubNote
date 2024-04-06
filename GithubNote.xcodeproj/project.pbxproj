@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B11FDA8B2BBFE8C500EC7083 /* AppConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11FDA8A2BBFE8C500EC7083 /* AppConst.swift */; };
 		B164626E2BB041E200F57548 /* Splash in Frameworks */ = {isa = PBXBuildFile; productRef = B164626D2BB041E200F57548 /* Splash */; };
 		B16462702BB0456300F57548 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = B164626F2BB0456300F57548 /* Request.swift */; };
 		B16462722BB0464A00F57548 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16462712BB0464A00F57548 /* Account.swift */; };
@@ -51,6 +52,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B11FDA8A2BBFE8C500EC7083 /* AppConst.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConst.swift; sourceTree = "<group>"; };
 		B164626F2BB0456300F57548 /* Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
 		B16462712BB0464A00F57548 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		B16462752BB1C63100F57548 /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
@@ -268,6 +270,7 @@
 			children = (
 				B16462752BB1C63100F57548 /* Model.swift */,
 				B1EC0DF92BBE5124007975D9 /* EmptyModel.swift */,
+				B11FDA8A2BBFE8C500EC7083 /* AppConst.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -461,6 +464,7 @@
 				B16C4AD42BB3164800F417D3 /* Binding+Extension.swift in Sources */,
 				B16462762BB1C63100F57548 /* Model.swift in Sources */,
 				B16462782BB1C69D00F57548 /* WritePannelView.swift in Sources */,
+				B11FDA8B2BBFE8C500EC7083 /* AppConst.swift in Sources */,
 				B16462722BB0464A00F57548 /* Account.swift in Sources */,
 				B19DC5A02BBFD51B009C7DBE /* CommentModel.swift in Sources */,
 				B1E55A4B2BBFD4F6000209ED /* CommentView.swift in Sources */,

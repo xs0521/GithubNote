@@ -39,7 +39,7 @@ struct WritePannelView: View {
                             .font(.system(size: 30))
                     }
                 }
-                .frame(minWidth: 200, maxWidth: .infinity)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 Divider()
                 ZStack {
                     TextEditor(text: $markdownString)
@@ -51,7 +51,7 @@ struct WritePannelView: View {
                             .font(.system(size: 30))
                     }
                 }
-                .frame(minWidth: 200, maxWidth: .infinity)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             if !markdownString.isEmpty {
                 HStack {
@@ -75,8 +75,6 @@ struct WritePannelView: View {
                 }
             }
         }
-        .frame(width: 1200, height: 1000)
-//        .background(Color.pink)
     }
     
     

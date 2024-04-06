@@ -33,7 +33,7 @@ struct IssuesView: View {
                         .listRowInsets(EdgeInsets())
                         .listRowSeparator(.hidden)
                         .multilineTextAlignment(.leading)
-                        .frame(width: 200, height: AppConst.issueItemHeight)
+                        .frame(height: AppConst.issueItemHeight)
                         .background(Color.clear)
                         .onTapGesture {
                             if item.id != model.selectedSideBarItem.id {
@@ -63,7 +63,7 @@ struct IssuesView: View {
                     
                     Spacer()
                 }
-                .frame(minWidth: 60, maxWidth: 200, alignment: .leading)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             if isCreateIssue {
                 IssuesCreateView(content: $createString)

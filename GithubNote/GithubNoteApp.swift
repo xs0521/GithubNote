@@ -21,10 +21,9 @@ struct GithubNoteApp: App {
             }
             if logined {
                 ContentView()
-                    .frame(minWidth: 1000, maxWidth: 1600, minHeight: 800, maxHeight: 1000)
             }
         }
-        .defaultSize(width: 800, height: 600)
+        .defaultSize(width: 1000, height: 600)
         .windowResizability(.contentSize)
         .windowStyle(HiddenTitleBarWindowStyle())
     }

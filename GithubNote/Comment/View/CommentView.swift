@@ -30,7 +30,6 @@ struct CommentView: View {
                         model.selectedCommentItem = item
                     }
                 }
-                
                 .listStyle(.plain)
                 .scrollContentBackground(.hidden)
                 .listRowInsets(EdgeInsets())
@@ -68,7 +67,6 @@ struct CommentView: View {
                 }
             }
         }
-        .frame(minWidth: 50, maxWidth: 200, alignment: .leading)
         .onChange(of: selectedSideBarItem) { oldValue, newValue in
             "comment issue change \(oldValue.id ?? 0) \(newValue.id ?? 0)".p()
             if oldValue.id != newValue.id {

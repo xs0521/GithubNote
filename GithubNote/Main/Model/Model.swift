@@ -59,16 +59,7 @@ enum UploadType {
     
 }
 
-struct AppConst {
-    static var markdown: String {
-        let dateformatter = DateFormatter()
-        dateformatter.dateFormat = "MM-dd HH:mm:ss"// 自定义时间格式
-        let time = dateformatter.string(from: Date())
-        return "### note \(time)"
-    }
-    static let issueItemHeight: CGFloat = 30
-    static let commentItemHeight: CGFloat = 30
-}
+
 
 
 class ViewModel: ObservableObject {
