@@ -23,7 +23,7 @@ struct GithubNoteApp: App {
                 ContentView()
             }
         }
-        .defaultSize(width: 1000, height: 600)
+        .defaultSize(width: AppConst.defaultWidth, height: AppConst.defaultHeight)
         .windowResizability(.contentSize)
         .windowStyle(HiddenTitleBarWindowStyle())
     }
