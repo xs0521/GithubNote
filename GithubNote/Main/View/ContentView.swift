@@ -75,17 +75,17 @@ struct ContentView: View {
         }
         .frame(minWidth: AppConst.minWidth, minHeight: AppConst.minHeight, alignment: .leading)
         .background(.thinMaterial)
-        .onChange(of: viewModel.issuesModel.selectedSideBarItem) { oldValue, newValue in
-            "contentView issue change \(oldValue.id ?? 0) \(newValue.id ?? 0)".p()
-            if oldValue.id != newValue.id {
+        .onChange(of: viewModel.issuesModel.selectedSideBarItem) { newValue in
+            "contentView issue change \(newValue.id ?? 0)".p()
+            if issuesNumber != newValue.id {
                 markdownString = ""
                 commentId = 0
                 issuesNumber = newValue.number ?? 0
             }
         }
-        .onChange(of: viewModel.commentModel.selectedCommentItem) { oldValue, newValue in
-            "contentView comment change \(oldValue?.commentid ?? 0) \(newValue?.commentid ?? 0)".p()
-            if oldValue?.commentid != newValue?.commentid {
+        .onChange(of: viewModel.commentModel.selectedCommentItem) { newValue in
+            "contentView comment change \(newValue?.commentid ?? 0)".p()
+            if commentId != newValue?.commentid {
                 markdownString = newValue?.value ?? ""
                 commentId = newValue?.commentid ?? 0
             }

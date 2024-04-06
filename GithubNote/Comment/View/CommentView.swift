@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 struct CommentView: View {
     
@@ -15,6 +16,8 @@ struct CommentView: View {
     
     @State private var isCommentloading: Bool = true
     @State private var commentHeight: CGFloat = AppConst.commentItemHeight * 2
+    
+    @State private var issuesNumber: Int?
     
     var body: some View {
         ZStack {
@@ -67,12 +70,14 @@ struct CommentView: View {
                 }
             }
         }
-        .onChange(of: selectedSideBarItem) { oldValue, newValue in
-            "comment issue change \(oldValue.id ?? 0) \(newValue.id ?? 0)".p()
-            if oldValue.id != newValue.id {
+        .onChange(of: selectedSideBarItem) { newValue in
+            "comment issue change \(newValue.id ?? 0)".p()
+            if issuesNumber != newValue.id {
+                issuesNumber = newValue.id
                 reloadComments()
             }
         }
+        
     }
     
     func reloadComments() -> Void {

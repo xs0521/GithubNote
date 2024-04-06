@@ -39,4 +39,7 @@ extension AppConst {
 extension AppConst {
     static let minWidth: CGFloat = issueMinWidth + commentMinWidth + editMinWidth
     static let minHeight: CGFloat = 600
+    
+    static let defaultWidth: CGFloat = 1200
+    static let defaultHeight: CGFloat = 800
 }

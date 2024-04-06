@@ -22,7 +22,7 @@ struct LoginView: View {
         VStack {
             Text("Github Note")
                 .padding(EdgeInsets(top: 0, leading: 10, bottom: 60, trailing: 10))
-                .font(.title)
+                .font(.largeTitle)
             
             TextField(AccountType.owner.title, text: $ownerName)
                 .frame(width: 300, height: 44)
@@ -48,6 +48,9 @@ struct LoginView: View {
             
             Button(action: {
                 "start".p()
+                if !enbleStart() {
+                    return
+                }
                 UserDefaults.save(value: ownerName, key: AccountType.owner.key)
                 UserDefaults.save(value: repoName, key: AccountType.repo.key)
                 UserDefaults.save(value: token, key: AccountType.token.key)
@@ -64,7 +67,7 @@ struct LoginView: View {
             .buttonStyle(.plain)
             .disabled(!enbleStart())
         }
-        .frame(width: 800, height: 400)
+        .frame(width: AppConst.defaultWidth, height: AppConst.defaultHeight)
     }
     
     func enbleStart() -> Bool {
