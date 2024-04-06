@@ -15,6 +15,9 @@ struct ContentView: View {
     
     @State private var issueUnfold: Bool = true
     @State private var commentUnfold: Bool = true
+    @State private var isCreateIssue: Bool = false
+    @State private var enbleCreateIssue: Bool = true
+    
     
     @ObservedObject var viewModel = ViewModel(issuesModel: IssuesModel(), commentModel: CommentModel())
     
@@ -23,7 +26,7 @@ struct ContentView: View {
             ZStack {
                 HStack (spacing: 0) {
                     ZStack {
-                        IssuesView(model: $viewModel.issuesModel) {
+                        IssuesView(model: $viewModel.issuesModel, isCreateIssue: $isCreateIssue, enbleCreateIssue: $enbleCreateIssue) {
                             viewModel.commentModel.commentList.removeAll()
                         }
                         .frame(width: issueUnfold ? AppConst.commentMaxWidth : AppConst.commentMinWidth)
@@ -32,6 +35,12 @@ struct ContentView: View {
                                 Spacer()
                                 Button {
                                     issueUnfold = !issueUnfold
+                                    if !issueUnfold {
+                                        isCreateIssue = false
+                                        enbleCreateIssue = false
+                                    } else {
+                                        enbleCreateIssue = true
+                                    }
                                 } label: {
                                     Image(systemName: issueUnfold ? "arrow.down.right.and.arrow.up.left" : "arrow.up.left.and.arrow.down.right")
                                         .font(.system(size: 20))

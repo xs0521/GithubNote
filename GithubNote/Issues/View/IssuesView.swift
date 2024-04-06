@@ -13,11 +13,12 @@ typealias IssuesViewItemTapCallBack = () -> ()
 struct IssuesView: View {
     
     @Binding var model: IssuesModel
+    @Binding var isCreateIssue: Bool
+    @Binding var enbleCreateIssue: Bool
     var tapCallBack: IssuesViewItemTapCallBack
     
     @State private var issuesHeight: CGFloat = AppConst.issueItemHeight * 2
     @State private var isIssuesloading: Bool = true
-    @State private var isCreateIssue: Bool = false
     @State private var createString: String = ""
     
     var body: some View {
@@ -71,24 +72,26 @@ struct IssuesView: View {
             VStack {
                 Spacer()
                 HStack {
-                    Button {
-                        if isCreateIssue == false {
-                            isCreateIssue = true
-                            return
-                        }
-                        Request.createIssue(title: createString, completion: { res in
-                            guard let issue = res else { return }
-                            DispatchQueue.main.async(execute: {
-                                isCreateIssue = false
-                                createString = ""
-                                model.issueList.insert(issue, at: 0)
-                                issuesHeight = CGFloat(model.issueList.count) * AppConst.issueItemHeight
+                    if enbleCreateIssue {
+                        Button {
+                            if isCreateIssue == false {
+                                isCreateIssue = true
+                                return
+                            }
+                            Request.createIssue(title: createString, completion: { res in
+                                guard let issue = res else { return }
+                                DispatchQueue.main.async(execute: {
+                                    isCreateIssue = false
+                                    createString = ""
+                                    model.issueList.insert(issue, at: 0)
+                                    issuesHeight = CGFloat(model.issueList.count) * AppConst.issueItemHeight
+                                })
                             })
-                        })
-                        
-                    } label: {
-                        Image(systemName: isCreateIssue ? "arrow.up.circle.fill" : "plus.circle.fill")
-                            .font(.system(size: 40))
+                            
+                        } label: {
+                            Image(systemName: isCreateIssue ? "arrow.up.circle.fill" : "plus.circle.fill")
+                                .font(.system(size: 40))
+                        }
                     }
                     if isCreateIssue {
                         Button {
