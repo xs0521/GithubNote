@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -23,9 +23,10 @@
 		B1922A5F2BAFF1FC00200828 /* GithubNoteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1922A5E2BAFF1FC00200828 /* GithubNoteTests.swift */; };
 		B1922A692BAFF1FC00200828 /* GithubNoteUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1922A682BAFF1FC00200828 /* GithubNoteUITests.swift */; };
 		B1922A6B2BAFF1FC00200828 /* GithubNoteUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1922A6A2BAFF1FC00200828 /* GithubNoteUITestsLaunchTests.swift */; };
-		B1922A892BAFF57700200828 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = B1922A882BAFF57700200828 /* MarkdownUI */; };
 		B1922A8C2BB03CF300200828 /* SplashCodeSyntaxHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1922A8B2BB03CF300200828 /* SplashCodeSyntaxHighlighter.swift */; };
 		B19DC5A02BBFD51B009C7DBE /* CommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19DC59F2BBFD51B009C7DBE /* CommentModel.swift */; };
+		B1DF96992BC586F00056FE99 /* NetworkImage in Frameworks */ = {isa = PBXBuildFile; productRef = B1DF96982BC586F00056FE99 /* NetworkImage */; };
+		B1DF969C2BC5877F0056FE99 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = B1DF969B2BC5877F0056FE99 /* MarkdownUI */; };
 		B1E55A422BBF96B7000209ED /* IssuesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E55A412BBF96B7000209ED /* IssuesModel.swift */; };
 		B1E55A442BBF96E2000209ED /* IssuesCreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E55A432BBF96E2000209ED /* IssuesCreateView.swift */; };
 		B1E55A462BBF99AA000209ED /* IssuesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E55A452BBF99AA000209ED /* IssuesView.swift */; };
@@ -90,7 +91,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B1922A892BAFF57700200828 /* MarkdownUI in Frameworks */,
+				B1DF969C2BC5877F0056FE99 /* MarkdownUI in Frameworks */,
+				B1DF96992BC586F00056FE99 /* NetworkImage in Frameworks */,
 				B164626E2BB041E200F57548 /* Splash in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -340,8 +342,9 @@
 			);
 			name = GithubNote;
 			packageProductDependencies = (
-				B1922A882BAFF57700200828 /* MarkdownUI */,
 				B164626D2BB041E200F57548 /* Splash */,
+				B1DF96982BC586F00056FE99 /* NetworkImage */,
+				B1DF969B2BC5877F0056FE99 /* MarkdownUI */,
 			);
 			productName = GithubNote;
 			productReference = B1922A492BAFF1FB00200828 /* GithubNote.app */;
@@ -416,8 +419,9 @@
 			);
 			mainGroup = B1922A402BAFF1FB00200828;
 			packageReferences = (
-				B1922A872BAFF57700200828 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
 				B164626C2BB041E200F57548 /* XCRemoteSwiftPackageReference "Splash" */,
+				B1DF96972BC586F00056FE99 /* XCLocalSwiftPackageReference "GithubNote/Local/NetworkImage" */,
+				B1DF969A2BC5877F0056FE99 /* XCLocalSwiftPackageReference "GithubNote/Local/swift-markdown-ui" */,
 			);
 			productRefGroup = B1922A4A2BAFF1FB00200828 /* Products */;
 			projectDirPath = "";
@@ -838,6 +842,17 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		B1DF96972BC586F00056FE99 /* XCLocalSwiftPackageReference "GithubNote/Local/NetworkImage" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = GithubNote/Local/NetworkImage;
+		};
+		B1DF969A2BC5877F0056FE99 /* XCLocalSwiftPackageReference "GithubNote/Local/swift-markdown-ui" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "GithubNote/Local/swift-markdown-ui";
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		B164626C2BB041E200F57548 /* XCRemoteSwiftPackageReference "Splash" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -845,14 +860,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.16.0;
-			};
-		};
-		B1922A872BAFF57700200828 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.3.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -863,9 +870,12 @@
 			package = B164626C2BB041E200F57548 /* XCRemoteSwiftPackageReference "Splash" */;
 			productName = Splash;
 		};
-		B1922A882BAFF57700200828 /* MarkdownUI */ = {
+		B1DF96982BC586F00056FE99 /* NetworkImage */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = B1922A872BAFF57700200828 /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
+			productName = NetworkImage;
+		};
+		B1DF969B2BC5877F0056FE99 /* MarkdownUI */ = {
+			isa = XCSwiftPackageProductDependency;
 			productName = MarkdownUI;
 		};
 /* End XCSwiftPackageProductDependency section */

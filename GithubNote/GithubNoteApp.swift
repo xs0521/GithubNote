@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import NetworkImage
 
 @main
 struct GithubNoteApp: App {
@@ -23,6 +24,9 @@ struct GithubNoteApp: App {
             if logined {
                 ZStack {
                     ContentView()
+                        .onAppear(perform: {
+                            NetworkImageConfig.shared.accessToken = Account.accessToken
+                        })
                     if willLoginOut {
                         LoginOutView(cancelCallBack: {
                             willLoginOut = false
