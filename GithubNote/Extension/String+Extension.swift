@@ -12,8 +12,13 @@ extension String {
     func toTitle() -> String {
         var value = trimmingCharacters(in: CharacterSet(charactersIn: "#"))
         value = value.trimmingCharacters(in: .whitespaces)
+        
         if value.count > 20 {
             value = String(value.prefix(20))
+        }
+        let values = value.components(separatedBy: "\n")
+        if values.count > 0 {
+            value = values.first ?? value
         }
         return value
     }

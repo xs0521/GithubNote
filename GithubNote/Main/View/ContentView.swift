@@ -81,8 +81,8 @@ struct ContentView: View {
         .frame(minWidth: AppConst.minWidth, minHeight: AppConst.minHeight, alignment: .leading)
         .background(.thinMaterial)
         .onChange(of: viewModel.issuesModel.selectedSideBarItem) { newValue in
-            "contentView issue change \(newValue.id ?? 0)".p()
-            if issuesNumber != newValue.id {
+            "contentView issue change \(newValue.number ?? 0)".p()
+            if issuesNumber != newValue.number {
                 markdownString = ""
                 commentId = 0
                 issuesNumber = newValue.number ?? 0

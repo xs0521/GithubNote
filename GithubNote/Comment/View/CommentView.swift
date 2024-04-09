@@ -71,9 +71,9 @@ struct CommentView: View {
             }
         }
         .onChange(of: selectedSideBarItem) { newValue in
-            "comment issue change \(newValue.id ?? 0)".p()
-            if issuesNumber != newValue.id {
-                issuesNumber = newValue.id
+            "comment issue change \(newValue.number ?? 0)".p()
+            if issuesNumber != newValue.number {
+                issuesNumber = newValue.number
                 reloadComments()
             }
         }
