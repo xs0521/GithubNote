@@ -42,6 +42,7 @@ struct CommentView: View {
             if model.commentList.isEmpty && !isCommentloading {
                 Image(systemName: EmptyModel.figureArray.randomElement() ?? "")
                     .font(.system(size: 30))
+                    .symbolRenderingMode(.hierarchical)
             }
             if isCommentloading {
                 ProgressView()
@@ -64,6 +65,7 @@ struct CommentView: View {
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.system(size: 40))
+                            .symbolRenderingMode(.hierarchical)
                     }
                     .buttonStyle(.plain)
                     .padding(.bottom, 20)

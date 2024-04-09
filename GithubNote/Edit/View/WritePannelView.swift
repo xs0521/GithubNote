@@ -35,6 +35,7 @@ struct WritePannelView: View {
                     if  markdownString.isEmpty {
                         Image(systemName: EmptyModel.figureArray.randomElement() ?? "")
                             .font(.system(size: 30))
+                            .symbolRenderingMode(.hierarchical)
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -47,6 +48,7 @@ struct WritePannelView: View {
                     if markdownString.isEmpty {
                         Image(systemName: EmptyModel.figureArray.randomElement() ?? "")
                             .font(.system(size: 30))
+                            .symbolRenderingMode(.hierarchical)
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -64,6 +66,7 @@ struct WritePannelView: View {
                         }, label: {
                             Image(systemName: uploadState.imageName)
                                 .font(.system(size: 40))
+                                .symbolRenderingMode(.hierarchical)
                         })
                         .buttonStyle(.plain)
                         .frame(width: 80, height: 80)

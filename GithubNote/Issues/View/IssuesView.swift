@@ -53,6 +53,7 @@ struct IssuesView: View {
                         VStack {
                             Image(systemName: EmptyModel.figureArray.randomElement() ?? "")
                                 .font(.system(size: 30))
+                                .symbolRenderingMode(.hierarchical)
                         }
                         .padding(.bottom, 60)
                     }
@@ -91,6 +92,7 @@ struct IssuesView: View {
                         } label: {
                             Image(systemName: isCreateIssue ? "arrow.up.circle.fill" : "plus.circle.fill")
                                 .font(.system(size: 40))
+                                .symbolRenderingMode(.hierarchical)
                         }
                     }
                     if isCreateIssue {
@@ -99,6 +101,7 @@ struct IssuesView: View {
                         } label: {
                             Image(systemName: "multiply.circle.fill")
                                 .font(.system(size: 40))
+                                .symbolRenderingMode(.hierarchical)
                         }
                     }
                 }

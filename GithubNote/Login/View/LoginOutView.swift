@@ -58,6 +58,7 @@ struct LoginOutView: View {
                             pasteboard.setString(token, forType: .string)
                         }, label: {
                             Image(systemName: "doc.on.doc")
+                                .symbolRenderingMode(.hierarchical)
                         })
                         .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
                         .buttonStyle(.plain)

@@ -44,6 +44,7 @@ struct ContentView: View {
                                 } label: {
                                     Image(systemName: issueUnfold ? "arrow.down.right.and.arrow.up.left" : "arrow.up.left.and.arrow.down.right")
                                         .font(.system(size: 20))
+                                        .symbolRenderingMode(.hierarchical)
                                 }
                                 .buttonStyle(.plain)
                                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
@@ -64,6 +65,7 @@ struct ContentView: View {
                                 } label: {
                                     Image(systemName: commentUnfold ? "arrow.down.right.and.arrow.up.left" : "arrow.up.left.and.arrow.down.right")
                                         .font(.system(size: 20))
+                                        .symbolRenderingMode(.hierarchical)
                                 }
                                 .buttonStyle(.plain)
                                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
