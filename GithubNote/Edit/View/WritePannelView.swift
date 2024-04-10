@@ -40,6 +40,7 @@ struct WritePannelView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 Divider()
+                    .padding(.bottom, 30)
                 ZStack {
                     TextEditor(text: $markdownString)
                         .font(.title3)
