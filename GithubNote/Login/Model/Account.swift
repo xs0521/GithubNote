@@ -66,3 +66,18 @@ struct Account {
         AccountType.allCases.forEach({$0.remove()})
     }
 }
+
+extension Account {
+    
+    static let kEditMode = "com.github.note.edit.mode.key"
+    
+    
+    static var editMode: ContentMaxWidthType {
+        guard let min = UserDefaults.value(kEditMode) as? Bool else { return .normal }
+        return min ? .mini : .normal
+    }
+    
+    static func saveEditMode(_ mode: ContentMaxWidthType) -> Void {
+        UserDefaults.save(value: mode == .mini, key: kEditMode)
+    }
+}

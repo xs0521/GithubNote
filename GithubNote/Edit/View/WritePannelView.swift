@@ -17,6 +17,7 @@ struct WritePannelView: View {
     @Binding var issuesNumber: Int
     
     @State var uploadState: UploadType = .normal
+    @State var editMaxMode: ContentMaxWidthType = Account.editMode
     
     var body: some View {
         ZStack {
@@ -32,7 +33,7 @@ struct WritePannelView: View {
 //                            .background(.red)
                     }
 //                    .background(.blue)
-                    if  markdownString.isEmpty {
+                    if markdownString.isEmpty {
                         Image(systemName: EmptyModel.figureArray.randomElement() ?? "")
                             .font(.system(size: 30))
                             .symbolRenderingMode(.hierarchical)
@@ -51,29 +52,48 @@ struct WritePannelView: View {
                             .font(.system(size: 30))
                             .symbolRenderingMode(.hierarchical)
                     }
+                    if editMaxMode == .mini {
+                        VStack {}
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(.white)
+                    }
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .frame(maxWidth: editMaxMode == .normal ? .infinity : AppConst.editItemMinWidth, maxHeight: .infinity)
             }
             if !markdownString.isEmpty {
                 HStack {
                     Spacer()
                     VStack {
                         Button(action: {
-                            uploadState = .sending
-                            Request.updateComment(content: markdownString, commentId: "\(commentId)") { res in
-                                uploadState = res ? .success : .fail
-                                changeToNormal()
-                            }
+                            editMaxMode = editMaxMode == .mini ? .normal : .mini
+                            Account.saveEditMode(editMaxMode)
                         }, label: {
-                            Image(systemName: uploadState.imageName)
-                                .font(.system(size: 40))
+                            Image(systemName: editMaxMode == .normal ? "arrow.down.right.and.arrow.up.left" : "arrow.up.left.and.arrow.down.right")
+                                .font(.system(size: 20))
                                 .symbolRenderingMode(.hierarchical)
+                                .shadow(color: .black, radius: 10, x: 0, y: 0)
                         })
                         .buttonStyle(.plain)
-                        .frame(width: 80, height: 80)
+                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: editMaxMode == .normal ? 0 : 10))
                         Spacer()
+                        if editMaxMode == .normal {
+                            Button(action: {
+                                uploadState = .sending
+                                Request.updateComment(content: markdownString, commentId: "\(commentId)") { res in
+                                    uploadState = res ? .success : .fail
+                                    changeToNormal()
+                                }
+                            }, label: {
+                                Image(systemName: uploadState.imageName)
+                                    .font(.system(size: 40))
+                                    .symbolRenderingMode(.hierarchical)
+                            })
+                            .buttonStyle(.plain)
+                            .frame(width: 80, height: 80)
+                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
+                        }
                     }
-                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
+                    
                 }
             }
         }

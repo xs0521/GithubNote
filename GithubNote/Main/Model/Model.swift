@@ -59,7 +59,10 @@ enum UploadType {
     
 }
 
-
+enum ContentMaxWidthType {
+    case normal
+    case mini
+}
 
 
 class ViewModel: ObservableObject {

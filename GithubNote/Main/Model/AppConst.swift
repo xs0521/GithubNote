@@ -34,6 +34,7 @@ extension AppConst {
 
 extension AppConst {
     static let editMinWidth: CGFloat = 800
+    static let editItemMinWidth: CGFloat = 50
 }
 
 extension AppConst {
