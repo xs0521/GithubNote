@@ -18,7 +18,7 @@ extension Theme {
     .text {
       ForegroundColor(.text)
       BackgroundColor(.background)
-      FontSize(16)
+      FontSize(14)
     }
     .code {
       FontFamilyVariant(.monospaced)

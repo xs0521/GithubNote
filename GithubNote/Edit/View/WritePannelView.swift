@@ -44,7 +44,7 @@ struct WritePannelView: View {
                     .padding(.bottom, 30)
                 ZStack {
                     TextEditor(text: $markdownString)
-                        .font(.title3)
+                        .font(.system(size: 14))
                         .padding(EdgeInsets(top: 0, leading: 10, bottom: 20, trailing: 10))
 //                        .background(.orange)
                     if markdownString.isEmpty {
