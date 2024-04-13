@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import NetworkImage
+import SDWebImage
 
 @main
 struct GithubNoteApp: App {
@@ -25,7 +25,7 @@ struct GithubNoteApp: App {
                 ZStack {
                     ContentView()
                         .onAppear(perform: {
-                            NetworkImageConfig.shared.accessToken = Account.accessToken
+                            SDWebImageDownloader.shared.setValue("Bearer \(Account.accessToken)", forHTTPHeaderField: "Authorization")
                         })
                     if willLoginOut {
                         LoginOutView(cancelCallBack: {

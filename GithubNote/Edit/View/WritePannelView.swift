@@ -109,6 +109,6 @@ struct WritePannelView: View {
     
     private var theme: Splash.Theme {
         // NOTE: We are ignoring the Splash theme font
-        return .sunset(withFont: .init(size: 16))
+        return .sunset(withFont: .init(size: 14))
     }
 }

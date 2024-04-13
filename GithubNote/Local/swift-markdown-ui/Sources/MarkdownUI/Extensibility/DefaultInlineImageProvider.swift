@@ -1,14 +1,17 @@
-import NetworkImage
+import SDWebImageSwiftUI
 import SwiftUI
 
 /// The default inline image provider, which loads images from the network.
 public struct DefaultInlineImageProvider: InlineImageProvider {
   public func image(with url: URL, label: String) async throws -> Image {
-    try await Image(
-      DefaultNetworkImageLoader.shared.image(from: url),
-      scale: 1,
-      label: Text(label)
-    )
+      // Use WebImage to load image from url
+      let webImage = await WebImage(url: url)
+          .resizable()
+//          .indicator(.activity) // Show activity indicator while loading
+          .scaledToFit()
+      // Convert WebImage to Image
+      let image = Image(decorative: webImage as! String)
+      return image
   }
 }
 
