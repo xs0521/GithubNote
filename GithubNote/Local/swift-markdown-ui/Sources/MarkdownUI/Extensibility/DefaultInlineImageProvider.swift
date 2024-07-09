@@ -10,7 +10,8 @@ public struct DefaultInlineImageProvider: InlineImageProvider {
 //          .indicator(.activity) // Show activity indicator while loading
           .scaledToFit()
       // Convert WebImage to Image
-      let image = Image(decorative: webImage as! String)
+      guard let webImage = webImage as? String else { return Image("photo") }
+      let image = Image(decorative: webImage)
       return image
   }
 }

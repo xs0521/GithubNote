@@ -22,7 +22,7 @@ struct Comment: Codable, Identifiable, Hashable, Equatable {
     }
     
     public static func == (lhs: Comment, rhs: Comment) -> Bool {
-        return lhs.id == rhs.id
+        return lhs.commentid == rhs.commentid
     }
     
     public func defultModel () -> Void {

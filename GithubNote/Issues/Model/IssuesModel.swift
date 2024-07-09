@@ -18,7 +18,7 @@ struct Issue: Codable, Identifiable, Hashable, Equatable {
     }
     
     public static func == (lhs: Issue, rhs: Issue) -> Bool {
-        return lhs.identifier == rhs.identifier
+        return lhs.id == rhs.id
     }
     
     

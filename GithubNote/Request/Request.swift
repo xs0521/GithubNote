@@ -7,6 +7,7 @@
 
 import Foundation
 
+typealias ReposDataCallBack = ([Repo]) -> ()
 typealias IssueDataCallBack = ([Issue]) -> ()
 typealias IssueCreateDataCallBack = (Issue?) -> ()
 typealias IssueCommentDataCallBack = (Int, [Comment]) -> ()
@@ -137,9 +138,52 @@ struct Request {
         task.resume()
     }
     
-    static func getRepoIssueData(completion: @escaping IssueDataCallBack) {
+    static func getReposData(completion: @escaping ReposDataCallBack) {
         
-        let apiUrl = URL(string: "https://api.github.com/repos/\(Account.owner)/\(Account.repo)/issues")!
+        let apiUrl = URL(string: "https://api.github.com/user/repos")!
+        
+        var request = URLRequest(url: apiUrl)
+        request.httpMethod = "GET"
+        request.addValue("token \(Account.accessToken)", forHTTPHeaderField: "Authorization")
+        
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                "Error: \(error.localizedDescription)".p()
+                completion([])
+                return
+            }
+            
+            var list = [Repo]()
+            
+            if let data = data {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data, options: [])
+                    if let repos = json as? [[String: Any]] {
+                        for repo in repos {
+                            let jsonData = try JSONSerialization.data(withJSONObject: repo, options: .prettyPrinted)
+                            do {
+                                let decoder = JSONDecoder()
+                                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                                let issue = try decoder.decode(Repo.self, from: jsonData)
+                                list.append(issue)
+                            } catch {
+                                print(String(describing: error)) // <- ✅ Use this for debuging!
+                            }    
+                        }
+                    }
+                } catch {
+                    "Error decoding JSON: \(error.localizedDescription)".p()
+                }
+            }
+            completion(list)
+        }
+        
+        task.resume()
+    }
+    
+    static func getRepoIssueData(_ repo: String, completion: @escaping IssueDataCallBack) {
+        
+        let apiUrl = URL(string: "https://api.github.com/repos/\(Account.owner)/\(repo)/issues")!
         
         var request = URLRequest(url: apiUrl)
         request.httpMethod = "GET"

@@ -23,7 +23,7 @@ struct GithubNoteApp: App {
             }
             if logined {
                 ZStack {
-                    ContentView()
+                    NoteContentView()
                         .onAppear(perform: {
                             SDWebImageDownloader.shared.setValue("Bearer \(Account.accessToken)", forHTTPHeaderField: "Authorization")
                         })

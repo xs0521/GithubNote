@@ -111,14 +111,14 @@ struct IssuesView: View {
         }
         .onAppear(perform: {
             isIssuesloading = true
-            Request.getRepoIssueData { list in
-                DispatchQueue.main.async(execute: {
-                    model.issueList = list
-                    issuesHeight = CGFloat(list.count) * AppConst.issueItemHeight
-                    model.selectedSideBarItem = list.first ?? Issue()
-                    isIssuesloading = false
-                })
-            }
+//            Request.getRepoIssueData { list in
+//                DispatchQueue.main.async(execute: {
+//                    model.issueList = list
+//                    issuesHeight = CGFloat(list.count) * AppConst.issueItemHeight
+//                    model.selectedSideBarItem = list.first ?? Issue()
+//                    isIssuesloading = false
+//                })
+//            }
         })
     }
 }
