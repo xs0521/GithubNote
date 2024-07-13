@@ -38,8 +38,9 @@ struct Issue: Codable, Identifiable, Hashable, Equatable {
     let body: String?
     let reactions: Reactions?
     let timelineUrl: String?
+    var commentList: [Comment]?
     
-    init(url: String? = nil, repositoryUrl: String? = nil, labelsUrl: String? = nil, commentsUrl: String? = nil, eventsUrl: String? = nil, htmlUrl: String? = nil, id: Int? = nil, nodeid: String? = nil, number: Int? = nil, title: String? = nil, user: User? = nil, state: String? = nil, locked: Bool? = nil, comments: Int? = nil, createdAt: String? = nil, updatedAt: String? = nil, authorAssociation: String? = nil, body: String? = nil, reactions: Reactions? = nil, timelineUrl: String? = nil) {
+    init(url: String? = nil, repositoryUrl: String? = nil, labelsUrl: String? = nil, commentsUrl: String? = nil, eventsUrl: String? = nil, htmlUrl: String? = nil, id: Int? = nil, nodeid: String? = nil, number: Int? = nil, title: String? = nil, user: User? = nil, state: String? = nil, locked: Bool? = nil, comments: Int? = nil, createdAt: String? = nil, updatedAt: String? = nil, authorAssociation: String? = nil, body: String? = nil, reactions: Reactions? = nil, timelineUrl: String? = nil, commentList: [Comment]? = nil) {
         // 在初始化方法中设置属性的初始值
         self.url = url
         self.repositoryUrl = repositoryUrl
@@ -61,6 +62,7 @@ struct Issue: Codable, Identifiable, Hashable, Equatable {
         self.body = body
         self.reactions = reactions
         self.timelineUrl = timelineUrl
+        self.commentList = commentList
     }
     
     public func defultModel () -> Void {

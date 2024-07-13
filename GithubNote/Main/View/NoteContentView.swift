@@ -21,13 +21,18 @@ struct NoteContentView: View {
     @State private var userCreatedGroups: [Repo] = [Repo]()
     @State private var searchTerm: String = ""
     
+    @State private var currentComments = [Comment]()
+    @State private var currentSelectionComment: Comment?
+    
     var body: some View {
         NavigationSplitView {
             NoteSidebarView(userCreatedGroups: $userCreatedGroups,
                             reposGroups: $allRepo,
                             selection: $selection,
                             issueGroups: $allIssue,
-                            selectionIssue: $selectionIssue)
+                            selectionIssue: $selectionIssue,
+                            commentGroups: $currentComments,
+                            selectionComment: $currentSelectionComment)
           
         } detail: {
             NoteTaskListView(title: "All", tasks: $allComment)
@@ -51,18 +56,18 @@ struct NoteContentView: View {
                 }
             }
         }
-        .onChange(of: selectionIssue) { oldValue, newValue in
-            if oldValue != newValue, let number = newValue?.number {
-                Request.getIssueCommentsData(issuesNumber: number) { resNumber, comments in
-                    DispatchQueue.main.async(execute: {
-                        if resNumber != number {
-                            return
-                        }
-                        "reload comments \(comments.count)".p()
-                        allComment = comments
-                    })
-                }
-            }
-        }
+//        .onChange(of: selectionIssue) { oldValue, newValue in
+//            if oldValue != newValue, let number = newValue?.number {
+//                Request.getIssueCommentsData(issuesNumber: number) { resNumber, comments in
+//                    DispatchQueue.main.async(execute: {
+//                        if resNumber != number {
+//                            return
+//                        }
+//                        "reload comments \(comments.count)".p()
+//                        allComment = comments
+//                    })
+//                }
+//            }
+//        }
     }
 }

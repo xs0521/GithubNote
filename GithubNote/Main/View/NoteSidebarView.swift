@@ -10,50 +10,88 @@ import SwiftUI
 struct NoteSidebarView: View {
     
     @Binding var userCreatedGroups: [Repo]
+    
     @Binding var reposGroups: [Repo]
     @Binding var selection: Repo?
     
     @Binding var issueGroups: [Issue]
     @Binding var selectionIssue: Issue?
     
+    @Binding var commentGroups: [Comment]
+    @Binding var selectionComment: Comment?
+    
+    @State var showRepos: Bool = false
+    
     var body: some View {
-        VStack {
-            List(selection: $selectionIssue) {
-                Section("Issues") {
+        ZStack {
+            VStack {
+                HStack {
+                    Text("Comments")
+                        .padding(.leading, 16)
+                    Spacer()
+                }
+                List(selection: $selectionComment) {
+                    ForEach(commentGroups) { selection in
+                        Label(selection.value.toTitle(),
+                              systemImage: "star")
+                        .tag(selection)
+                    }
+                }
+                Spacer()
+                HStack {
+                    Text("Issues")
+                        .padding(.leading, 16)
+                    Spacer()
+                }
+                List(selection: $selectionIssue) {
                     ForEach(issueGroups) { selection in
                         Label(selection.title ?? "unknow",
                               systemImage: "star")
                         .tag(selection)
                     }
                 }
+                .frame(maxHeight: 200)
             }
-            Spacer()
-            HStack {
-                Text("Repos")
-                    .padding(.leading, 16)
-                Spacer()
-            }
-            List(selection: $selection) {
-                ForEach(reposGroups) { selection in
-                    Label(selection.name ?? "unknow",
-                          systemImage: "star")
-                    .tag(selection)
+            if showRepos {
+                List(selection: $selection) {
+                    ForEach(reposGroups) { selection in
+                        Label(selection.name ?? "unknow",
+                              systemImage: "star")
+                        .tag(selection)
+                    }
                 }
+                .background(.white)
             }
-            .frame(maxHeight: 200)
         }
         .safeAreaInset(edge: .bottom) {
             Button(action: {
-                let newGroup = Repo()
-                userCreatedGroups.append(newGroup)
+                showRepos = !showRepos
             }, label: {
-                Label("Add Issue", systemImage: "plus.circle")
+                Label("Repos", systemImage: "chevron.right")
             })
             .buttonStyle(.borderless)
             .foregroundColor(.accentColor)
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
             .keyboardShortcut(/*@START_MENU_TOKEN@*/KeyEquivalent("a")/*@END_MENU_TOKEN@*/, modifiers: /*@START_MENU_TOKEN@*/.command/*@END_MENU_TOKEN@*/)
+        }
+        .onChange(of: selectionIssue) { oldValue, newValue in
+            if oldValue != newValue, let number = newValue?.number {
+                Request.getIssueCommentsData(issuesNumber: number) { resNumber, comments in
+                    DispatchQueue.main.async(execute: {
+                        if resNumber != number {
+                            return
+                        }
+                        "reload comments \(comments.count)".p()
+                        commentGroups = comments
+                    })
+                }
+            }
+        }
+        .onChange(of: selection) { oldValue, newValue in
+            if oldValue != newValue {
+                showRepos = false
+            }
         }
         
     }
