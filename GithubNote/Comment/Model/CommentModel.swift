@@ -11,7 +11,7 @@ struct Comment: Codable, Identifiable, Hashable, Equatable {
     
     var id = UUID()
     var commentid: Int = 0
-    var value: String = ""
+    var body: String = ""
     
     var identifier: String {
         return UUID().uuidString
@@ -27,6 +27,13 @@ struct Comment: Codable, Identifiable, Hashable, Equatable {
     
     public func defultModel () -> Void {
         
+    }
+    
+    func newComment(_ content: String) -> Comment {
+        var item = Comment()
+        item.commentid = commentid
+        item.body = content
+        return item
     }
 }
 

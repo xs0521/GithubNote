@@ -99,7 +99,7 @@ struct WritePannelView: View {
         }
         .onChange(of: comment) { oldValue, newValue in
             if oldValue?.commentid != newValue?.commentid {
-                markdownString = newValue?.value
+                markdownString = newValue?.body
             }
         }
     }

@@ -16,9 +16,11 @@ typealias CommentCallBack = (Bool) -> ()
 
 struct Request {
     
+    static let host = "https://api.github.com"
+    
     static func createIssue(title: String, body: String = "", completion: @escaping IssueCreateDataCallBack) {
         
-        let url = URL(string: "https://api.github.com/repos/\(Account.owner)/\(Account.repo)/issues")!
+        let url = URL(string: "\(host)/repos/\(Account.owner)/\(Account.repo)/issues")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/vnd.github.v3+json", forHTTPHeaderField: "Accept")
@@ -62,7 +64,7 @@ struct Request {
     
     static func createComment(issuesNumber: Int, content: String, completion: @escaping CommentDataCallBack) {
         
-        let apiUrl = URL(string: "https://api.github.com/repos/\(Account.owner)/\(Account.repo)/issues/\(issuesNumber)/comments")!
+        let apiUrl = URL(string: "\(host)/repos/\(Account.owner)/\(Account.repo)/issues/\(issuesNumber)/comments")!
         
         var request = URLRequest(url: apiUrl)
         request.httpMethod = "POST"
@@ -85,7 +87,7 @@ struct Request {
                         let json = try JSONSerialization.jsonObject(with: data, options: [])
                         if let comment = json as? [String: Any] {
                             var item = Comment()
-                            item.value = comment["body"] as? String ?? ""
+                            item.body = comment["body"] as? String ?? ""
                             item.commentid = comment["id"] as? Int ?? 0
                             completion(item)
                             "Create comment successfully.".p()
@@ -105,7 +107,7 @@ struct Request {
         
     static func updateComment(content: String, commentId: String, completion: @escaping CommentCallBack) {
         
-        let apiUrl = URL(string: "https://api.github.com/repos/\(Account.owner)/\(Account.repo)/issues/comments/\(commentId)")!
+        let apiUrl = URL(string: "\(host)/repos/\(Account.owner)/\(Account.repo)/issues/comments/\(commentId)")!
         
         var request = URLRequest(url: apiUrl)
         request.httpMethod = "POST"
@@ -140,7 +142,7 @@ struct Request {
     
     static func getReposData(completion: @escaping ReposDataCallBack) {
         
-        let apiUrl = URL(string: "https://api.github.com/user/repos")!
+        let apiUrl = URL(string: "\(host)/user/repos")!
         
         var request = URLRequest(url: apiUrl)
         request.httpMethod = "GET"
@@ -183,7 +185,7 @@ struct Request {
     
     static func getRepoIssueData(_ repo: String, completion: @escaping IssueDataCallBack) {
         
-        let apiUrl = URL(string: "https://api.github.com/repos/\(Account.owner)/\(repo)/issues")!
+        let apiUrl = URL(string: "\(host)/repos/\(Account.owner)/\(repo)/issues")!
         
         var request = URLRequest(url: apiUrl)
         request.httpMethod = "GET"
@@ -220,9 +222,47 @@ struct Request {
         task.resume()
     }
     
+    static func getIssueCommentsDataV2(issuesNumber: Int, completion: @escaping IssueCommentDataCallBack) {
+        
+//    \(host)/repos/probberechts/hexo-theme-cactus/issues/378/comments
+        let apiUrl = URL(string: "\(host)/repos/\(Account.owner)/\(Account.repo)/issues/\(issuesNumber)/comments")!
+        
+        var request = URLRequest(url: apiUrl)
+        request.httpMethod = "GET"
+        request.addValue("token \(Account.accessToken)", forHTTPHeaderField: "Authorization")
+        
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                "Error: \(error.localizedDescription)".p()
+                completion(issuesNumber, [])
+                return
+            }
+            
+            if let data = data {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data, options: [])
+                    if let commentsData = json as? [[String: Any]] {
+                        var list = [Comment]()
+                        commentsData.forEach { data in
+                            var item = Comment()
+                            item.body = data["body"] as? String ?? ""
+                            item.commentid = data["id"] as? Int ?? 0
+                            list.append(item)
+                        }
+                        completion(issuesNumber, list)
+                    }
+                } catch {
+                    "Error decoding JSON: \(error.localizedDescription)".p()
+                }
+            }
+        }
+        
+        task.resume()
+    }
+    
     static func getIssueCommentsData(issuesNumber: Int, completion: @escaping IssueCommentDataCallBack) {
         
-        let apiUrl = URL(string: "https://api.github.com/repos/\(Account.owner)/\(Account.repo)/issues/\(issuesNumber)")!
+        let apiUrl = URL(string: "\(host)/repos/\(Account.owner)/\(Account.repo)/issues/\(issuesNumber)")!
         
         var request = URLRequest(url: apiUrl)
         request.httpMethod = "GET"
@@ -283,7 +323,7 @@ struct Request {
                         var list = [Comment]()
                         for comment in comments {
                             var item = Comment()
-                            item.value = comment["body"] as? String ?? ""
+                            item.body = comment["body"] as? String ?? ""
                             item.commentid = comment["id"] as? Int ?? 0
                             list.append(item)
                         }

@@ -23,7 +23,7 @@ struct NoteTaskView: View {
 //            TextField("New Task", text: $task.title)
 //                .textFieldStyle(.plain)
             
-            Text(task.value.toTitle())
+            Text(task.body.toTitle())
             
             Button(action: {
                 inspectorIsShown = true

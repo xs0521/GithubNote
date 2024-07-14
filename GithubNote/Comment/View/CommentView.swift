@@ -24,7 +24,7 @@ struct CommentView: View {
             VStack {
                 Spacer()
                 List(model.commentList, id: \.id) { item in
-                    Text(item.value.toTitle())
+                    Text(item.body.toTitle())
                     .frame(height: AppConst.commentItemHeight)
                     .foregroundStyle(item.commentid == model.selectedCommentItem?.commentid ? Color.black : Color.gray)
                     .listRowSeparator(.hidden)

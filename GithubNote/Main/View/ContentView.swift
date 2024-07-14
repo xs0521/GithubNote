@@ -93,7 +93,7 @@ struct ContentView: View {
         .onChange(of: viewModel.commentModel.selectedCommentItem) { newValue in
             "contentView comment change \(newValue?.commentid ?? 0)".p()
             if commentId != newValue?.commentid {
-                markdownString = newValue?.value ?? ""
+                markdownString = newValue?.body ?? ""
                 commentId = newValue?.commentid ?? 0
             }
         }

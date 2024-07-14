@@ -10,7 +10,7 @@ import SwiftUI
 struct NoteContentView: View {
     
     @State private var allRepo: [Repo] = [Repo]()
-    @State private var selection: Repo?
+    @State private var selectionRepo: Repo?
     
     @State private var allIssue = [Issue]()
     @State private var selectionIssue: Issue?
@@ -27,7 +27,7 @@ struct NoteContentView: View {
         NavigationSplitView {
             NoteSidebarView(userCreatedGroups: $userCreatedGroups,
                             reposGroups: $allRepo,
-                            selection: $selection,
+                            selectionRepo: $selectionRepo,
                             issueGroups: $allIssue,
                             selectionIssue: $selectionIssue,
                             commentGroups: $allComment,
@@ -35,39 +35,45 @@ struct NoteContentView: View {
           
         } detail: {
             NoteWritePannelView(comment: $selectionComment,
-                            issue: $selectionIssue)
+                                  issue: $selectionIssue)
                 .background(Color.white)
         }
         .onAppear(perform: {
-            Request.getReposData { repos in
-                allRepo = repos
-                
-                if repos.isEmpty {
-                    allRepo.removeAll()
-                    return
-                }
-                
-                if let repo = allRepo.first(where: {$0.name == Account.repo}) {
-                    selection = repo
-                    return
-                }
-                
-                if let firstRepo = allRepo.first {
-                    selection = firstRepo
-                    return
-                }
-            }
+            requestRepo()
         })
-        .onChange(of: selection) { oldValue, newValue in
+        .onChange(of: selectionRepo) { oldValue, newValue in
             if oldValue != newValue {
                 guard let repoName = newValue?.name else { return }
                 UserDefaults.save(value: repoName, key: AccountType.repo.key)
-                Request.getRepoIssueData(repoName) { list in
-                    DispatchQueue.main.async(execute: {
-                        allIssue = list
-                    })
-                }
+                requestIssue()
             }
+        }
+    }
+    
+    func requestRepo() -> Void {
+        Request.getReposData { repos in
+            allRepo = repos
+            if repos.isEmpty {
+                allRepo.removeAll()
+                return
+            }
+            if let repo = allRepo.first(where: {$0.name == Account.repo}) {
+                selectionRepo = repo
+                return
+            }
+            if let firstRepo = allRepo.first {
+                selectionRepo = firstRepo
+                return
+            }
+        }
+    }
+    
+    func requestIssue() -> Void {
+        guard let repoName = selectionRepo?.name else { return }
+        Request.getRepoIssueData(repoName) { list in
+            DispatchQueue.main.async(execute: {
+                allIssue = list
+            })
         }
     }
 }

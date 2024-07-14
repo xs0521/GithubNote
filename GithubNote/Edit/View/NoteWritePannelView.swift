@@ -18,7 +18,7 @@ struct NoteWritePannelView: View {
     @State var markdownString: String?
     @State var editIsShown: Bool = false
     
-    @State var isUploading: Bool = false
+    @State var uploadState: UploadType = .normal
     
     var body: some View {
         ZStack {
@@ -29,27 +29,26 @@ struct NoteWritePannelView: View {
                     .markdownTheme(.gitHub)
                     .padding(EdgeInsets(top: 0, leading: 10, bottom: 20, trailing: 10))
                     .frame(maxWidth: .infinity, alignment: .leading)
-//                            .background(.red)
             }
         }
         .toolbar {
             ToolbarItemGroup {
                 ZStack {
-                    if isUploading {
+                    if uploadState == .sending {
                         ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: .blue))
-                            .scaleEffect(2.0, anchor: .center)
+                            .controlSize(.mini)
                     } else {
                         Button {
-                            isUploading = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                                isUploading = false
+                            if uploadState != .normal {
+                                return
                             }
+                            updateContent()
                         } label: {
-                            Label("Show inspector", systemImage: "icloud.and.arrow.up")
+                            Label("Show inspector", systemImage: uploadState.imageName)
                         }
                     }
                 }
+                .frame(width: 30, height: 40)
                 Button {
                     editIsShown.toggle()
                 } label: {
@@ -67,11 +66,25 @@ struct NoteWritePannelView: View {
         }
         .onChange(of: comment) { oldValue, newValue in
             if oldValue?.commentid != newValue?.commentid {
-                markdownString = newValue?.value
+                markdownString = newValue?.body
             }
         }
     }
     
+    
+    private func updateContent() -> Void {
+        guard let markdownString = markdownString, let commentid = comment?.commentid else { return }
+        uploadState = .sending
+        Request.updateComment(content: markdownString, commentId: "\(commentid)") { success in
+            uploadState = success ? .success : .fail
+            if success {
+                comment?.body = markdownString
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                uploadState = .normal
+            }
+        }
+    }
     
     private var theme: Splash.Theme {
         // NOTE: We are ignoring the Splash theme font
