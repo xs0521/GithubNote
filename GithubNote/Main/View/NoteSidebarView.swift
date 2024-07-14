@@ -73,7 +73,6 @@ struct NoteSidebarView: View {
             .foregroundColor(.accentColor)
             .padding()
             .frame(maxWidth: .infinity, alignment: .leading)
-            .keyboardShortcut(/*@START_MENU_TOKEN@*/KeyEquivalent("a")/*@END_MENU_TOKEN@*/, modifiers: /*@START_MENU_TOKEN@*/.command/*@END_MENU_TOKEN@*/)
         }
         .onChange(of: selectionIssue) { oldValue, newValue in
             if oldValue != newValue, let number = newValue?.number {

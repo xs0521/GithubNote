@@ -10,8 +10,10 @@ import Foundation
 enum AccountType: CaseIterable {
     
     case owner
-    case repo
     case token
+    case repo
+    case issue
+    case comment
     
     var key: String {
         switch self {
@@ -21,11 +23,15 @@ enum AccountType: CaseIterable {
             return "com.githubnote.repo"
         case .token:
             return "com.githubnote.token"
+        case .issue:
+            return "com.githubnote.issue"
+        case .comment:
+            return "com.githubnote.comment"   
         }
     }
     
-    var value: String? {
-        UserDefaults.value(key) as? String
+    var value: Any? {
+        UserDefaults.value(key)
     }
     
     var title: String {
@@ -36,6 +42,8 @@ enum AccountType: CaseIterable {
             return "repo name"
         case .token:
             return "access token"
+        case .comment, .issue:
+            return ""
         }
     }
     
@@ -47,15 +55,28 @@ enum AccountType: CaseIterable {
 struct Account {
     
     static var owner: String {
-        return AccountType.owner.value ?? ""
+        guard let value = AccountType.owner.value, let owner = value as? String else { return "" }
+        return owner
     }
     
     static var repo: String {
-        return AccountType.repo.value ?? ""
+        guard let value = AccountType.repo.value, let repo = value as? String else { return "" }
+        return repo
     }
     
     static var accessToken: String {
-        return AccountType.token.value ?? ""
+        guard let value = AccountType.token.value, let token = value as? String else { return "" }
+        return token
+    }
+    
+    static var issue: Int {
+        guard let value = AccountType.issue.value, let issue = value as? Int else { return 0 }
+        return issue
+    }
+    
+    static var comment: Int {
+        guard let value = AccountType.owner.value, let comment = value as? Int else { return 0 }
+        return comment
     }
     
     static var enble: Bool {

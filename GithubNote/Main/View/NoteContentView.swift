@@ -41,15 +41,27 @@ struct NoteContentView: View {
         .onAppear(perform: {
             Request.getReposData { repos in
                 allRepo = repos
-                guard let repo = repos.first else {
+                
+                if repos.isEmpty {
+                    allRepo.removeAll()
                     return
                 }
-                selection = repo
+                
+                if let repo = allRepo.first(where: {$0.name == Account.repo}) {
+                    selection = repo
+                    return
+                }
+                
+                if let firstRepo = allRepo.first {
+                    selection = firstRepo
+                    return
+                }
             }
         })
         .onChange(of: selection) { oldValue, newValue in
             if oldValue != newValue {
                 guard let repoName = newValue?.name else { return }
+                UserDefaults.save(value: repoName, key: AccountType.repo.key)
                 Request.getRepoIssueData(repoName) { list in
                     DispatchQueue.main.async(execute: {
                         allIssue = list
@@ -57,18 +69,5 @@ struct NoteContentView: View {
                 }
             }
         }
-//        .onChange(of: selectionIssue) { oldValue, newValue in
-//            if oldValue != newValue, let number = newValue?.number {
-//                Request.getIssueCommentsData(issuesNumber: number) { resNumber, comments in
-//                    DispatchQueue.main.async(execute: {
-//                        if resNumber != number {
-//                            return
-//                        }
-//                        "reload comments \(comments.count)".p()
-//                        allComment = comments
-//                    })
-//                }
-//            }
-//        }
     }
 }
