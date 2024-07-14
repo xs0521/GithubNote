@@ -12,9 +12,9 @@ import Splash
 
 struct WritePannelView: View {
     
-    @Binding var markdownString: String
-    @Binding var commentId: Int
-    @Binding var issuesNumber: Int
+    @State var markdownString: String?
+    @Binding var comment: Comment?
+    @Binding var issue: Issue?
     
     @State var uploadState: UploadType = .normal
     @State var editMaxMode: ContentMaxWidthType = Account.editMode
@@ -24,7 +24,7 @@ struct WritePannelView: View {
             HStack (spacing: 0) {
                 ZStack {
                     ScrollView(.vertical) {
-                        Markdown(markdownString)
+                        Markdown(markdownString ?? "")
                             .markdownCodeSyntaxHighlighter(.splash(theme: self.theme))
                             .markdownImageProvider(.default)
                             .markdownTheme(.gitHub)
@@ -33,7 +33,7 @@ struct WritePannelView: View {
 //                            .background(.red)
                     }
 //                    .background(.blue)
-                    if markdownString.isEmpty {
+                    if markdownString == nil || markdownString!.isEmpty {
                         Image(systemName: EmptyModel.figureArray.randomElement() ?? "")
                             .font(.system(size: 30))
                             .symbolRenderingMode(.hierarchical)
@@ -43,11 +43,11 @@ struct WritePannelView: View {
                 Divider()
                     .padding(.bottom, 30)
                 ZStack {
-                    TextEditor(text: $markdownString)
+                    TextEditor(text: $markdownString.toUnwrapped(defaultValue: ""))
                         .font(.system(size: 14))
                         .padding(EdgeInsets(top: 0, leading: 10, bottom: 20, trailing: 10))
 //                        .background(.orange)
-                    if markdownString.isEmpty {
+                    if markdownString == nil || markdownString!.isEmpty {
                         Image(systemName: EmptyModel.figureArray.randomElement() ?? "")
                             .font(.system(size: 30))
                             .symbolRenderingMode(.hierarchical)
@@ -60,7 +60,7 @@ struct WritePannelView: View {
                 }
                 .frame(maxWidth: editMaxMode == .normal ? .infinity : AppConst.editItemMinWidth, maxHeight: .infinity)
             }
-            if !markdownString.isEmpty {
+            if let content = markdownString,!content.isEmpty {
                 HStack {
                     Spacer()
                     VStack {
@@ -79,7 +79,7 @@ struct WritePannelView: View {
                         if editMaxMode == .normal {
                             Button(action: {
                                 uploadState = .sending
-                                Request.updateComment(content: markdownString, commentId: "\(commentId)") { res in
+                                Request.updateComment(content: markdownString ?? "", commentId: "\(comment?.commentid ?? 0)") { res in
                                     uploadState = res ? .success : .fail
                                     changeToNormal()
                                 }
@@ -95,6 +95,11 @@ struct WritePannelView: View {
                     }
                     
                 }
+            }
+        }
+        .onChange(of: comment) { oldValue, newValue in
+            if oldValue?.commentid != newValue?.commentid {
+                markdownString = newValue?.value
             }
         }
     }

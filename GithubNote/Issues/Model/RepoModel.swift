@@ -2,7 +2,7 @@
 //  RepoModel.swift
 //  GithubNote
 //
-//  Created by luoshuai on 2024/7/9.
+//  Created by xs0521 on 2024/7/9.
 //
 
 import Foundation

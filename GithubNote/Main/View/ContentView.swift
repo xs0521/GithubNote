@@ -76,9 +76,9 @@ struct ContentView: View {
                 }
                 .frame(width: sideWidth(), alignment: .center)
             }
-            WritePannelView(markdownString: $markdownString, commentId: $commentId, issuesNumber: $issuesNumber)
-            .frame(minWidth: AppConst.editMinWidth, maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.white)
+//            WritePannelView(markdownString: $markdownString, commentId: $commentId, issuesNumber: $issuesNumber)
+//            .frame(minWidth: AppConst.editMinWidth, maxWidth: .infinity, maxHeight: .infinity)
+//            .background(Color.white)
         }
         .frame(minWidth: AppConst.minWidth, minHeight: AppConst.minHeight, alignment: .leading)
         .background(.thinMaterial)

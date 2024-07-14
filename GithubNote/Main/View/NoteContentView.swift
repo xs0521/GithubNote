@@ -2,7 +2,7 @@
 //  NoteContentView.swift
 //  GithubNote
 //
-//  Created by luoshuai on 2024/7/9.
+//  Created by xs0521 on 2024/7/9.
 //
 
 import SwiftUI
@@ -21,8 +21,7 @@ struct NoteContentView: View {
     @State private var userCreatedGroups: [Repo] = [Repo]()
     @State private var searchTerm: String = ""
     
-    @State private var currentComments = [Comment]()
-    @State private var currentSelectionComment: Comment?
+    @State private var markdownString: String? = ""
     
     var body: some View {
         NavigationSplitView {
@@ -31,11 +30,13 @@ struct NoteContentView: View {
                             selection: $selection,
                             issueGroups: $allIssue,
                             selectionIssue: $selectionIssue,
-                            commentGroups: $currentComments,
-                            selectionComment: $currentSelectionComment)
+                            commentGroups: $allComment,
+                            selectionComment: $selectionComment)
           
         } detail: {
-            NoteTaskListView(title: "All", tasks: $allComment)
+            NoteWritePannelView(comment: $selectionComment,
+                            issue: $selectionIssue)
+                .background(Color.white)
         }
         .onAppear(perform: {
             Request.getReposData { repos in
