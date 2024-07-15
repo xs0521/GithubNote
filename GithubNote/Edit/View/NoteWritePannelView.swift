@@ -12,6 +12,8 @@ import Splash
 
 struct NoteWritePannelView: View {
     
+    @Binding var commentGroups: [Comment]
+    
     @Binding var comment: Comment?
     @Binding var issue: Issue?
     
@@ -46,6 +48,7 @@ struct NoteWritePannelView: View {
                         } label: {
                             Label("Show inspector", systemImage: uploadState.imageName)
                         }
+                        .disabled(!editIsShown)
                     }
                 }
                 .frame(width: 30, height: 40)
@@ -78,12 +81,23 @@ struct NoteWritePannelView: View {
         Request.updateComment(content: markdownString, commentId: "\(commentid)") { success in
             uploadState = success ? .success : .fail
             if success {
-                comment?.body = markdownString
+                updateComment(commentid, markdownString)
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 uploadState = .normal
             }
         }
+    }
+    
+    func updateComment(_ commentid: Int, _ body: String) -> Void {
+        guard let index = commentGroups.firstIndex(where: {$0.commentid == commentid}) else {
+            return
+        }
+        let oldComment = commentGroups[index]
+        var list = commentGroups
+        list[index] = oldComment.newComment(body)
+        commentGroups.removeAll()
+        commentGroups = list
     }
     
     private var theme: Splash.Theme {

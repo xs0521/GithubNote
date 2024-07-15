@@ -47,6 +47,7 @@
 		B1EC0DF62BBE434F007975D9 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EC0DF52BBE434F007975D9 /* LoginView.swift */; };
 		B1EC0DF82BBE47A8007975D9 /* UserDefaults+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EC0DF72BBE47A8007975D9 /* UserDefaults+Extension.swift */; };
 		B1EC0DFA2BBE5124007975D9 /* EmptyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EC0DF92BBE5124007975D9 /* EmptyModel.swift */; };
+		B1FE674E2C45767600970DA0 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FE674D2C45767600970DA0 /* Common.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,6 +105,7 @@
 		B1EC0DF52BBE434F007975D9 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		B1EC0DF72BBE47A8007975D9 /* UserDefaults+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extension.swift"; sourceTree = "<group>"; };
 		B1EC0DF92BBE5124007975D9 /* EmptyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyModel.swift; sourceTree = "<group>"; };
+		B1FE674D2C45767600970DA0 /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -189,6 +191,7 @@
 			isa = PBXGroup;
 			children = (
 				B1922A4C2BAFF1FB00200828 /* GithubNoteApp.swift */,
+				B1FE674C2C45766800970DA0 /* Common */,
 				B1D7CF512BCA11BB00362C35 /* Images */,
 				B19DC5A12BBFD535009C7DBE /* Request */,
 				B1E55A472BBFD482000209ED /* Comment */,
@@ -381,6 +384,14 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
+		B1FE674C2C45766800970DA0 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				B1FE674D2C45767600970DA0 /* Common.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -537,6 +548,7 @@
 				B16C4AD42BB3164800F417D3 /* Binding+Extension.swift in Sources */,
 				B16462762BB1C63100F57548 /* Model.swift in Sources */,
 				B1D7CF542BCA11DE00362C35 /* ImagesModel.swift in Sources */,
+				B1FE674E2C45767600970DA0 /* Common.swift in Sources */,
 				B16462782BB1C69D00F57548 /* WritePannelView.swift in Sources */,
 				B11FDA8B2BBFE8C500EC7083 /* AppConst.swift in Sources */,
 				B16462722BB0464A00F57548 /* Account.swift in Sources */,

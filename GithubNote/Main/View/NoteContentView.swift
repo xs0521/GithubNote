@@ -31,12 +31,15 @@ struct NoteContentView: View {
                             issueGroups: $allIssue,
                             selectionIssue: $selectionIssue,
                             commentGroups: $allComment,
-                            selectionComment: $selectionComment)
+                            selectionComment: $selectionComment) { (callBack) in
+                requestIssue(callBack)
+            }
           
         } detail: {
-            NoteWritePannelView(comment: $selectionComment,
-                                  issue: $selectionIssue)
-                .background(Color.white)
+            NoteWritePannelView(commentGroups: $allComment,
+                                      comment: $selectionComment,
+                                        issue: $selectionIssue)
+            .background(Color.white)
         }
         .onAppear(perform: {
             requestRepo()
@@ -45,7 +48,9 @@ struct NoteContentView: View {
             if oldValue != newValue {
                 guard let repoName = newValue?.name else { return }
                 UserDefaults.save(value: repoName, key: AccountType.repo.key)
-                requestIssue()
+                requestIssue {
+                    
+                }
             }
         }
     }
@@ -68,11 +73,12 @@ struct NoteContentView: View {
         }
     }
     
-    func requestIssue() -> Void {
+    func requestIssue(_ completion: @escaping CommonCallBack) -> Void {
         guard let repoName = selectionRepo?.name else { return }
         Request.getRepoIssueData(repoName) { list in
             DispatchQueue.main.async(execute: {
                 allIssue = list
+                completion()
             })
         }
     }

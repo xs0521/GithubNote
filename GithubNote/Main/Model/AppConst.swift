@@ -17,6 +17,20 @@ extension AppConst {
         let time = dateformatter.string(from: Date())
         return "### note \(time)"
     }
+    
+    static var issueMarkdown: String {
+        let dateformatter = DateFormatter()
+        dateformatter.dateFormat = "MM-dd HH:mm:ss"
+        let time = dateformatter.string(from: Date())
+        return "NoteBook \(time)"
+    }
+    
+    static var issueBodyMarkdown: String {
+        let dateformatter = DateFormatter()
+        dateformatter.dateFormat = "MM-dd HH:mm:ss"
+        let time = dateformatter.string(from: Date())
+        return "body \(time)"
+    }
 }
 
 

@@ -188,6 +188,7 @@ struct Request {
         let apiUrl = URL(string: "\(host)/repos/\(Account.owner)/\(repo)/issues")!
         
         var request = URLRequest(url: apiUrl)
+        request.cachePolicy = .reloadIgnoringLocalCacheData
         request.httpMethod = "GET"
         request.addValue("token \(Account.accessToken)", forHTTPHeaderField: "Authorization")
         
@@ -224,10 +225,9 @@ struct Request {
     
     static func getIssueCommentsDataV2(issuesNumber: Int, completion: @escaping IssueCommentDataCallBack) {
         
-//    \(host)/repos/probberechts/hexo-theme-cactus/issues/378/comments
         let apiUrl = URL(string: "\(host)/repos/\(Account.owner)/\(Account.repo)/issues/\(issuesNumber)/comments")!
-        
         var request = URLRequest(url: apiUrl)
+        request.cachePolicy = .reloadIgnoringLocalCacheData
         request.httpMethod = "GET"
         request.addValue("token \(Account.accessToken)", forHTTPHeaderField: "Authorization")
         
