@@ -12,6 +12,8 @@ import Splash
 
 struct NoteWritePannelView: View {
     
+    @Environment(\.colorScheme) private var colorScheme
+    
     @Binding var commentGroups: [Comment]
     
     @Binding var comment: Comment?
@@ -23,53 +25,58 @@ struct NoteWritePannelView: View {
     @State var uploadState: UploadType = .normal
     
     var body: some View {
-        ZStack {
-            ScrollView(.vertical) {
-                Markdown(markdownString ?? "")
-                    .markdownCodeSyntaxHighlighter(.splash(theme: self.theme))
-                    .markdownImageProvider(.default)
-                    .markdownTheme(.gitHub)
-                    .padding(EdgeInsets(top: 0, leading: 10, bottom: 20, trailing: 10))
-                    .frame(maxWidth: .infinity, alignment: .leading)
+        VStack {
+            ZStack {
+                ScrollView(.vertical) {
+                    Markdown(markdownString ?? "")
+                        .markdownCodeSyntaxHighlighter(.splash(theme: self.theme))
+                        .markdownImageProvider(.default)
+                        .markdownTheme(.gitHub)
+                        .padding(EdgeInsets(top: 0, leading: 10, bottom: 20, trailing: 10))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
             }
-        }
-        .toolbar {
-            ToolbarItemGroup {
-                ZStack {
-                    if uploadState == .sending {
-                        ProgressView()
-                            .controlSize(.mini)
-                    } else {
-                        Button {
-                            if uploadState != .normal {
-                                return
+            .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
+            .toolbar {
+                ToolbarItemGroup {
+                    ZStack {
+                        if uploadState == .sending {
+                            ProgressView()
+                                .controlSize(.mini)
+                        } else {
+                            Button {
+                                if uploadState != .normal {
+                                    return
+                                }
+                                updateContent()
+                            } label: {
+                                Label("Show inspector", systemImage: uploadState.imageName)
                             }
-                            updateContent()
-                        } label: {
-                            Label("Show inspector", systemImage: uploadState.imageName)
+                            .disabled(!editIsShown)
                         }
-                        .disabled(!editIsShown)
+                    }
+                    .frame(width: 30, height: 40)
+                    Button {
+                        editIsShown.toggle()
+                    } label: {
+                        Label("Show inspector", systemImage: "sidebar.right")
                     }
                 }
-                .frame(width: 30, height: 40)
-                Button {
-                    editIsShown.toggle()
-                } label: {
-                    Label("Show inspector", systemImage: "sidebar.right")
+               
+            }
+            .inspector(isPresented: $editIsShown) {
+                Group {
+                    TextEditor(text: $markdownString.toUnwrapped(defaultValue: ""))
+                        .transparentScrolling()
+                        .font(.system(size: 14))
+                        .inspectorColumnWidth(min: 100, ideal: 500, max: 800)
                 }
+                .background(Color.background)
             }
-           
-        }
-        .inspector(isPresented: $editIsShown) {
-            Group {
-                TextEditor(text: $markdownString.toUnwrapped(defaultValue: ""))
-                    .font(.system(size: 14))
-                    .inspectorColumnWidth(min: 100, ideal: 500, max: 800)
-            }
-        }
-        .onChange(of: comment) { oldValue, newValue in
-            if oldValue?.commentid != newValue?.commentid {
-                markdownString = newValue?.body
+            .onChange(of: comment) { oldValue, newValue in
+                if oldValue?.commentid != newValue?.commentid {
+                    markdownString = newValue?.body
+                }
             }
         }
     }

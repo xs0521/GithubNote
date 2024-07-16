@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AppKit
 
 struct NoteSidebarView: View {
     
@@ -132,7 +133,7 @@ struct NoteSidebarView: View {
                         .tag(selection)
                     }
                 }
-                .background(.white)
+                .background(Color.background)
             }
         }
         .safeAreaInset(edge: .bottom) {

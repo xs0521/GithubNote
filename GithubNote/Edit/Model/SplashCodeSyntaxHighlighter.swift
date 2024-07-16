@@ -9,6 +9,7 @@ import SwiftUI
 import Foundation
 import MarkdownUI
 import Splash
+import Highlightr
 
 
 struct SplashCodeSyntaxHighlighter: CodeSyntaxHighlighter {
@@ -22,7 +23,13 @@ struct SplashCodeSyntaxHighlighter: CodeSyntaxHighlighter {
 //    guard language?.lowercased() == "swift" else {
 //      return Text(content)
 //    }
-    let value = self.syntaxHighlighter.highlight(content)
+      
+    let highlightr = Highlightr()
+      highlightr?.setTheme(to: "paraiso-dark")
+      guard let value = highlightr?.highlight(content, as: "swift") else {
+        let value = self.syntaxHighlighter.highlight(content)
+        return Text(AttributedString(value))
+      }
     return Text(AttributedString(value))
   }
 }
