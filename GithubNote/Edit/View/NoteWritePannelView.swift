@@ -24,6 +24,8 @@ struct NoteWritePannelView: View {
     
     @State var uploadState: UploadType = .normal
     
+    @State private var importing = false
+    
     var body: some View {
         VStack {
             ZStack {
@@ -60,6 +62,25 @@ struct NoteWritePannelView: View {
                         editIsShown.toggle()
                     } label: {
                         Label("Show inspector", systemImage: "sidebar.right")
+                    }
+                    Spacer()
+                    if editIsShown {
+                        Button(action: {
+                            importing = true
+                        }, label: {
+                            Image(systemName: "photo.on.rectangle.angled")
+                        })
+                        .fileImporter(
+                            isPresented: $importing,
+                            allowedContentTypes: [.image]
+                        ) { result in
+                            switch result {
+                            case .success(let file):
+                                print(file.absoluteString)
+                            case .failure(let error):
+                                print(error.localizedDescription)
+                            }
+                        }
                     }
                 }
                
