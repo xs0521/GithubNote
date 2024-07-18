@@ -13,6 +13,7 @@ struct GithubNoteApp: App {
     
     @State var logined: Bool = Account.enble
     @State var willLoginOut: Bool = false
+    @State private var importing: Bool? = true
     
     var body: some Scene {
         WindowGroup {
@@ -25,7 +26,7 @@ struct GithubNoteApp: App {
                 ZStack {
                     NoteContentView()
                         .onAppear(perform: {
-                            SDWebImageDownloader.shared.setValue("Bearer \(Account.accessToken)", forHTTPHeaderField: "Authorization")
+                    SDWebImageDownloader.shared.setValue("Bearer \(Account.accessToken)", forHTTPHeaderField: "Authorization")
                         })
                     if willLoginOut {
                         LoginOutView(cancelCallBack: {

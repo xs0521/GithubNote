@@ -21,6 +21,8 @@ struct NoteSidebarView: View {
     @Binding var commentGroups: [Comment]
     @Binding var selectionComment: Comment?
     
+    @Binding var importing: Bool?
+    
     @State var showRepos: Bool = false
     @State var isNewIssueSending: Bool = false
     @State var isNewCommentSending: Bool = false

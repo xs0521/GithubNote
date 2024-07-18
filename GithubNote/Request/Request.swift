@@ -13,6 +13,7 @@ typealias IssueCreateDataCallBack = (Issue?) -> ()
 typealias IssueCommentDataCallBack = (Int, [Comment]) -> ()
 typealias CommentDataCallBack = (Comment?) -> ()
 typealias CommentCallBack = (Bool) -> ()
+typealias ImagesDataCallBack = ([GithubImage]) -> ()
 
 struct Request {
     
@@ -336,5 +337,59 @@ struct Request {
         }
         
         task.resume()
+    }
+    
+    static func getRepoFiles(completion: @escaping ImagesDataCallBack) {
+        
+        let apiUrl = URL(string: "\(host)/repos/\(Account.owner)/\(Account.repo)/contents/images")!
+        
+        var request = URLRequest(url: apiUrl)
+        request.httpMethod = "GET"
+        request.addValue("token \(Account.accessToken)", forHTTPHeaderField: "Authorization")
+        
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                "Error: \(error.localizedDescription)".p()
+                completion([])
+                return
+            }
+            
+            var list = [GithubImage]()
+            
+            if let data = data {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data, options: [])
+                    if let images = json as? [[String: Any]] {
+                        for imageData in images {
+                            let jsonData = try JSONSerialization.data(withJSONObject: imageData, options: [])
+                            let decoder = JSONDecoder()
+                            let imageModel = try decoder.decode(GithubImage.self, from: jsonData)
+                            list.append(imageModel)
+                        }
+                    }
+                } catch let DecodingError.dataCorrupted(context) {
+                    print(context)
+                } catch let DecodingError.keyNotFound(key, context) {
+                    print("Key '\(key)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.valueNotFound(value, context) {
+                    print("Value '\(value)' not found:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch let DecodingError.typeMismatch(type, context)  {
+                    print("Type '\(type)' mismatch:", context.debugDescription)
+                    print("codingPath:", context.codingPath)
+                } catch {
+                    print("error: ", error)
+                }
+            }
+            completion(list)
+        }
+        
+        task.resume()
+    }
+    
+    static func getRepoCreateImagesFold(completion: @escaping CommentCallBack) {
+        
+        
     }
 }

@@ -18,13 +18,14 @@ struct NoteWritePannelView: View {
     
     @Binding var comment: Comment?
     @Binding var issue: Issue?
+    @Binding var importing: Bool?
+    
+    @State var isPresented: Bool = false
     
     @State var markdownString: String?
     @State var editIsShown: Bool = false
     
     @State var uploadState: UploadType = .normal
-    
-    @State private var importing = false
     
     var body: some View {
         VStack {
@@ -41,37 +42,39 @@ struct NoteWritePannelView: View {
             .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
             .toolbar {
                 ToolbarItemGroup {
-                    ZStack {
-                        if uploadState == .sending {
-                            ProgressView()
-                                .controlSize(.mini)
-                        } else {
-                            Button {
-                                if uploadState != .normal {
-                                    return
+                    if !(importing ?? false) {
+                        ZStack {
+                            if uploadState == .sending {
+                                ProgressView()
+                                    .controlSize(.mini)
+                            } else {
+                                Button {
+                                    if uploadState != .normal {
+                                        return
+                                    }
+                                    updateContent()
+                                } label: {
+                                    Label("Show inspector", systemImage: uploadState.imageName)
                                 }
-                                updateContent()
-                            } label: {
-                                Label("Show inspector", systemImage: uploadState.imageName)
+                                .disabled(!editIsShown)
                             }
-                            .disabled(!editIsShown)
+                        }
+                        .frame(width: 30, height: 40)
+                        Button {
+                            editIsShown.toggle()
+                        } label: {
+                            Label("Show inspector", systemImage: "sidebar.right")
                         }
                     }
-                    .frame(width: 30, height: 40)
-                    Button {
-                        editIsShown.toggle()
-                    } label: {
-                        Label("Show inspector", systemImage: "sidebar.right")
-                    }
                     Spacer()
-                    if editIsShown {
+                    if importing! {
                         Button(action: {
-                            importing = true
+                            isPresented = true
                         }, label: {
-                            Image(systemName: "photo.on.rectangle.angled")
+                            Image(systemName: "plus")
                         })
                         .fileImporter(
-                            isPresented: $importing,
+                            isPresented: $isPresented,
                             allowedContentTypes: [.image]
                         ) { result in
                             switch result {
@@ -81,6 +84,13 @@ struct NoteWritePannelView: View {
                                 print(error.localizedDescription)
                             }
                         }
+                    }
+                    if editIsShown {
+                        Button(action: {
+                            importing?.toggle()
+                        }, label: {
+                            Image(systemName: "photo.on.rectangle.angled")
+                        })
                     }
                 }
                

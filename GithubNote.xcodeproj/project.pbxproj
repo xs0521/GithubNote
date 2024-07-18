@@ -51,6 +51,7 @@
 		B1EC0DFA2BBE5124007975D9 /* EmptyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EC0DF92BBE5124007975D9 /* EmptyModel.swift */; };
 		B1FE674E2C45767600970DA0 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FE674D2C45767600970DA0 /* Common.swift */; };
 		B1FE67502C46B72400970DA0 /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FE674F2C46B72400970DA0 /* View+Extension.swift */; };
+		B1FE67542C480B0200970DA0 /* NoteImageBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FE67532C480B0200970DA0 /* NoteImageBrowserView.swift */; };
 		E9A119FC00268F2F27DE1D6F /* Pods_GithubNote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67D56CF39CE8C3C40BEF463D /* Pods_GithubNote.framework */; };
 /* End PBXBuildFile section */
 
@@ -118,6 +119,7 @@
 		B1EC0DF92BBE5124007975D9 /* EmptyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyModel.swift; sourceTree = "<group>"; };
 		B1FE674D2C45767600970DA0 /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		B1FE674F2C46B72400970DA0 /* View+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
+		B1FE67532C480B0200970DA0 /* NoteImageBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteImageBrowserView.swift; sourceTree = "<group>"; };
 		CCBEDDBB70377BC5F6CCDC54 /* Pods-GithubNote-GithubNoteUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GithubNote-GithubNoteUITests.debug.xcconfig"; path = "Target Support Files/Pods-GithubNote-GithubNoteUITests/Pods-GithubNote-GithubNoteUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		E1B79E6A4FF24374131296A2 /* Pods-GithubNote.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GithubNote.debug.xcconfig"; path = "Target Support Files/Pods-GithubNote/Pods-GithubNote.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -354,6 +356,7 @@
 			children = (
 				B1922A4E2BAFF1FB00200828 /* ContentView.swift */,
 				B10930FA2C3D848A006B5DB0 /* NoteContentView.swift */,
+				B1FE67532C480B0200970DA0 /* NoteImageBrowserView.swift */,
 				B10930FC2C3D85C5006B5DB0 /* NoteSidebarView.swift */,
 				B10930FE2C3D8748006B5DB0 /* NoteTaskListView.swift */,
 				B10931002C3D8784006B5DB0 /* NoteTaskView.swift */,
@@ -695,6 +698,7 @@
 				B10930FB2C3D848B006B5DB0 /* NoteContentView.swift in Sources */,
 				B1E538622C43816F00A4B3C4 /* NoteWritePannelView.swift in Sources */,
 				B1922A8C2BB03CF300200828 /* SplashCodeSyntaxHighlighter.swift in Sources */,
+				B1FE67542C480B0200970DA0 /* NoteImageBrowserView.swift in Sources */,
 				B1EC0DF82BBE47A8007975D9 /* UserDefaults+Extension.swift in Sources */,
 				B16C4AD42BB3164800F417D3 /* Binding+Extension.swift in Sources */,
 				B16462762BB1C63100F57548 /* Model.swift in Sources */,

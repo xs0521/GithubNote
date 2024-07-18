@@ -22,35 +22,43 @@ struct NoteContentView: View {
     @State private var searchTerm: String = ""
     
     @State private var markdownString: String? = ""
+    @State private var importing: Bool? = false
     
     var body: some View {
-        NavigationSplitView {
-            NoteSidebarView(userCreatedGroups: $userCreatedGroups,
-                            reposGroups: $allRepo,
-                            selectionRepo: $selectionRepo,
-                            issueGroups: $allIssue,
-                            selectionIssue: $selectionIssue,
-                            commentGroups: $allComment,
-                            selectionComment: $selectionComment) { (callBack) in
-                requestIssue(callBack)
-            }
-          
-        } detail: {
-            NoteWritePannelView(commentGroups: $allComment,
-                                      comment: $selectionComment,
-                                        issue: $selectionIssue)
-            .background(Color.white)
-        }
-        .onAppear(perform: {
-            requestRepo()
-        })
-        .onChange(of: selectionRepo) { oldValue, newValue in
-            if oldValue != newValue {
-                guard let repoName = newValue?.name else { return }
-                UserDefaults.save(value: repoName, key: AccountType.repo.key)
-                requestIssue {
-                    
+        ZStack {
+            NavigationSplitView {
+                NoteSidebarView(userCreatedGroups: $userCreatedGroups,
+                                reposGroups: $allRepo,
+                                selectionRepo: $selectionRepo,
+                                issueGroups: $allIssue,
+                                selectionIssue: $selectionIssue,
+                                commentGroups: $allComment,
+                                selectionComment: $selectionComment, 
+                                importing: $importing) { (callBack) in
+                    requestIssue(callBack)
                 }
+              
+            } detail: {
+                NoteWritePannelView(commentGroups: $allComment,
+                                          comment: $selectionComment,
+                                            issue: $selectionIssue,
+                                        importing: $importing)
+                .background(Color.white)
+            }
+            .onAppear(perform: {
+                requestRepo()
+            })
+            .onChange(of: selectionRepo) { oldValue, newValue in
+                if oldValue != newValue {
+                    guard let repoName = newValue?.name else { return }
+                    UserDefaults.save(value: repoName, key: AccountType.repo.key)
+                    requestIssue {
+                        
+                    }
+                }
+            }
+            if importing! {
+                NoteImageBrowserView(showImageBrowser: $importing)
             }
         }
     }
