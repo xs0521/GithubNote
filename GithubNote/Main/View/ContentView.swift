@@ -91,10 +91,10 @@ struct ContentView: View {
             }
         }
         .onChange(of: viewModel.commentModel.selectedCommentItem) { newValue in
-            "contentView comment change \(newValue?.commentid ?? 0)".p()
-            if commentId != newValue?.commentid {
+            "contentView comment change \(newValue?.id ?? 0)".p()
+            if commentId != newValue?.id {
                 markdownString = newValue?.body ?? ""
-                commentId = newValue?.commentid ?? 0
+                commentId = newValue?.id ?? 0
             }
         }
     }

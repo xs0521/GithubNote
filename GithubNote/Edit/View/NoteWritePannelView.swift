@@ -105,7 +105,7 @@ struct NoteWritePannelView: View {
                 .background(Color.background)
             }
             .onChange(of: comment) { oldValue, newValue in
-                if oldValue?.commentid != newValue?.commentid {
+                if oldValue?.id != newValue?.id {
                     markdownString = newValue?.body
                 }
             }
@@ -114,7 +114,7 @@ struct NoteWritePannelView: View {
     
     
     private func updateContent() -> Void {
-        guard let markdownString = markdownString, let commentid = comment?.commentid else { return }
+        guard let markdownString = markdownString, let commentid = comment?.id else { return }
         uploadState = .sending
         Request.updateComment(content: markdownString, commentId: "\(commentid)") { success in
             uploadState = success ? .success : .fail
@@ -128,7 +128,7 @@ struct NoteWritePannelView: View {
     }
     
     func updateComment(_ commentid: Int, _ body: String) -> Void {
-        guard let index = commentGroups.firstIndex(where: {$0.commentid == commentid}) else {
+        guard let index = commentGroups.firstIndex(where: {$0.id == commentid}) else {
             return
         }
         let oldComment = commentGroups[index]

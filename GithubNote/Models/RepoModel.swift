@@ -2,7 +2,7 @@
 //  RepoModel.swift
 //  GithubNote
 //
-//  Created by xs0521 on 2024/7/9.
+//  Created by xs0521 on 2024/7/20.
 //
 
 import Foundation
@@ -24,7 +24,7 @@ struct Permissions: Codable {
     }
 }
 
-struct Repo: Codable, Identifiable, Hashable, Equatable {
+struct RepoModel: APIModel, Identifiable, Hashable, Equatable {
     
     var identifier: String {
         return UUID().uuidString
@@ -34,7 +34,7 @@ struct Repo: Codable, Identifiable, Hashable, Equatable {
         return hasher.combine(identifier)
     }
     
-    public static func == (lhs: Repo, rhs: Repo) -> Bool {
+    public static func == (lhs: RepoModel, rhs: RepoModel) -> Bool {
         return lhs.id == rhs.id
     }
     
@@ -171,21 +171,4 @@ struct Repo: Codable, Identifiable, Hashable, Equatable {
     }
 }
 
-struct RepoModel: Codable, Identifiable, Hashable, Equatable {
-    
-    var id = UUID().uuidString
-    
-    var repoList: [Repo] = []
-    var selectedSideBarItem: Repo = Repo()
-    
-    public func hash(into hasher: inout Hasher) {
-        return hasher.combine(id)
-    }
-    
-    public static func == (lhs: RepoModel, rhs: RepoModel) -> Bool {
-        return lhs.id == rhs.id
-    }
-    
-    public func defultModel () -> Void {
-    }
-}
+

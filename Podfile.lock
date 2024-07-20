@@ -1,16 +1,39 @@
 PODS:
+  - Alamofire (5.9.0)
+  - Cache (7.1.0)
   - Highlightr (2.1.0)
+  - Moya (15.0.0):
+    - Moya/Core (= 15.0.0)
+  - Moya/Core (15.0.0):
+    - Alamofire (~> 5.0)
 
 DEPENDENCIES:
-  - Highlightr
+  - Cache (from `https://github.com/hyperoslo/Cache.git`, tag `7.2.0`)
+  - Highlightr (= 2.1.0)
+  - Moya (~> 15.0)
 
 SPEC REPOS:
   trunk:
+    - Alamofire
     - Highlightr
+    - Moya
+
+EXTERNAL SOURCES:
+  Cache:
+    :git: https://github.com/hyperoslo/Cache.git
+    :tag: 7.2.0
+
+CHECKOUT OPTIONS:
+  Cache:
+    :git: https://github.com/hyperoslo/Cache.git
+    :tag: 7.2.0
 
 SPEC CHECKSUMS:
+  Alamofire: 02b772c9910e8eba1a079227c32fbd9e46c90a24
+  Cache: 79717afe1491def3c772c242bc1166766d7b9b36
   Highlightr: 595f3e100737c8de41113385da8bd0b5b65212c6
+  Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
 
-PODFILE CHECKSUM: 38cda6cc9d77d897ece660299779a937db33c601
+PODFILE CHECKSUM: dd9601648dc3f074a3352f8354546cc542c0fe52
 
 COCOAPODS: 1.14.3

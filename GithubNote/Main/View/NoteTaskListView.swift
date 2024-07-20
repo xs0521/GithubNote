@@ -41,7 +41,7 @@ struct NoteTaskListView: View {
         .inspector(isPresented: $inspectorIsShown) {
             Group {
                 if let selectedTask {
-                    Text(selectedTask.body.toTitle()).font(.title)
+                    Text(selectedTask.body?.toTitle() ?? "").font(.title)
                 } else {
                     Text("nothing selected")
                 }

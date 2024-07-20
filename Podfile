@@ -6,6 +6,8 @@ target 'GithubNote' do
   use_frameworks!
 
   pod 'Highlightr', '2.1.0'
+  pod 'Moya', '~> 15.0'
+  pod 'Cache', :git => 'https://github.com/hyperoslo/Cache.git', :tag => '7.2.0'
 
   # Pods for GithubNote
 

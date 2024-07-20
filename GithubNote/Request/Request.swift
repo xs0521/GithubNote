@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import Moya
 
-typealias ReposDataCallBack = ([Repo]) -> ()
+typealias ReposDataCallBack = ([RepoModel]) -> ()
 typealias IssueDataCallBack = ([Issue]) -> ()
 typealias IssueCreateDataCallBack = (Issue?) -> ()
 typealias IssueCommentDataCallBack = (Int, [Comment]) -> ()
@@ -88,8 +89,8 @@ struct Request {
                         let json = try JSONSerialization.jsonObject(with: data, options: [])
                         if let comment = json as? [String: Any] {
                             var item = Comment()
-                            item.body = comment["body"] as? String ?? ""
-                            item.commentid = comment["id"] as? Int ?? 0
+//                            item.body = comment["body"] as? String ?? ""
+//                            item.commentid = comment["id"] as? Int ?? 0
                             completion(item)
                             "Create comment successfully.".p()
                         }
@@ -156,7 +157,7 @@ struct Request {
                 return
             }
             
-            var list = [Repo]()
+            var list = [RepoModel]()
             
             if let data = data {
                 do {
@@ -167,7 +168,7 @@ struct Request {
                             do {
                                 let decoder = JSONDecoder()
                                 decoder.keyDecodingStrategy = .convertFromSnakeCase
-                                let issue = try decoder.decode(Repo.self, from: jsonData)
+                                let issue = try decoder.decode(RepoModel.self, from: jsonData)
                                 list.append(issue)
                             } catch {
                                 print(String(describing: error)) // <- ✅ Use this for debuging!
@@ -247,7 +248,7 @@ struct Request {
                         commentsData.forEach { data in
                             var item = Comment()
                             item.body = data["body"] as? String ?? ""
-                            item.commentid = data["id"] as? Int ?? 0
+//                            item.commentid = data["id"] as? Int ?? 0
                             list.append(item)
                         }
                         completion(issuesNumber, list)
@@ -325,7 +326,7 @@ struct Request {
                         for comment in comments {
                             var item = Comment()
                             item.body = comment["body"] as? String ?? ""
-                            item.commentid = comment["id"] as? Int ?? 0
+//                            item.commentid = comment["id"] as? Int ?? 0
                             list.append(item)
                         }
                         completion(issuesNumber, list)

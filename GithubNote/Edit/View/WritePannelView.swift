@@ -79,7 +79,7 @@ struct WritePannelView: View {
                         if editMaxMode == .normal {
                             Button(action: {
                                 uploadState = .sending
-                                Request.updateComment(content: markdownString ?? "", commentId: "\(comment?.commentid ?? 0)") { res in
+                                Request.updateComment(content: markdownString ?? "", commentId: "\(comment?.id ?? 0)") { res in
                                     uploadState = res ? .success : .fail
                                     changeToNormal()
                                 }
@@ -98,7 +98,7 @@ struct WritePannelView: View {
             }
         }
         .onChange(of: comment) { oldValue, newValue in
-            if oldValue?.commentid != newValue?.commentid {
+            if oldValue?.id != newValue?.id {
                 markdownString = newValue?.body
             }
         }

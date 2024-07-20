@@ -10,10 +10,10 @@ import AppKit
 
 struct NoteSidebarView: View {
     
-    @Binding var userCreatedGroups: [Repo]
+    @Binding var userCreatedGroups: [RepoModel]
     
-    @Binding var reposGroups: [Repo]
-    @Binding var selectionRepo: Repo?
+    @Binding var reposGroups: [RepoModel]
+    @Binding var selectionRepo: RepoModel?
     
     @Binding var issueGroups: [Issue]
     @Binding var selectionIssue: Issue?
@@ -60,7 +60,7 @@ struct NoteSidebarView: View {
                         List(selection: $selectionComment) {
                             ForEach(commentGroups) { selection in
                                 Label(title: {
-                                    Text(selection.body.toTitle())
+                                    Text(selection.body?.toTitle() ?? "")
                                 }, icon: {
                                     Image(systemName: "note.text")
                                         .foregroundStyle(Color.primary)
@@ -68,7 +68,7 @@ struct NoteSidebarView: View {
                                 .tag(selection)
                                 .contextMenu {
                                     Button("Delete", role: .destructive) {
-                                        "delete \(selection.body.toTitle())".p()
+                                        "delete \(selection.body?.toTitle() ?? "")".p()
                                     }
                                 }
                             }
@@ -164,16 +164,13 @@ struct NoteSidebarView: View {
     
     func commentsData(_ complete: @escaping () -> Void) -> Void {
         guard let number = selectionIssue?.number else { return }
-        Request.getIssueCommentsDataV2(issuesNumber: number) { resNumber, comments in
-            DispatchQueue.main.async(execute: {
-                if resNumber != number {
-                    complete()
-                    return
-                }
-                "reload comments \(comments.count)".p()
-                commentGroups = comments
-                complete()
-            })
+        Networking<Comment>(cache: true).request(API.comments(issueId: number), parseHandler: ModelGenerator(convertFromSnakeCase: true)) { (data, _) in
+            guard let list = data, !list.isEmpty else {
+                commentGroups.removeAll()
+                return
+            }
+            commentGroups = list
+            complete()
         }
     }
     
@@ -194,14 +191,15 @@ struct NoteSidebarView: View {
         guard let issue = issue, let number = issue.number else { return }
         isNewCommentSending = true
         Request.createComment(issuesNumber: number, content: AppConst.markdown, completion: { comment in
-            if let comment = comment {
-                commentsData {
-                    let select = commentGroups.first(where: {$0.commentid == comment.commentid})
-                    DispatchQueue.main.async(execute: {
-                        selectionComment = select
-                        isNewCommentSending = false
-                    })
-                }
+            guard let comment = comment else {
+                return
+            }
+            commentsData {
+                let select = commentGroups.first(where: {$0.id == comment.id})
+                DispatchQueue.main.async(execute: {
+                    selectionComment = select
+                    isNewCommentSending = false
+                })
             }
         })
     }
