@@ -11,37 +11,34 @@ import Moya
 
 class Networking<T> where T: APIModel {
     
-    var cache: Bool = false
-    
     typealias CompletionModelClosure = (_ data: T?, _ cache: Bool) -> Void
     typealias CompletionListClosure = (_ data: [T]?, _ cache: Bool) -> Void
     typealias ErrorClosure = (NetworkError) -> ()
     typealias HandleJSONClosure = ModelGenerator<T>
     
-    convenience init(cache: Bool) {
-        self.init()
-        self.cache = cache
-    }
-    
     @discardableResult
     func request<R: TargetType>(_ type: R,
-                              parseHandler: HandleJSONClosure? = nil,
-                              completionListHandler: CompletionListClosure? = nil,
-                              completionModelHandler: CompletionModelClosure? = nil,
-                              error: ErrorClosure? = nil) -> Cancellable? {
-        execute(type, parseHandler: parseHandler, progress: nil, completionListHandler: completionListHandler, completionModelHandler: completionModelHandler, error: error)
+                                writeCache: Bool = true,
+                                readCache: Bool = true,
+                                parseHandler: HandleJSONClosure? = nil,
+                                completionListHandler: CompletionListClosure? = nil,
+                                completionModelHandler: CompletionModelClosure? = nil,
+                                error: ErrorClosure? = nil) -> Cancellable? {
+        execute(type, writeCache: writeCache, readCache: readCache, parseHandler: parseHandler, progress: nil, completionListHandler: completionListHandler, completionModelHandler: completionModelHandler, error: error)
     }
     
     private func execute<R: TargetType>(_ type: R,
+                                        writeCache: Bool = true,
+                                        readCache: Bool = true,
                                         parseHandler: HandleJSONClosure?,
                                         progress: ProgressBlock? = nil,
                                         completionListHandler: CompletionListClosure?,
                                         completionModelHandler: CompletionModelClosure?,
                                         error: ErrorClosure? = nil) -> Cancellable? {
         
-        let provider = provider(type)
-        if cache {
-            if let dataCachePlugin = type as? DataCachePluginGettableType, let cacheData = dataCachePlugin.cacheData {
+        let provider = provider(type, writeCache: writeCache)
+        if readCache {
+            if let api = type as? API, let cacheData = api.cacheData {
                 self.handleData(type, parseHandler: parseHandler, data: cacheData, isCache: true, completionListHandler: completionListHandler, completionModelHandler: completionModelHandler)
                 return nil
             }
@@ -52,33 +49,43 @@ class Networking<T> where T: APIModel {
             case .success(let resp):
                 self.handleData(type, parseHandler: parseHandler, data: resp.data, completionListHandler: completionListHandler, completionModelHandler: completionModelHandler)
             case .failure:
-                error!(NetworkError.exception(message: "Server error"))
+                error?(NetworkError.exception(message: "Server error"))
             }
         }
         return cancellable
     }
     
-    private func provider<R: TargetType>(_ type: R) -> MoyaProvider<R> {
-        let activityPlugin = NetworkActivityPlugin { (state, targetType) in
-            switch state {
-                case .began:
-                    DispatchQueue.main.async {
-                        
-                    }
-                case .ended:
-                    DispatchQueue.main.async {
-                        
-                    }
-            }
-        }
+    private func provider<R: TargetType>(_ type: R, writeCache: Bool) -> MoyaProvider<R> {
+        
         var plugins = [PluginType]()
-        let cachePolicyPlugin = CachePolicyPlugin()
-        plugins.append(activityPlugin)
-        plugins.append(cachePolicyPlugin)
-        if self.cache {
-            let dataCachePlugin = DataCachePlugin()
-            plugins.append(dataCachePlugin)
+        
+        func cachePolicyPlugin() -> Void {
+            let plugin = CachePolicyPlugin()
+            plugins.append(plugin)
         }
+        
+        func networkActivityPlugin() -> Void {
+            let plugin = NetworkActivityPlugin { (_, _) in }
+            plugins.append(plugin)
+        }
+        
+        func networkLoggerPlugin() -> Void {
+            let plugin = NetworkLoggerPlugin(configuration: NetworkLoggerPlugin.Configuration(logOptions: .verbose))
+            plugins.append(plugin)
+        }
+        
+        func writeCachePlugin() -> Void {
+            let plugin = WriteCachePlugin()
+            plugins.append(plugin)
+        }
+        
+        networkActivityPlugin()
+        cachePolicyPlugin()
+        networkLoggerPlugin()
+        if writeCache {
+            writeCachePlugin()
+        }
+
         let provider = MoyaProvider<R>(plugins: plugins)
         return provider
     }

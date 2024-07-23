@@ -61,10 +61,10 @@ struct Comment: Codable, Identifiable, Hashable, Equatable {
         
     }
     
-    func newComment(_ content: String) -> Comment {
+    func newComment(_ content: String, _ id: Int) -> Comment {
         var item = Comment()
-//        item.commentid = commentid
-//        item.body = content
+        item.id = id
+        item.body = content
         return item
     }
 }

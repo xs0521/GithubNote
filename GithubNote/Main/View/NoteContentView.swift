@@ -34,9 +34,10 @@ struct NoteContentView: View {
                                 selectionIssue: $selectionIssue,
                                 commentGroups: $allComment,
                                 selectionComment: $selectionComment, 
-                                importing: $importing) { (callBack) in
-                    requestIssue(callBack)
-                }
+                                importing: $importing, 
+                                issueSyncCallBack: { callBack in
+                    requestIssue(false, callBack)
+                })
               
             } detail: {
                 NoteWritePannelView(commentGroups: $allComment,
@@ -46,7 +47,7 @@ struct NoteContentView: View {
                 .background(Color.white)
             }
             .onAppear(perform: {
-                requestRepo()
+                requestRepo {}
             })
             .onChange(of: selectionRepo) { oldValue, newValue in
                 if oldValue != newValue {
@@ -61,8 +62,8 @@ struct NoteContentView: View {
         }
     }
     
-    private func requestRepo() -> Void {
-        Networking<RepoModel>(cache: true).request(API.repos, parseHandler: ModelGenerator(convertFromSnakeCase: true)) { (data, _) in
+    private func requestRepo(_ readCache: Bool = true, _ completion: @escaping CommonCallBack) -> Void {
+        Networking<RepoModel>().request(API.repos, readCache: readCache, parseHandler: ModelGenerator(convertFromSnakeCase: true)) { (data, _) in
             guard let list = data, !list.isEmpty else {
                 allRepo.removeAll()
                 return
@@ -79,9 +80,9 @@ struct NoteContentView: View {
         }
     }
     
-    private func requestIssue(_ completion: @escaping CommonCallBack) -> Void {
+    private func requestIssue(_ readCache: Bool = true, _ completion: @escaping CommonCallBack) -> Void {
         guard let repoName = selectionRepo?.name else { return }
-        Networking<Issue>(cache: true).request(API.repoIssue(repoName: repoName),
+        Networking<Issue>().request(API.repoIssue(repoName: repoName), readCache: readCache,
                                     parseHandler: ModelGenerator(convertFromSnakeCase: true)) { (data, _) in
             guard let list = data, !list.isEmpty else {
                 allIssue.removeAll()

@@ -114,17 +114,28 @@ struct NoteWritePannelView: View {
     
     
     private func updateContent() -> Void {
-        guard let markdownString = markdownString, let commentid = comment?.id else { return }
+        guard let body = markdownString, let commentid = comment?.id else { return }
         uploadState = .sending
-        Request.updateComment(content: markdownString, commentId: "\(commentid)") { success in
-            uploadState = success ? .success : .fail
-            if success {
-                updateComment(commentid, markdownString)
+        
+        Networking<Comment>().request(API.updateComment(commentId: commentid, body: body), writeCache: false, readCache: false, completionListHandler: nil) { data, cache in
+            uploadState = data != nil ? .success : .fail
+            if uploadState == .success {
+                updateComment(commentid, body)
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 uploadState = .normal
             }
         }
+        
+//        Request.updateComment(content: markdownString, commentId: "\(commentid)") { success in
+//            uploadState = success ? .success : .fail
+//            if success {
+//                updateComment(commentid, markdownString)
+//            }
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+//                uploadState = .normal
+//            }
+//        }
     }
     
     func updateComment(_ commentid: Int, _ body: String) -> Void {
@@ -133,7 +144,7 @@ struct NoteWritePannelView: View {
         }
         let oldComment = commentGroups[index]
         var list = commentGroups
-        list[index] = oldComment.newComment(body)
+        list[index] = oldComment.newComment(body, commentid)
         commentGroups.removeAll()
         commentGroups = list
     }

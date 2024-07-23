@@ -9,12 +9,7 @@ import Moya
 
 extension API: CachePolicyGettableType {
     var cachePolicy: URLRequest.CachePolicy? {
-        switch self {
-        case .repoIssue:
-            return .reloadIgnoringLocalCacheData
-        default:
-            return .useProtocolCachePolicy
-        }
+        .reloadIgnoringLocalCacheData
     }
 }
 

@@ -27,7 +27,7 @@ struct NoteSidebarView: View {
     @State var isNewIssueSending: Bool = false
     @State var isNewCommentSending: Bool = false
     
-    var addIssueCallBack: (_ callBack: @escaping CommonCallBack) -> ()
+    var issueSyncCallBack: (_ callBack: @escaping CommonCallBack) -> ()
     
     var body: some View {
         ZStack {
@@ -36,7 +36,14 @@ struct NoteSidebarView: View {
                     Text("Note")
                         .padding(.leading, 16)
                     Spacer()
-                    VStack {
+                    HStack {
+                        Button {
+                            commentsData(false) {}
+                        } label: {
+                            Image(systemName: "arrow.triangle.2.circlepath")
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.trailing, 5)
                         if isNewCommentSending {
                             ProgressView()
                                 .controlSize(.mini)
@@ -80,7 +87,14 @@ struct NoteSidebarView: View {
                     Text("NoteBook")
                         .padding(.leading, 16)
                     Spacer()
-                    VStack {
+                    HStack {
+                        Button {
+                            issueSyncCallBack({})
+                        } label: {
+                            Image(systemName: "arrow.triangle.2.circlepath")
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.trailing, 5)
                         if isNewIssueSending {
                             ProgressView()
                                 .controlSize(.mini)
@@ -162,9 +176,9 @@ struct NoteSidebarView: View {
         }
     }
     
-    func commentsData(_ complete: @escaping () -> Void) -> Void {
+    func commentsData(_ cache: Bool = true, _ complete: @escaping () -> Void) -> Void {
         guard let number = selectionIssue?.number else { return }
-        Networking<Comment>(cache: true).request(API.comments(issueId: number), parseHandler: ModelGenerator(convertFromSnakeCase: true)) { (data, _) in
+        Networking<Comment>().request(API.comments(issueId: number), readCache: cache, parseHandler: ModelGenerator(convertFromSnakeCase: true)) { (data, _) in
             guard let list = data, !list.isEmpty else {
                 commentGroups.removeAll()
                 return
@@ -176,31 +190,35 @@ struct NoteSidebarView: View {
     
     func createIssue() -> Void {
         isNewIssueSending = true
-        Request.createIssue(title: AppConst.issueMarkdown, body: AppConst.issueBodyMarkdown) { issue in
-            guard let _ = issue else {
+        let title = AppConst.issueMarkdown
+        let body = AppConst.issueBodyMarkdown
+        Networking<Issue>().request(API.newIssue(title: title, body: body), writeCache: false, readCache: false, completionListHandler: nil) { data, cache in
+            guard let _ = data else {
                 isNewIssueSending = false
                 return
             }
-            addIssueCallBack({
+            issueSyncCallBack({
                 isNewIssueSending = false
             })
         }
     }
     
     func createComment(_ issue: Issue?) -> Void {
-        guard let issue = issue, let number = issue.number else { return }
+        guard let issueId = issue?.number else { return }
+        let body = AppConst.markdown
         isNewCommentSending = true
-        Request.createComment(issuesNumber: number, content: AppConst.markdown, completion: { comment in
+        Networking<Comment>().request(API.newComment(issueId: issueId, body: body), writeCache: false, readCache: false, completionListHandler: nil) { comment, cache in
             guard let comment = comment else {
+                isNewCommentSending = false
                 return
             }
-            commentsData {
+            commentsData(false) {
                 let select = commentGroups.first(where: {$0.id == comment.id})
                 DispatchQueue.main.async(execute: {
                     selectionComment = select
                     isNewCommentSending = false
                 })
             }
-        })
+        }
     }
 }

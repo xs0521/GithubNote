@@ -34,6 +34,7 @@
 		B19DC5A02BBFD51B009C7DBE /* CommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19DC59F2BBFD51B009C7DBE /* CommentModel.swift */; };
 		B1A529822BCA1813003F6B78 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = B1A529812BCA1813003F6B78 /* MarkdownUI */; };
 		B1A529852BCAB331003F6B78 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = B1A529842BCAB331003F6B78 /* MarkdownUI */; };
+		B1AE88372C4FFDAC00BB8047 /* WriteCachePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1AE88362C4FFDAC00BB8047 /* WriteCachePlugin.swift */; };
 		B1B617E92BCAB3CD005652FF /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = B1B617E82BCAB3CD005652FF /* MarkdownUI */; };
 		B1C01ACA2BCA16BB009E9C20 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = B1C01AC92BCA16BB009E9C20 /* SDWebImageSwiftUI */; };
 		B1D7CF542BCA11DE00362C35 /* ImagesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D7CF532BCA11DE00362C35 /* ImagesModel.swift */; };
@@ -112,6 +113,7 @@
 		B1922A6A2BAFF1FC00200828 /* GithubNoteUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubNoteUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		B1922A8B2BB03CF300200828 /* SplashCodeSyntaxHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashCodeSyntaxHighlighter.swift; sourceTree = "<group>"; };
 		B19DC59F2BBFD51B009C7DBE /* CommentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentModel.swift; sourceTree = "<group>"; };
+		B1AE88362C4FFDAC00BB8047 /* WriteCachePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCachePlugin.swift; sourceTree = "<group>"; };
 		B1D7CF532BCA11DE00362C35 /* ImagesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesModel.swift; sourceTree = "<group>"; };
 		B1D7CF562BCA122800362C35 /* ImagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesView.swift; sourceTree = "<group>"; };
 		B1E538612C43816F00A4B3C4 /* NoteWritePannelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteWritePannelView.swift; sourceTree = "<group>"; };
@@ -451,6 +453,7 @@
 				B1ED88692C4ACAFE00FD8DEB /* API.swift */,
 				B1ED88742C4C057200FD8DEB /* CachePolicyPlugin.swift */,
 				B1ED88762C4C057F00FD8DEB /* DataCachePlugin.swift */,
+				B1AE88362C4FFDAC00BB8047 /* WriteCachePlugin.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -740,6 +743,7 @@
 				B1D7CF572BCA122800362C35 /* ImagesView.swift in Sources */,
 				B16462702BB0456300F57548 /* Request.swift in Sources */,
 				B1ED88732C4BD40600FD8DEB /* CacheManager.swift in Sources */,
+				B1AE88372C4FFDAC00BB8047 /* WriteCachePlugin.swift in Sources */,
 				B1E55A442BBF96E2000209ED /* IssuesCreateView.swift in Sources */,
 				B1ED88772C4C057F00FD8DEB /* DataCachePlugin.swift in Sources */,
 				B10930FB2C3D848B006B5DB0 /* NoteContentView.swift in Sources */,
