@@ -7,6 +7,8 @@
 
 import Foundation
 
+
+
 struct Issue: Codable, Identifiable, Hashable, Equatable {
     
     var identifier: String {
@@ -63,25 +65,6 @@ struct Issue: Codable, Identifiable, Hashable, Equatable {
         self.reactions = reactions
         self.timelineUrl = timelineUrl
         self.commentList = commentList
-    }
-    
-    public func defultModel () -> Void {
-    }
-}
-
-struct IssuesModel: Codable, Identifiable, Hashable, Equatable {
-    
-    var id = UUID().uuidString
-    
-    var issueList: [Issue] = []
-    var selectedSideBarItem: Issue = Issue()
-    
-    public func hash(into hasher: inout Hasher) {
-        return hasher.combine(id)
-    }
-    
-    public static func == (lhs: IssuesModel, rhs: IssuesModel) -> Bool {
-        return lhs.id == rhs.id
     }
     
     public func defultModel () -> Void {

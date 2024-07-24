@@ -16,6 +16,8 @@ enum API {
     case newComment(issueId: Int, body: String)
     case updateComment(commentId: Int, body: String)
     case newIssue(title: String, body: String)
+    case repoImages
+    
     
     var owner: String { Account.owner }
     var selectRepo: String { Account.repo }
@@ -59,6 +61,8 @@ extension API: TargetType {
             return "/repos/\(owner)/\(selectRepo)/issues/comments/\(commentId)"
         case .newIssue:
             return "/repos/\(owner)/\(selectRepo)/issues"
+        case .repoImages:
+            return "/repos/\(owner)/\(selectRepo)/contents/images"
         }
     }
     

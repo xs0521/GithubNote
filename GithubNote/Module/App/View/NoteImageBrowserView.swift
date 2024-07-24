@@ -26,10 +26,18 @@ struct NoteImageBrowserView: View {
                 withAnimation(baseAnimation) {
                     animated = true
                 }
-                Request.getRepoFiles { images in
-                    data = images
-                }
+                requestImagesData()
             })
+    }
+    
+    func requestImagesData() -> Void {
+
+        Networking<GithubImage>().request(API.repoImages, writeCache: false, readCache: false) { data, cache in
+            guard let list = data else {
+                return
+            }
+            self.data = list
+        }
     }
 }
 
