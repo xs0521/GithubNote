@@ -24,10 +24,12 @@ struct Permissions: Codable {
     }
 }
 
-struct RepoModel: APIModel, Identifiable, Hashable, Equatable {
+struct RepoModel: APIModelable, Identifiable, Hashable, Equatable {
+    
+    var uuid: String?
     
     var identifier: String {
-        return UUID().uuidString
+        return "\(id ?? 0)-\(uuid ?? "")"
     }
     
     public func hash(into hasher: inout Hasher) {

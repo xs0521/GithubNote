@@ -7,8 +7,16 @@
 
 import Foundation
 
-typealias APIModel = Codable
+protocol APIModelable: Codable {
+    var uuid: String? { get set }
+    mutating func defultModel() -> Void
+}
 
+extension APIModelable {
+    mutating func defultModel() -> Void {
+        self.uuid = UUID().uuidString
+    }
+}
 
 protocol Modelable {
     associatedtype AbstractType
@@ -33,7 +41,7 @@ struct AnyModelable<T>: Modelable {
     }
 }
 
-struct ModelGenerator<T: APIModel>: Modelable {
+struct ModelGenerator<T: APIModelable>: Modelable {
     var convertFromSnakeCase: Bool = false
     typealias AbstractType = T
     func handle(_ data: [String: Any]) -> T? {
@@ -43,7 +51,9 @@ struct ModelGenerator<T: APIModel>: Modelable {
             if convertFromSnakeCase {
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
             }
-            return try decoder.decode(T.self, from: jsonData)
+            var value = try decoder.decode(T.self, from: jsonData)
+            value.defultModel()
+            return value
         } catch {
             print(String(describing: error)) // <- ✅ Use this for debuging!
         }

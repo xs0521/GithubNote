@@ -7,13 +7,14 @@
 
 import Foundation
 
-struct Comment: Codable, Identifiable, Hashable, Equatable {
+struct Comment: APIModelable, Identifiable, Hashable, Equatable {
     
     var url, htmlURL, issueURL: String?
     var id: Int?
     var nodeID: String?
     var createdAt, updatedAt: String?
     var body: String?
+    var uuid: String?
 
 //    enum CodingKeys: String, CodingKey {
 //        case url
@@ -27,16 +28,16 @@ struct Comment: Codable, Identifiable, Hashable, Equatable {
 //        case body
 //    }
     
-    var identifier: String {
-        return UUID().uuidString
+    public var identifier: String {
+        return "\(id ?? 0)-\(uuid ?? "")"
     }
     
     public func hash(into hasher: inout Hasher) {
-        return hasher.combine(identifier)
+        return hasher.combine(uuid)
     }
     
     public static func == (lhs: Comment, rhs: Comment) -> Bool {
-        return lhs.id == rhs.id
+        return lhs.identifier == rhs.identifier
     }
     
     init(   url: String? = nil,
@@ -46,6 +47,7 @@ struct Comment: Codable, Identifiable, Hashable, Equatable {
             nodeID: String? = nil,
             createdAt: String? = nil,
             updatedAt: String? = nil,
+            uuid: String? = nil,
             body: String? = nil) {
             self.url = url
             self.htmlURL = htmlURL
@@ -55,11 +57,8 @@ struct Comment: Codable, Identifiable, Hashable, Equatable {
             self.createdAt = createdAt
             self.updatedAt = updatedAt
             self.body = body
+            self.uuid = UUID().uuidString
         }
-    
-    public func defultModel () -> Void {
-        
-    }
     
     func newComment(_ content: String, _ id: Int) -> Comment {
         var item = Comment()

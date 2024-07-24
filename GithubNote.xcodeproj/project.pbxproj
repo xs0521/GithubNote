@@ -46,7 +46,7 @@
 		B1ED88672C4AC60000FD8DEB /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1ED88662C4AC60000FD8DEB /* NetworkError.swift */; };
 		B1ED886A2C4ACAFE00FD8DEB /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1ED88692C4ACAFE00FD8DEB /* API.swift */; };
 		B1ED886F2C4ACBB900FD8DEB /* RepoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1ED886E2C4ACBB900FD8DEB /* RepoModel.swift */; };
-		B1ED88712C4ACE0E00FD8DEB /* APIModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1ED88702C4ACE0E00FD8DEB /* APIModel.swift */; };
+		B1ED88712C4ACE0E00FD8DEB /* Modelable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1ED88702C4ACE0E00FD8DEB /* Modelable.swift */; };
 		B1ED88732C4BD40600FD8DEB /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1ED88722C4BD40600FD8DEB /* CacheManager.swift */; };
 		B1ED88752C4C057200FD8DEB /* CachePolicyPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1ED88742C4C057200FD8DEB /* CachePolicyPlugin.swift */; };
 		B1ED88772C4C057F00FD8DEB /* DataCachePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1ED88762C4C057F00FD8DEB /* DataCachePlugin.swift */; };
@@ -115,7 +115,7 @@
 		B1ED88662C4AC60000FD8DEB /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		B1ED88692C4ACAFE00FD8DEB /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		B1ED886E2C4ACBB900FD8DEB /* RepoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoModel.swift; sourceTree = "<group>"; };
-		B1ED88702C4ACE0E00FD8DEB /* APIModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIModel.swift; sourceTree = "<group>"; };
+		B1ED88702C4ACE0E00FD8DEB /* Modelable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modelable.swift; sourceTree = "<group>"; };
 		B1ED88722C4BD40600FD8DEB /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
 		B1ED88742C4C057200FD8DEB /* CachePolicyPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachePolicyPlugin.swift; sourceTree = "<group>"; };
 		B1ED88762C4C057F00FD8DEB /* DataCachePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataCachePlugin.swift; sourceTree = "<group>"; };
@@ -225,12 +225,12 @@
 			isa = PBXGroup;
 			children = (
 				B1922A4C2BAFF1FB00200828 /* GithubNoteApp.swift */,
-				B1AE88382C51564E00BB8047 /* Module */,
-				B1ED886B2C4ACB5900FD8DEB /* Models */,
 				B1ED88682C4ACAE500FD8DEB /* API */,
+				B1ED886B2C4ACB5900FD8DEB /* Cache */,
 				B18536282C4ABC1400867E91 /* Network */,
 				B1FE674C2C45766800970DA0 /* Common */,
 				B1EC0DF42BBE4324007975D9 /* Extension */,
+				B1AE88382C51564E00BB8047 /* Module */,
 				B1922A502BAFF1FC00200828 /* Assets.xcassets */,
 				B1922A522BAFF1FC00200828 /* GithubNote.entitlements */,
 				B1922A532BAFF1FC00200828 /* Preview Content */,
@@ -267,6 +267,7 @@
 			isa = PBXGroup;
 			children = (
 				B1EC0DEB2BBE428F007975D9 /* App */,
+				B1B55A8D2C515D8100820689 /* Repo */,
 				B1D7CF512BCA11BB00362C35 /* ImagesBrowser */,
 				B1E55A472BBFD482000209ED /* Comment */,
 				B1EC0DED2BBE42AD007975D9 /* Edit */,
@@ -274,6 +275,48 @@
 				B11B515A2BBF965D0016158E /* Issues */,
 			);
 			path = Module;
+			sourceTree = "<group>";
+		};
+		B1B55A8C2C515D6400820689 /* Plugins */ = {
+			isa = PBXGroup;
+			children = (
+				B1ED88742C4C057200FD8DEB /* CachePolicyPlugin.swift */,
+				B1ED88762C4C057F00FD8DEB /* DataCachePlugin.swift */,
+				B1AE88362C4FFDAC00BB8047 /* WriteCachePlugin.swift */,
+			);
+			path = Plugins;
+			sourceTree = "<group>";
+		};
+		B1B55A8D2C515D8100820689 /* Repo */ = {
+			isa = PBXGroup;
+			children = (
+				B1B55A8E2C515D9C00820689 /* Model */,
+			);
+			path = Repo;
+			sourceTree = "<group>";
+		};
+		B1B55A8E2C515D9C00820689 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				B1ED886E2C4ACBB900FD8DEB /* RepoModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		B1B55A8F2C515DB600820689 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				B1ED88722C4BD40600FD8DEB /* CacheManager.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		B1B55A902C515E2000820689 /* Modelable */ = {
+			isa = PBXGroup;
+			children = (
+				B1ED88702C4ACE0E00FD8DEB /* Modelable.swift */,
+			);
+			path = Modelable;
 			sourceTree = "<group>";
 		};
 		B1D7CF512BCA11BB00362C35 /* ImagesBrowser */ = {
@@ -414,21 +457,18 @@
 			isa = PBXGroup;
 			children = (
 				B1ED88692C4ACAFE00FD8DEB /* API.swift */,
-				B1ED88742C4C057200FD8DEB /* CachePolicyPlugin.swift */,
-				B1ED88762C4C057F00FD8DEB /* DataCachePlugin.swift */,
-				B1AE88362C4FFDAC00BB8047 /* WriteCachePlugin.swift */,
+				B1B55A902C515E2000820689 /* Modelable */,
+				B1B55A8C2C515D6400820689 /* Plugins */,
 			);
 			path = API;
 			sourceTree = "<group>";
 		};
-		B1ED886B2C4ACB5900FD8DEB /* Models */ = {
+		B1ED886B2C4ACB5900FD8DEB /* Cache */ = {
 			isa = PBXGroup;
 			children = (
-				B1ED886E2C4ACBB900FD8DEB /* RepoModel.swift */,
-				B1ED88702C4ACE0E00FD8DEB /* APIModel.swift */,
-				B1ED88722C4BD40600FD8DEB /* CacheManager.swift */,
+				B1B55A8F2C515DB600820689 /* Model */,
 			);
-			path = Models;
+			path = Cache;
 			sourceTree = "<group>";
 		};
 		B1FE674C2C45766800970DA0 /* Common */ = {
@@ -725,7 +765,7 @@
 				B10931012C3D8784006B5DB0 /* NoteTaskView.swift in Sources */,
 				B1EC0DE82BBB8DD4007975D9 /* String+Extension.swift in Sources */,
 				B1ED886A2C4ACAFE00FD8DEB /* API.swift in Sources */,
-				B1ED88712C4ACE0E00FD8DEB /* APIModel.swift in Sources */,
+				B1ED88712C4ACE0E00FD8DEB /* Modelable.swift in Sources */,
 				B1FE67502C46B72400970DA0 /* View+Extension.swift in Sources */,
 				B1EC0DF62BBE434F007975D9 /* LoginView.swift in Sources */,
 				B10930FD2C3D85C5006B5DB0 /* NoteSidebarView.swift in Sources */,

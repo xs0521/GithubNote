@@ -105,7 +105,7 @@ struct NoteWritePannelView: View {
                 .background(Color.background)
             }
             .onChange(of: comment) { oldValue, newValue in
-                if oldValue?.id != newValue?.id {
+                if oldValue?.identifier != newValue?.identifier {
                     markdownString = newValue?.body
                 }
             }

@@ -7,12 +7,12 @@
 
 import Foundation
 
-
-
-struct Issue: Codable, Identifiable, Hashable, Equatable {
+struct Issue: APIModelable, Identifiable, Hashable, Equatable {
+    
+    var uuid: String?
     
     var identifier: String {
-        return UUID().uuidString
+        return "\(id ?? 0)-\(uuid ?? "")"
     }
     
     public func hash(into hasher: inout Hasher) {
@@ -20,7 +20,7 @@ struct Issue: Codable, Identifiable, Hashable, Equatable {
     }
     
     public static func == (lhs: Issue, rhs: Issue) -> Bool {
-        return lhs.id == rhs.id
+        return lhs.identifier == rhs.identifier
     }
     
     
@@ -65,6 +65,7 @@ struct Issue: Codable, Identifiable, Hashable, Equatable {
         self.reactions = reactions
         self.timelineUrl = timelineUrl
         self.commentList = commentList
+        self.uuid = UUID().uuidString
     }
     
     public func defultModel () -> Void {

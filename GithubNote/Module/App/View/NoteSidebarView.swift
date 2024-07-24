@@ -183,7 +183,10 @@ struct NoteSidebarView: View {
                 commentGroups.removeAll()
                 return
             }
+            commentGroups.removeAll()
             commentGroups = list
+            let item = commentGroups.first(where: {$0.id == selectionComment?.id})
+            selectionComment = item
             complete()
         }
     }

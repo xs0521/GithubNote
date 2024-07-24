@@ -9,7 +9,7 @@ import Foundation
 import AppKit
 import Moya
 
-class Networking<T> where T: APIModel {
+class Networking<T> where T: APIModelable {
     
     typealias CompletionModelClosure = (_ data: T?, _ cache: Bool) -> Void
     typealias CompletionListClosure = (_ data: [T]?, _ cache: Bool) -> Void

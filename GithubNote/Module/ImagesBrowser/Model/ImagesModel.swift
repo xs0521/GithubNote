@@ -12,9 +12,11 @@ class ImagesModel {
 }
 
 
-struct GithubImage: Codable, Identifiable, Hashable, Equatable {
+struct GithubImage: APIModelable, Identifiable, Hashable, Equatable {
     
     var id = UUID().uuidString
+    
+    var uuid: String?
     
     let name, path, sha: String
     let size: Int

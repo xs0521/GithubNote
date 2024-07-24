@@ -33,27 +33,7 @@ extension AppConst {
     }
 }
 
-
 extension AppConst {
-    static let issueItemHeight: CGFloat = 30
-    static let issueMaxWidth: CGFloat = 200
-    static let issueMinWidth: CGFloat = 50
-}
-
-extension AppConst {
-    static let commentItemHeight: CGFloat = 30
-    static let commentMaxWidth: CGFloat = 200
-    static let commentMinWidth: CGFloat = 50
-}
-
-extension AppConst {
-    static let editMinWidth: CGFloat = 800
-    static let editItemMinWidth: CGFloat = 50
-}
-
-extension AppConst {
-    static let minWidth: CGFloat = issueMinWidth + commentMinWidth + editMinWidth
-    static let minHeight: CGFloat = 600
     
     static let defaultWidth: CGFloat = 1200
     static let defaultHeight: CGFloat = 800

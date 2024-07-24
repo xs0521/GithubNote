@@ -18,7 +18,7 @@ class CacheManager {
         let storage = try? Storage<String, Data?>(
           diskConfig: diskConfig,
           memoryConfig: memoryConfig,
-          transformer: TransformerFactory.forCodable(ofType: Data?.self) // Storage<String, User>
+          transformer: TransformerFactory.forCodable(ofType: Data?.self)
         )
         return storage!
     }()
