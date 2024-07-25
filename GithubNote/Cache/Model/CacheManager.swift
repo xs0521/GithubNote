@@ -22,4 +22,11 @@ class CacheManager {
         )
         return storage!
     }()
+    
+    func updateCommentsCacheData(_ list: [Comment], issueId: Int) -> Void {
+        let data = list.compactMap({$0.data()}).compactMap({$0.anyObj()})
+        let jsonData = try? JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
+        guard let path = API.comments(issueId: issueId).cachePath else { return }
+        try? CacheManager.shared.store.setObject(jsonData, forKey: path)
+    }
 }

@@ -10,36 +10,45 @@ import Foundation
 protocol APIModelable: Codable {
     var uuid: String? { get set }
     mutating func defultModel() -> Void
+    func data() -> Data?
 }
 
 extension APIModelable {
     mutating func defultModel() -> Void {
         self.uuid = UUID().uuidString
     }
+    
+    func data() -> Data? {
+        return ModelGenerator().toData(self)
+    }
 }
 
 protocol Modelable {
     associatedtype AbstractType
     func handle(_ data: [String: Any]) -> AbstractType?
+    func toData(_ model: AbstractType) -> Data?
 }
 
 extension Modelable {
     func handle(_ data: [String: Any]) -> AbstractType? {
         nil
     }
+    func toData(_ model: AbstractType) -> Data? {
+        nil
+    }
 }
 
-struct AnyModelable<T>: Modelable {
-    private let _handle: (_ data: [String: Any]) -> T?
-    
-    init<G: Modelable>(_ gen: G) where G.AbstractType == T {
-        _handle = gen.handle
-    }
-    
-    func handle(_ data: [String: Any]) -> T? {
-        return _handle(data)
-    }
-}
+//struct AnyModelable<T>: Modelable {
+//    private let _handle: (_ data: [String: Any]) -> T?
+//    
+//    init<G: Modelable>(_ gen: G) where G.AbstractType == T {
+//        _handle = gen.handle
+//    }
+//    
+//    func handle(_ data: [String: Any]) -> T? {
+//        return _handle(data)
+//    }
+//}
 
 struct ModelGenerator<T: APIModelable>: Modelable {
     var convertFromSnakeCase: Bool = false
@@ -59,6 +68,19 @@ struct ModelGenerator<T: APIModelable>: Modelable {
         }
         return nil
     }
+    
+    func toData(_ model: T) -> Data? {
+        let encoder = JSONEncoder()
+        do {
+            let data = try encoder.encode(model)
+            // 这里的 data 就是你的模型转换为 Data 的结果
+            return data
+        } catch {
+            print("Error encoding model: \(error)")
+        }
+        return nil
+    }
+    
 }
 
 

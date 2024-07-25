@@ -167,10 +167,6 @@ struct RepoModel: APIModelable, Identifiable, Hashable, Equatable {
         self.defaultBranch = defaultBranch
         self.permissions = permissions
     }
-
-    
-    public func defultModel () -> Void {
-    }
 }
 
 

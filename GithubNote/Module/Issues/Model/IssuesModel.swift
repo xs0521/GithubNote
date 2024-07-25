@@ -67,7 +67,4 @@ struct Issue: APIModelable, Identifiable, Hashable, Equatable {
         self.commentList = commentList
         self.uuid = UUID().uuidString
     }
-    
-    public func defultModel () -> Void {
-    }
 }

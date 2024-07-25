@@ -118,35 +118,33 @@ struct NoteWritePannelView: View {
         uploadState = .sending
         
         Networking<Comment>().request(API.updateComment(commentId: commentid, body: body), writeCache: false, readCache: false, completionListHandler: nil) { data, cache in
-            uploadState = data != nil ? .success : .fail
-            if uploadState == .success {
-                updateComment(commentid, body)
+            
+            guard let comment = data else {
+                uploadState = .fail
+                normal()
+                return
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                uploadState = .normal
+            updateCommentData(comment)
+            func normal() -> Void {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    uploadState = .normal
+                }
             }
+            normal()
         }
-        
-//        Request.updateComment(content: markdownString, commentId: "\(commentid)") { success in
-//            uploadState = success ? .success : .fail
-//            if success {
-//                updateComment(commentid, markdownString)
-//            }
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-//                uploadState = .normal
-//            }
-//        }
     }
     
-    func updateComment(_ commentid: Int, _ body: String) -> Void {
-        guard let index = commentGroups.firstIndex(where: {$0.id == commentid}) else {
+    private func updateCommentData(_ comment: Comment) -> Void {
+        guard let index = commentGroups.firstIndex(where: {$0.id == comment.id}) else {
             return
         }
-        let oldComment = commentGroups[index]
         var list = commentGroups
-        list[index] = oldComment.newComment(body, commentid)
-        commentGroups.removeAll()
+        list[index] = comment
         commentGroups = list
+        self.comment = comment
+        
+        guard let issueId = issue?.number else { return }
+        CacheManager.shared.updateCommentsCacheData(commentGroups, issueId: issueId)
     }
     
     private var theme: Splash.Theme {

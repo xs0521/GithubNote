@@ -33,10 +33,6 @@ struct GithubImage: APIModelable, Identifiable, Hashable, Equatable {
         return lhs.path == rhs.path
     }
     
-    public func defultModel () -> Void {
-        
-    }
-    
     enum CodingKeys: String, CodingKey {
         case name, path, sha, size, url
         case htmlURL = "html_url"

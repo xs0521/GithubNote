@@ -196,13 +196,13 @@ struct NoteSidebarView: View {
         let title = AppConst.issueMarkdown
         let body = AppConst.issueBodyMarkdown
         Networking<Issue>().request(API.newIssue(title: title, body: body), writeCache: false, readCache: false, completionListHandler: nil) { data, cache in
-            guard let _ = data else {
+            guard let issue = data else {
                 isNewIssueSending = false
                 return
             }
-            issueSyncCallBack({
-                isNewIssueSending = false
-            })
+            issueGroups.insert(issue, at: 0)
+            selectionIssue = issue
+            isNewIssueSending = false
         }
     }
     
