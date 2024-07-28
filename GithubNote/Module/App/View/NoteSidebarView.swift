@@ -76,6 +76,7 @@ struct NoteSidebarView: View {
                                 .contextMenu {
                                     Button("Delete", role: .destructive) {
                                         "delete \(selection.body?.toTitle() ?? "")".p()
+                                        deleteComment(selection)
                                     }
                                 }
                             }
@@ -129,6 +130,7 @@ struct NoteSidebarView: View {
                                 .contextMenu {
                                     Button("Delete", role: .destructive) {
                                         "delete \(selection.title ?? "")".p()
+                                        closeIssue(selection)
                                     }
                                 }
                             }
@@ -178,7 +180,7 @@ struct NoteSidebarView: View {
     
     func commentsData(_ cache: Bool = true, _ complete: @escaping () -> Void) -> Void {
         guard let number = selectionIssue?.number else { return }
-        Networking<Comment>().request(API.comments(issueId: number), readCache: cache, parseHandler: ModelGenerator(convertFromSnakeCase: true)) { (data, _) in
+        Networking<Comment>().request(API.comments(issueId: number), readCache: cache, parseHandler: ModelGenerator(snakeCase: true)) { (data, _, _) in
             guard let list = data, !list.isEmpty else {
                 commentGroups.removeAll()
                 return
@@ -195,7 +197,7 @@ struct NoteSidebarView: View {
         isNewIssueSending = true
         let title = AppConst.issueMarkdown
         let body = AppConst.issueBodyMarkdown
-        Networking<Issue>().request(API.newIssue(title: title, body: body), writeCache: false, readCache: false, completionListHandler: nil) { data, cache in
+        Networking<Issue>().request(API.newIssue(title: title, body: body), writeCache: false, readCache: false, completionListHandler: nil) { data, cache, _ in
             guard let issue = data else {
                 isNewIssueSending = false
                 return
@@ -206,11 +208,21 @@ struct NoteSidebarView: View {
         }
     }
     
+    func closeIssue(_ issue: Issue) -> Void {
+        guard let issueId = issue.number, let title = issue.title, let body = issue.body, let repoName = selectionRepo?.name else { return }
+        Networking<Issue>().request(API.updateIssue(issueId: issueId, state: .closed, title: title, body: body), writeCache: false, readCache: false, completionListHandler: nil) { data, cache, _ in
+            if data != nil {
+                issueGroups.removeAll(where: {$0.number == issueId})
+                CacheManager.shared.updateIssues(issueGroups, repoName: repoName)
+            }
+        }
+    }
+    
     func createComment(_ issue: Issue?) -> Void {
         guard let issueId = issue?.number else { return }
         let body = AppConst.markdown
         isNewCommentSending = true
-        Networking<Comment>().request(API.newComment(issueId: issueId, body: body), writeCache: false, readCache: false, completionListHandler: nil) { comment, cache in
+        Networking<Comment>().request(API.newComment(issueId: issueId, body: body), writeCache: false, readCache: false, completionListHandler: nil) { comment, cache, _ in
             guard let comment = comment else {
                 isNewCommentSending = false
                 return
@@ -222,6 +234,17 @@ struct NoteSidebarView: View {
                     isNewCommentSending = false
                 })
             }
+        }
+    }
+    
+    func deleteComment(_ comment: Comment) -> Void {
+        guard let commentId = comment.id, let issueId = selectionIssue?.number else { return }
+        Networking<Comment>().request(API.deleteComment(commentId: commentId), completionListHandler: nil) { data, cache, code in
+            if MessageCode.finish.rawValue != code {
+                return
+            }
+            commentGroups.removeAll(where: {$0.id == commentId})
+            CacheManager.shared.updateComments(commentGroups, issueId: issueId)
         }
     }
 }

@@ -11,11 +11,13 @@ import Moya
 enum API {
     
     case repos
-    case repoIssue(repoName: String)
+    case repoIssues(repoName: String)
     case comments(issueId: Int)
     case newComment(issueId: Int, body: String)
     case updateComment(commentId: Int, body: String)
+    case deleteComment(commentId: Int)
     case newIssue(title: String, body: String)
+    case updateIssue(issueId: Int, state: IssueState, title: String, body: String)
     case repoImages
     
     
@@ -41,6 +43,15 @@ enum API {
         }
         return nil
     }
+    
+    var onlyValidationCode: Bool {
+        switch self {
+        case .deleteComment:
+            return true
+        default: break
+        }
+        return false
+    }
 }
 
 extension API: TargetType {
@@ -53,14 +64,18 @@ extension API: TargetType {
         switch self {
         case .repos:
             return "/user/repos"
-        case .repoIssue(let repoName):
+        case .repoIssues(let repoName):
             return "/repos/\(owner)/\(repoName)/issues"
         case .comments(let issueId), .newComment(let issueId, _):
             return "/repos/\(owner)/\(selectRepo)/issues/\(issueId)/comments"
         case .updateComment(let commentId, _):
             return "/repos/\(owner)/\(selectRepo)/issues/comments/\(commentId)"
+        case .deleteComment(let commentId):
+            return "/repos/\(owner)/\(selectRepo)/issues/comments/\(commentId)"
         case .newIssue:
             return "/repos/\(owner)/\(selectRepo)/issues"
+        case .updateIssue(let issueId, _, _, _):
+            return "/repos/\(owner)/\(selectRepo)/issues/\(issueId)"
         case .repoImages:
             return "/repos/\(owner)/\(selectRepo)/contents/images"
         }
@@ -70,6 +85,10 @@ extension API: TargetType {
         switch self {
         case .newComment, .newIssue, .updateComment:
             return .post
+        case .updateIssue:
+            return .patch
+        case .deleteComment:
+            return .delete
         default:
             return .get
         }
@@ -78,8 +97,10 @@ extension API: TargetType {
     var headers: [String : String]? {
         var params = [String : String]()
         params["Authorization"] = "token \(accessToken)"
-        if case .newIssue = self {
+        switch self {
+        case .newIssue, .deleteComment:
             params["Accept"] = "application/vnd.github.v3+json"
+        default: break
         }
         return params
     }
@@ -94,10 +115,13 @@ extension API: TargetType {
             parameters["body"] = body
         case .updateComment(_, let body):
             parameters["body"] = body
+        case .updateIssue(_, let state, let title, let body):
+            parameters["state"] = state.rawValue
+            parameters["title"] = title
+            parameters["body"] = body
         default: break
         }
-        let encoding: ParameterEncoding = method == .post ? JSONEncoding.default : URLEncoding.default
+        let encoding: ParameterEncoding = method == .get ? URLEncoding.default : JSONEncoding.default
         return .requestParameters(parameters: parameters, encoding: encoding)
     }
-    
 }

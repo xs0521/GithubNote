@@ -11,8 +11,8 @@ import Moya
 
 class Networking<T> where T: APIModelable {
     
-    typealias CompletionModelClosure = (_ data: T?, _ cache: Bool) -> Void
-    typealias CompletionListClosure = (_ data: [T]?, _ cache: Bool) -> Void
+    typealias CompletionModelClosure = (_ data: T?, _ cache: Bool, _ code: Int) -> Void
+    typealias CompletionListClosure = (_ data: [T]?, _ cache: Bool, _ code: Int) -> Void
     typealias ErrorClosure = (NetworkError) -> ()
     typealias HandleJSONClosure = ModelGenerator<T>
     
@@ -47,9 +47,10 @@ class Networking<T> where T: APIModelable {
         let cancellable = provider.request(type, callbackQueue: DispatchQueue.global(), progress: progress) { response in
             switch response {
             case .success(let resp):
-                self.handleData(type, parseHandler: parseHandler, data: resp.data, completionListHandler: completionListHandler, completionModelHandler: completionModelHandler)
-            case .failure:
-                error?(NetworkError.exception(message: "Server error"))
+                self.handleData(type, parseHandler: parseHandler, respone: resp, data: resp.data, completionListHandler: completionListHandler, completionModelHandler: completionModelHandler)
+            case .failure(let error):
+                completionModelHandler?(nil, false, error.errorCode)
+                completionListHandler?(nil, false, error.errorCode)
             }
         }
         return cancellable
@@ -96,6 +97,7 @@ extension Networking {
     
     private func handleData<R: TargetType>(_ type: R,
                                            parseHandler: HandleJSONClosure?,
+                                           respone: Response? = nil,
                                            data: Data,
                                            isCache: Bool = false,
                                            completionListHandler: CompletionListClosure?,
@@ -108,19 +110,25 @@ extension Networking {
         
         switch type.task{
         case .uploadMultipart, .requestParameters:
+            
+            if let api = type as? API, api.onlyValidationCode, let respone = respone {
+                completionModelHandler?(nil, isCache, respone.statusCode)
+                return
+            }
+            
             do {
                 let json = try JSONSerialization.jsonObject(with: data, options: [])
                 if let list = json as? [[String: Any]] {
                    let modelList = list.compactMap({parseHandler?.handle($0)})
                     DispatchQueue.main.async {
-                        completionListHandler?(modelList, isCache)
+                        completionListHandler?(modelList, isCache, 0)
                     }
                     
                 }
                 if let json = json as? [String: Any] {
                    let model = parseHandler?.handle(json)
                     DispatchQueue.main.async {
-                        completionModelHandler?(model, isCache)
+                        completionModelHandler?(model, isCache, 0)
                     }
                 }
             } catch {

@@ -7,6 +7,11 @@
 
 import Foundation
 
+enum IssueState: String, Codable {
+    case open = "open"
+    case closed = "closed"
+}
+
 struct Issue: APIModelable, Identifiable, Hashable, Equatable {
     
     var uuid: String?
@@ -32,7 +37,7 @@ struct Issue: APIModelable, Identifiable, Hashable, Equatable {
     let number: Int?
     let title: String?
     let user: User?
-    let state: String?
+    let state: IssueState?
     let locked: Bool?
     let comments: Int?
     let createdAt, updatedAt: String?
@@ -42,7 +47,7 @@ struct Issue: APIModelable, Identifiable, Hashable, Equatable {
     let timelineUrl: String?
     var commentList: [Comment]?
     
-    init(url: String? = nil, repositoryUrl: String? = nil, labelsUrl: String? = nil, commentsUrl: String? = nil, eventsUrl: String? = nil, htmlUrl: String? = nil, id: Int? = nil, nodeid: String? = nil, number: Int? = nil, title: String? = nil, user: User? = nil, state: String? = nil, locked: Bool? = nil, comments: Int? = nil, createdAt: String? = nil, updatedAt: String? = nil, authorAssociation: String? = nil, body: String? = nil, reactions: Reactions? = nil, timelineUrl: String? = nil, commentList: [Comment]? = nil) {
+    init(url: String? = nil, repositoryUrl: String? = nil, labelsUrl: String? = nil, commentsUrl: String? = nil, eventsUrl: String? = nil, htmlUrl: String? = nil, id: Int? = nil, nodeid: String? = nil, number: Int? = nil, title: String? = nil, user: User? = nil, state: IssueState? = nil, locked: Bool? = nil, comments: Int? = nil, createdAt: String? = nil, updatedAt: String? = nil, authorAssociation: String? = nil, body: String? = nil, reactions: Reactions? = nil, timelineUrl: String? = nil, commentList: [Comment]? = nil) {
         // 在初始化方法中设置属性的初始值
         self.url = url
         self.repositoryUrl = repositoryUrl
@@ -66,5 +71,9 @@ struct Issue: APIModelable, Identifiable, Hashable, Equatable {
         self.timelineUrl = timelineUrl
         self.commentList = commentList
         self.uuid = UUID().uuidString
+    }
+    
+    func filter() -> Bool {
+        return state == .open
     }
 }

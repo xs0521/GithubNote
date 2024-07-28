@@ -12,3 +12,8 @@ public enum NetworkError: Error  {
     case dict(message: String)
     case exception(message: String)
 }
+
+public enum MessageCode: Int  {
+    case success = 200
+    case finish = 204
+}

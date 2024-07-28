@@ -63,7 +63,7 @@ struct NoteContentView: View {
     }
     
     private func requestRepo(_ readCache: Bool = true, _ completion: @escaping CommonCallBack) -> Void {
-        Networking<RepoModel>().request(API.repos, readCache: readCache, parseHandler: ModelGenerator(convertFromSnakeCase: true)) { (data, _) in
+        Networking<RepoModel>().request(API.repos, readCache: readCache, parseHandler: ModelGenerator(snakeCase: true)) { (data, _, _) in
             guard let list = data, !list.isEmpty else {
                 allRepo.removeAll()
                 return
@@ -82,8 +82,8 @@ struct NoteContentView: View {
     
     private func requestIssue(_ readCache: Bool = true, _ completion: @escaping CommonCallBack) -> Void {
         guard let repoName = selectionRepo?.name else { return }
-        Networking<Issue>().request(API.repoIssue(repoName: repoName), readCache: readCache,
-                                    parseHandler: ModelGenerator(convertFromSnakeCase: true)) { (data, _) in
+        Networking<Issue>().request(API.repoIssues(repoName: repoName), readCache: readCache,
+                                    parseHandler: ModelGenerator(snakeCase: true, filter: true)) { (data, _, _) in
             guard let list = data, !list.isEmpty else {
                 allIssue.removeAll()
                 return

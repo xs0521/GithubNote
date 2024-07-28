@@ -117,7 +117,7 @@ struct NoteWritePannelView: View {
         guard let body = markdownString, let commentid = comment?.id else { return }
         uploadState = .sending
         
-        Networking<Comment>().request(API.updateComment(commentId: commentid, body: body), writeCache: false, readCache: false, completionListHandler: nil) { data, cache in
+        Networking<Comment>().request(API.updateComment(commentId: commentid, body: body), writeCache: false, readCache: false, completionListHandler: nil) { data, cache, _ in
             
             guard let comment = data else {
                 uploadState = .fail
@@ -144,7 +144,7 @@ struct NoteWritePannelView: View {
         self.comment = comment
         
         guard let issueId = issue?.number else { return }
-        CacheManager.shared.updateCommentsCacheData(commentGroups, issueId: issueId)
+        CacheManager.shared.updateComments(commentGroups, issueId: issueId)
     }
     
     private var theme: Splash.Theme {

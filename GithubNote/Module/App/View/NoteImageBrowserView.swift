@@ -32,7 +32,7 @@ struct NoteImageBrowserView: View {
     
     func requestImagesData() -> Void {
 
-        Networking<GithubImage>().request(API.repoImages, writeCache: false, readCache: false) { data, cache in
+        Networking<GithubImage>().request(API.repoImages, writeCache: false, readCache: false) { data, cache, _ in
             guard let list = data else {
                 return
             }

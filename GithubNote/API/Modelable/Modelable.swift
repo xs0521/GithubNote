@@ -11,15 +11,21 @@ protocol APIModelable: Codable {
     var uuid: String? { get set }
     mutating func defultModel() -> Void
     func data() -> Data?
+    func filter() -> Bool
 }
 
 extension APIModelable {
+    
     mutating func defultModel() -> Void {
         self.uuid = UUID().uuidString
     }
     
     func data() -> Data? {
         return ModelGenerator().toData(self)
+    }
+    
+    func filter() -> Bool {
+        false
     }
 }
 
@@ -51,17 +57,23 @@ extension Modelable {
 //}
 
 struct ModelGenerator<T: APIModelable>: Modelable {
-    var convertFromSnakeCase: Bool = false
+    var snakeCase: Bool = false
+    var filter: Bool = false
     typealias AbstractType = T
     func handle(_ data: [String: Any]) -> T? {
         let decoder = JSONDecoder()
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
-            if convertFromSnakeCase {
+            if snakeCase {
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
             }
             var value = try decoder.decode(T.self, from: jsonData)
             value.defultModel()
+            if filter {
+                if !value.filter() {
+                   return nil
+                }
+            }
             return value
         } catch {
             print(String(describing: error)) // <- ✅ Use this for debuging!
