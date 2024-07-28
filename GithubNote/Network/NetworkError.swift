@@ -15,5 +15,7 @@ public enum NetworkError: Error  {
 
 public enum MessageCode: Int  {
     case success = 200
+    case createSuccess = 201
     case finish = 204
+    case notFound = 404
 }

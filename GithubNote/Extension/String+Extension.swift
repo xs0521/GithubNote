@@ -49,6 +49,13 @@ extension String {
         let base64String = data.base64EncodedString()
         return base64String
     }
-    
 }
 
+
+extension String {
+    
+    func isImage() -> Bool {
+        guard let suffix = self.split(separator: ".").last?.lowercased() else { return false }
+        return ["jpeg","jpg", "png", "tiff", "gif", "webp", "heic"].contains(suffix)
+    }
+}

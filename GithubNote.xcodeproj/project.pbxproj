@@ -338,6 +338,7 @@
 		B1D7CF552BCA121900362C35 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				B1FE67532C480B0200970DA0 /* NoteImageBrowserView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -389,7 +390,6 @@
 			isa = PBXGroup;
 			children = (
 				B10930FA2C3D848A006B5DB0 /* NoteContentView.swift */,
-				B1FE67532C480B0200970DA0 /* NoteImageBrowserView.swift */,
 				B10930FC2C3D85C5006B5DB0 /* NoteSidebarView.swift */,
 				B10930FE2C3D8748006B5DB0 /* NoteTaskListView.swift */,
 				B10931002C3D8784006B5DB0 /* NoteTaskView.swift */,

@@ -22,7 +22,7 @@ struct NoteContentView: View {
     @State private var searchTerm: String = ""
     
     @State private var markdownString: String? = ""
-    @State private var importing: Bool? = false
+    @State private var showImageBrowser: Bool? = false
     
     var body: some View {
         ZStack {
@@ -34,7 +34,7 @@ struct NoteContentView: View {
                                 selectionIssue: $selectionIssue,
                                 commentGroups: $allComment,
                                 selectionComment: $selectionComment, 
-                                importing: $importing, 
+                                showImageBrowser: $showImageBrowser,
                                 issueSyncCallBack: { callBack in
                     requestIssue(false, callBack)
                 })
@@ -43,7 +43,7 @@ struct NoteContentView: View {
                 NoteWritePannelView(commentGroups: $allComment,
                                           comment: $selectionComment,
                                             issue: $selectionIssue,
-                                        importing: $importing)
+                                        importing: $showImageBrowser)
                 .background(Color.white)
             }
             .onAppear(perform: {
@@ -52,15 +52,17 @@ struct NoteContentView: View {
             .onChange(of: selectionRepo) { oldValue, newValue in
                 if oldValue != newValue {
                     guard let repoName = newValue?.name else { return }
-                    UserDefaults.save(value: repoName, key: AccountType.repo.key)
                     requestIssue {}
                 }
             }
-            if importing! {
-                NoteImageBrowserView(showImageBrowser: $importing)
+            if showImageBrowser! {
+                NoteImageBrowserView(showImageBrowser: $showImageBrowser)
             }
         }
     }
+}
+
+extension NoteContentView {
     
     private func requestRepo(_ readCache: Bool = true, _ completion: @escaping CommonCallBack) -> Void {
         Networking<RepoModel>().request(API.repos, readCache: readCache, parseHandler: ModelGenerator(snakeCase: true)) { (data, _, _) in

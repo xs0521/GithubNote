@@ -12,6 +12,8 @@ import Splash
 
 struct NoteWritePannelView: View {
     
+    private let formatter = DateFormatter()
+    
     @Environment(\.colorScheme) private var colorScheme
     
     @Binding var commentGroups: [Comment]
@@ -78,8 +80,10 @@ struct NoteWritePannelView: View {
                             allowedContentTypes: [.image]
                         ) { result in
                             switch result {
-                            case .success(let file):
-                                print(file.absoluteString)
+                            case .success(let url):
+                                _ = url.startAccessingSecurityScopedResource()
+                                uploadImage(filePath: url)
+                                print(url.absoluteString)
                             case .failure(let error):
                                 print(error.localizedDescription)
                             }
@@ -117,9 +121,9 @@ struct NoteWritePannelView: View {
         guard let body = markdownString, let commentid = comment?.id else { return }
         uploadState = .sending
         
-        Networking<Comment>().request(API.updateComment(commentId: commentid, body: body), writeCache: false, readCache: false, completionListHandler: nil) { data, cache, _ in
+        Networking<Comment>().request(API.updateComment(commentId: commentid, body: body), writeCache: false, readCache: false) { data, cache, _ in
             
-            guard let comment = data else {
+            guard let comment = data?.first else {
                 uploadState = .fail
                 normal()
                 return
@@ -145,6 +149,26 @@ struct NoteWritePannelView: View {
         
         guard let issueId = issue?.number else { return }
         CacheManager.shared.updateComments(commentGroups, issueId: issueId)
+    }
+    
+    private func uploadImage(filePath: URL) -> Void {
+        DispatchQueue.global().async(execute: {
+            let data = try? Data(contentsOf: filePath)
+            guard let data = data, !data.isEmpty else { return }
+            let imageBase64 = data.base64EncodedString()
+            
+            let now = Date()
+            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            let dateString = formatter.string(from: now)
+            let pathExtension = filePath.pathExtension
+            let fileName = dateString + ".\(pathExtension)"
+            Networking<PushCommitModel>().request(API.updateImage(imageBase64: imageBase64, fileName: fileName)) { data, cache, code in
+                if code != MessageCode.createSuccess.rawValue {
+                    return
+                }
+                print("upload success \(fileName)")
+            }
+        })
     }
     
     private var theme: Splash.Theme {

@@ -18,7 +18,9 @@ enum API {
     case deleteComment(commentId: Int)
     case newIssue(title: String, body: String)
     case updateIssue(issueId: Int, state: IssueState, title: String, body: String)
+    case createImagesDirectory
     case repoImages
+    case updateImage(imageBase64: String, fileName: String)
     
     
     var owner: String { Account.owner }
@@ -42,15 +44,6 @@ enum API {
             print(error)
         }
         return nil
-    }
-    
-    var onlyValidationCode: Bool {
-        switch self {
-        case .deleteComment:
-            return true
-        default: break
-        }
-        return false
     }
 }
 
@@ -76,8 +69,12 @@ extension API: TargetType {
             return "/repos/\(owner)/\(selectRepo)/issues"
         case .updateIssue(let issueId, _, _, _):
             return "/repos/\(owner)/\(selectRepo)/issues/\(issueId)"
+        case .createImagesDirectory:
+            return "repos/\(owner)/\(selectRepo)/contents/images/images.txt"
         case .repoImages:
             return "/repos/\(owner)/\(selectRepo)/contents/images"
+        case .updateImage(_, let fileName):
+            return "repos/\(owner)/\(selectRepo)/contents/images/\(fileName)"
         }
     }
     
@@ -89,6 +86,8 @@ extension API: TargetType {
             return .patch
         case .deleteComment:
             return .delete
+        case .createImagesDirectory, .updateImage:
+            return .put
         default:
             return .get
         }
@@ -98,7 +97,7 @@ extension API: TargetType {
         var params = [String : String]()
         params["Authorization"] = "token \(accessToken)"
         switch self {
-        case .newIssue, .deleteComment:
+        case .newIssue, .deleteComment, .updateImage:
             params["Accept"] = "application/vnd.github.v3+json"
         default: break
         }
@@ -119,6 +118,14 @@ extension API: TargetType {
             parameters["state"] = state.rawValue
             parameters["title"] = title
             parameters["body"] = body
+        case .createImagesDirectory:
+            parameters["message"] = "Create new directory"
+            parameters["content"] = "Q3JlYXRlIGEgbmV3IGRpcmVjdG9yeQ=="
+            parameters["branch"] = "main"
+        case .updateImage(let imageBase64, let fileName):
+            parameters["message"] = "upload image \(fileName)"
+            parameters["content"] = imageBase64
+            parameters["branch"] = "main"
         default: break
         }
         let encoding: ParameterEncoding = method == .get ? URLEncoding.default : JSONEncoding.default

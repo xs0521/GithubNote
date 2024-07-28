@@ -11,8 +11,7 @@ import Moya
 
 class Networking<T> where T: APIModelable {
     
-    typealias CompletionModelClosure = (_ data: T?, _ cache: Bool, _ code: Int) -> Void
-    typealias CompletionListClosure = (_ data: [T]?, _ cache: Bool, _ code: Int) -> Void
+    typealias CompletionModelClosure = (_ data: [T]?, _ cache: Bool, _ code: Int) -> Void
     typealias ErrorClosure = (NetworkError) -> ()
     typealias HandleJSONClosure = ModelGenerator<T>
     
@@ -21,10 +20,9 @@ class Networking<T> where T: APIModelable {
                                 writeCache: Bool = true,
                                 readCache: Bool = true,
                                 parseHandler: HandleJSONClosure? = nil,
-                                completionListHandler: CompletionListClosure? = nil,
                                 completionModelHandler: CompletionModelClosure? = nil,
                                 error: ErrorClosure? = nil) -> Cancellable? {
-        execute(type, writeCache: writeCache, readCache: readCache, parseHandler: parseHandler, progress: nil, completionListHandler: completionListHandler, completionModelHandler: completionModelHandler, error: error)
+        execute(type, writeCache: writeCache, readCache: readCache, parseHandler: parseHandler, progress: nil, completionModelHandler: completionModelHandler, error: error)
     }
     
     private func execute<R: TargetType>(_ type: R,
@@ -32,14 +30,13 @@ class Networking<T> where T: APIModelable {
                                         readCache: Bool = true,
                                         parseHandler: HandleJSONClosure?,
                                         progress: ProgressBlock? = nil,
-                                        completionListHandler: CompletionListClosure?,
                                         completionModelHandler: CompletionModelClosure?,
                                         error: ErrorClosure? = nil) -> Cancellable? {
         
         let provider = provider(type, writeCache: writeCache)
         if readCache {
             if let api = type as? API, let cacheData = api.cacheData {
-                self.handleData(type, parseHandler: parseHandler, data: cacheData, isCache: true, completionListHandler: completionListHandler, completionModelHandler: completionModelHandler)
+                self.handleData(type, parseHandler: parseHandler, data: cacheData, isCache: true, completionModelHandler: completionModelHandler)
                 return nil
             }
         }
@@ -47,10 +44,9 @@ class Networking<T> where T: APIModelable {
         let cancellable = provider.request(type, callbackQueue: DispatchQueue.global(), progress: progress) { response in
             switch response {
             case .success(let resp):
-                self.handleData(type, parseHandler: parseHandler, respone: resp, data: resp.data, completionListHandler: completionListHandler, completionModelHandler: completionModelHandler)
+                self.handleData(type, parseHandler: parseHandler, respone: resp, data: resp.data, completionModelHandler: completionModelHandler)
             case .failure(let error):
                 completionModelHandler?(nil, false, error.errorCode)
-                completionListHandler?(nil, false, error.errorCode)
             }
         }
         return cancellable
@@ -100,36 +96,36 @@ extension Networking {
                                            respone: Response? = nil,
                                            data: Data,
                                            isCache: Bool = false,
-                                           completionListHandler: CompletionListClosure?,
                                            completionModelHandler: CompletionModelClosure?) -> Void {
         
-        var parseHandler = parseHandler
-        if parseHandler == nil {
-            parseHandler = ModelGenerator()
+        let parseHandler = parseHandler ?? ModelGenerator()
+        let code = (respone != nil) ? respone!.statusCode : MessageCode.success.rawValue
+        
+        func callBack(_ data: [T]?, _ cache: Bool, _ code: Int) -> Void {
+            DispatchQueue.main.async {
+                completionModelHandler?(data, isCache, code)
+            }
         }
         
         switch type.task{
         case .uploadMultipart, .requestParameters:
-            
-            if let api = type as? API, api.onlyValidationCode, let respone = respone {
-                completionModelHandler?(nil, isCache, respone.statusCode)
-                return
-            }
-            
             do {
+                if data.isEmpty {
+                    callBack(nil, isCache, code)
+                    return
+                }
                 let json = try JSONSerialization.jsonObject(with: data, options: [])
                 if let list = json as? [[String: Any]] {
-                   let modelList = list.compactMap({parseHandler?.handle($0)})
-                    DispatchQueue.main.async {
-                        completionListHandler?(modelList, isCache, 0)
+                    let modelList = list.compactMap({parseHandler.handle($0)})
+                    callBack(modelList, isCache, code)
+                } else if let json = json as? [String: Any] {
+                    if let model = parseHandler.handle(json) {
+                        callBack([model], isCache, code)
+                    } else {
+                        callBack(nil, isCache, code)
                     }
-                    
-                }
-                if let json = json as? [String: Any] {
-                   let model = parseHandler?.handle(json)
-                    DispatchQueue.main.async {
-                        completionModelHandler?(model, isCache, 0)
-                    }
+                } else {
+                    callBack(nil, isCache, code)
                 }
             } catch {
 #if Debug

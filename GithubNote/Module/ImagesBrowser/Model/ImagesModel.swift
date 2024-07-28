@@ -14,8 +14,7 @@ class ImagesModel {
 
 struct GithubImage: APIModelable, Identifiable, Hashable, Equatable {
     
-    var id = UUID().uuidString
-    
+    var id: String?
     var uuid: String?
     
     let name, path, sha: String
@@ -25,12 +24,26 @@ struct GithubImage: APIModelable, Identifiable, Hashable, Equatable {
     let downloadURL: String
     let type: String
     
+    public var identifier: String {
+        return "\(url)-\(uuid ?? "")"
+    }
+    
     public func hash(into hasher: inout Hasher) {
-        return hasher.combine(id)
+        return hasher.combine(uuid)
     }
     
     public static func == (lhs: GithubImage, rhs: GithubImage) -> Bool {
-        return lhs.path == rhs.path
+        return lhs.identifier == rhs.identifier
+    }
+    
+    public func imageUrl() -> String {
+        if let url = URL(string: downloadURL) {
+            if var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false) {
+                urlComponents.query = nil
+                return urlComponents.url?.absoluteString ?? ""
+            }
+        }
+        return ""
     }
     
     enum CodingKeys: String, CodingKey {

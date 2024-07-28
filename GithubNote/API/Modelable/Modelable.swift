@@ -44,18 +44,6 @@ extension Modelable {
     }
 }
 
-//struct AnyModelable<T>: Modelable {
-//    private let _handle: (_ data: [String: Any]) -> T?
-//    
-//    init<G: Modelable>(_ gen: G) where G.AbstractType == T {
-//        _handle = gen.handle
-//    }
-//    
-//    func handle(_ data: [String: Any]) -> T? {
-//        return _handle(data)
-//    }
-//}
-
 struct ModelGenerator<T: APIModelable>: Modelable {
     var snakeCase: Bool = false
     var filter: Bool = false

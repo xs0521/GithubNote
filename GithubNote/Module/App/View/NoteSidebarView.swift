@@ -21,9 +21,9 @@ struct NoteSidebarView: View {
     @Binding var commentGroups: [Comment]
     @Binding var selectionComment: Comment?
     
-    @Binding var importing: Bool?
+    @Binding var showImageBrowser: Bool?
     
-    @State var showRepos: Bool = false
+    @State var showReposView: Bool = false
     @State var isNewIssueSending: Bool = false
     @State var isNewCommentSending: Bool = false
     
@@ -139,7 +139,7 @@ struct NoteSidebarView: View {
                 }
                 .frame(maxHeight: 200)
             }
-            if showRepos {
+            if showReposView {
                 List(selection: $selectionRepo) {
                     ForEach(reposGroups) { selection in
                         Label(title: {
@@ -155,20 +155,33 @@ struct NoteSidebarView: View {
             }
         }
         .safeAreaInset(edge: .bottom) {
-            Button(action: {
-                showRepos = !showRepos
-            }, label: {
-                Label("Repos", systemImage: "chevron.right")
-                    .foregroundStyle(Color.primary)
-            })
-            .buttonStyle(.borderless)
-            .foregroundColor(.accentColor)
-            .padding()
-            .frame(maxWidth: .infinity, alignment: .leading)
+            HStack {
+                Button(action: {
+                    showReposView = !showReposView
+                }, label: {
+                    Label("Repos", systemImage: "chevron.right")
+                        .foregroundStyle(Color.primary)
+                })
+                .buttonStyle(.borderless)
+                .foregroundColor(.accentColor)
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                
+                Button(action: {
+                    showImageBrowser?.toggle()
+                }, label: {
+                    Image(systemName: "photo.on.rectangle.angled")
+                })
+                .buttonStyle(.plain)
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .trailing)
+            }
         }
         .onChange(of: selectionRepo) { oldValue, newValue in
             if oldValue != newValue {
-                showRepos = false
+                guard let repoName = newValue?.name else { return }
+                UserDefaults.save(value: repoName, key: AccountType.repo.key)
+                showReposView = false
             }
         }
         .onChange(of: selectionIssue) { oldValue, newValue in
@@ -178,7 +191,12 @@ struct NoteSidebarView: View {
         }
     }
     
-    func commentsData(_ cache: Bool = true, _ complete: @escaping () -> Void) -> Void {
+    
+}
+
+extension NoteSidebarView {
+    
+    private func commentsData(_ cache: Bool = true, _ complete: @escaping () -> Void) -> Void {
         guard let number = selectionIssue?.number else { return }
         Networking<Comment>().request(API.comments(issueId: number), readCache: cache, parseHandler: ModelGenerator(snakeCase: true)) { (data, _, _) in
             guard let list = data, !list.isEmpty else {
@@ -193,12 +211,12 @@ struct NoteSidebarView: View {
         }
     }
     
-    func createIssue() -> Void {
+    private func createIssue() -> Void {
         isNewIssueSending = true
         let title = AppConst.issueMarkdown
         let body = AppConst.issueBodyMarkdown
-        Networking<Issue>().request(API.newIssue(title: title, body: body), writeCache: false, readCache: false, completionListHandler: nil) { data, cache, _ in
-            guard let issue = data else {
+        Networking<Issue>().request(API.newIssue(title: title, body: body), writeCache: false, readCache: false) { data, cache, _ in
+            guard let issue = data?.first else {
                 isNewIssueSending = false
                 return
             }
@@ -208,9 +226,9 @@ struct NoteSidebarView: View {
         }
     }
     
-    func closeIssue(_ issue: Issue) -> Void {
+    private func closeIssue(_ issue: Issue) -> Void {
         guard let issueId = issue.number, let title = issue.title, let body = issue.body, let repoName = selectionRepo?.name else { return }
-        Networking<Issue>().request(API.updateIssue(issueId: issueId, state: .closed, title: title, body: body), writeCache: false, readCache: false, completionListHandler: nil) { data, cache, _ in
+        Networking<Issue>().request(API.updateIssue(issueId: issueId, state: .closed, title: title, body: body), writeCache: false, readCache: false) { data, cache, _ in
             if data != nil {
                 issueGroups.removeAll(where: {$0.number == issueId})
                 CacheManager.shared.updateIssues(issueGroups, repoName: repoName)
@@ -218,12 +236,12 @@ struct NoteSidebarView: View {
         }
     }
     
-    func createComment(_ issue: Issue?) -> Void {
+    private func createComment(_ issue: Issue?) -> Void {
         guard let issueId = issue?.number else { return }
         let body = AppConst.markdown
         isNewCommentSending = true
-        Networking<Comment>().request(API.newComment(issueId: issueId, body: body), writeCache: false, readCache: false, completionListHandler: nil) { comment, cache, _ in
-            guard let comment = comment else {
+        Networking<Comment>().request(API.newComment(issueId: issueId, body: body), writeCache: false, readCache: false) { data, cache, _ in
+            guard let comment = data?.first else {
                 isNewCommentSending = false
                 return
             }
@@ -237,9 +255,9 @@ struct NoteSidebarView: View {
         }
     }
     
-    func deleteComment(_ comment: Comment) -> Void {
+    private func deleteComment(_ comment: Comment) -> Void {
         guard let commentId = comment.id, let issueId = selectionIssue?.number else { return }
-        Networking<Comment>().request(API.deleteComment(commentId: commentId), completionListHandler: nil) { data, cache, code in
+        Networking<Comment>().request(API.deleteComment(commentId: commentId)) { data, cache, code in
             if MessageCode.finish.rawValue != code {
                 return
             }
