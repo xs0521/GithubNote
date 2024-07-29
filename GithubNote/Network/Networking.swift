@@ -25,6 +25,17 @@ class Networking<T> where T: APIModelable {
         execute(type, writeCache: writeCache, readCache: readCache, parseHandler: parseHandler, progress: nil, completionModelHandler: completionModelHandler, error: error)
     }
     
+    @discardableResult
+    func uploadImage<R: TargetType>(_ type: R,
+                                writeCache: Bool = false,
+                                readCache: Bool = false,
+                                parseHandler: HandleJSONClosure? = nil,
+                                progress: ProgressBlock? = nil,
+                                completionModelHandler: CompletionModelClosure? = nil,
+                                error: ErrorClosure? = nil) -> Cancellable? {
+        execute(type, writeCache: writeCache, readCache: readCache, parseHandler: parseHandler, progress: progress, completionModelHandler: completionModelHandler, error: error)
+    }
+    
     private func execute<R: TargetType>(_ type: R,
                                         writeCache: Bool = true,
                                         readCache: Bool = true,

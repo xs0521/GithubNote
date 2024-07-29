@@ -36,4 +36,11 @@ class CacheManager {
         guard let path = API.repoIssues(repoName: repoName).cachePath else { return }
         try? CacheManager.shared.store.setObject(jsonData, forKey: path)
     }
+    
+    func updateImages(_ list: [GithubImage], repoName: String) -> Void {
+        let data = list.compactMap({$0.data()}).compactMap({$0.anyObj()})
+        let jsonData = try? JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
+        guard let path = API.repoImages.cachePath else { return }
+        try? CacheManager.shared.store.setObject(jsonData, forKey: path)
+    }
 }

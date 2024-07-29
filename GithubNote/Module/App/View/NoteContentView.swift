@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AlertToast
 
 struct NoteContentView: View {
     
@@ -23,6 +24,16 @@ struct NoteContentView: View {
     
     @State private var markdownString: String? = ""
     @State private var showImageBrowser: Bool? = false
+    
+    @State private var progressValue: Double = 0.0
+    
+    @State private var showLoading: Bool = false
+    
+    @State private var showToast: Bool = false
+    @State private var toastMessage: String = ""
+    
+    @State private var syncImages: Bool = false
+    
     
     var body: some View {
         ZStack {
@@ -43,7 +54,9 @@ struct NoteContentView: View {
                 NoteWritePannelView(commentGroups: $allComment,
                                           comment: $selectionComment,
                                             issue: $selectionIssue,
-                                        importing: $showImageBrowser)
+                                 showImageBrowser: $showImageBrowser,
+                                    progressValue: $progressValue,
+                                    syncImages: $syncImages)
                 .background(Color.white)
             }
             .onAppear(perform: {
@@ -51,13 +64,23 @@ struct NoteContentView: View {
             })
             .onChange(of: selectionRepo) { oldValue, newValue in
                 if oldValue != newValue {
-                    guard let repoName = newValue?.name else { return }
                     requestIssue {}
                 }
             }
-            if showImageBrowser! {
-                NoteImageBrowserView(showImageBrowser: $showImageBrowser)
+            .toast(isPresenting: $showToast, duration: 2.0, tapToDismiss: true){
+                AlertToast(displayMode: .hud, type: .systemImage("party.popper", .primary), title: toastMessage)
             }
+            .toast(isPresenting: $showLoading){
+                AlertToast(type: .loading, title: nil, subTitle: nil)
+            }
+            if showImageBrowser! {
+                NoteImageBrowserView(showImageBrowser: $showImageBrowser, 
+                                     progressValue: $progressValue,
+                                     showToast: $showToast,
+                                     toastMessage: $toastMessage,
+                                     showLoading: $showLoading, syncImages: $syncImages)
+            }
+            
         }
     }
 }

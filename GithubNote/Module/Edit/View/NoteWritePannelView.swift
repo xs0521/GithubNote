@@ -20,7 +20,7 @@ struct NoteWritePannelView: View {
     
     @Binding var comment: Comment?
     @Binding var issue: Issue?
-    @Binding var importing: Bool?
+    @Binding var showImageBrowser: Bool?
     
     @State var isPresented: Bool = false
     
@@ -28,6 +28,11 @@ struct NoteWritePannelView: View {
     @State var editIsShown: Bool = false
     
     @State var uploadState: UploadType = .normal
+    
+    @Binding var progressValue: Double
+    
+    @Binding var syncImages: Bool
+    
     
     var body: some View {
         VStack {
@@ -44,7 +49,7 @@ struct NoteWritePannelView: View {
             .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
             .toolbar {
                 ToolbarItemGroup {
-                    if !(importing ?? false) {
+                    if !(showImageBrowser ?? false) {
                         ZStack {
                             if uploadState == .sending {
                                 ProgressView()
@@ -69,29 +74,35 @@ struct NoteWritePannelView: View {
                         }
                     }
                     Spacer()
-                    if importing! {
-                        Button(action: {
-                            isPresented = true
-                        }, label: {
-                            Image(systemName: "plus")
-                        })
-                        .fileImporter(
-                            isPresented: $isPresented,
-                            allowedContentTypes: [.image]
-                        ) { result in
-                            switch result {
-                            case .success(let url):
-                                _ = url.startAccessingSecurityScopedResource()
-                                uploadImage(filePath: url)
-                                print(url.absoluteString)
-                            case .failure(let error):
-                                print(error.localizedDescription)
+                    if showImageBrowser! {
+                        HStack {
+                            Button(action: {
+                                isPresented = true
+                            }, label: {
+                                Image(systemName: "plus")
+                            })
+                            .fileImporter(
+                                isPresented: $isPresented,
+                                allowedContentTypes: [.image]
+                            ) { result in
+                                switch result {
+                                case .success(let url):
+                                    _ = url.startAccessingSecurityScopedResource()
+                                    uploadImage(filePath: url)
+                                case .failure(let error):
+                                    print(error.localizedDescription)
+                                }
+                            }
+                            Button {
+                                syncImages.toggle()
+                            } label: {
+                                Image(systemName: "arrow.triangle.2.circlepath")
                             }
                         }
                     }
-                    if editIsShown {
+                    if editIsShown && !showImageBrowser! {
                         Button(action: {
-                            importing?.toggle()
+                            showImageBrowser?.toggle()
                         }, label: {
                             Image(systemName: "photo.on.rectangle.angled")
                         })
@@ -162,12 +173,20 @@ struct NoteWritePannelView: View {
             let dateString = formatter.string(from: now)
             let pathExtension = filePath.pathExtension
             let fileName = dateString + ".\(pathExtension)"
-            Networking<PushCommitModel>().request(API.updateImage(imageBase64: imageBase64, fileName: fileName)) { data, cache, code in
+            
+            Networking<PushCommitModel>().uploadImage(API.updateImage(imageBase64: imageBase64, fileName: fileName)) { progress in
+                progressValue = progress.progress
+            } completionModelHandler: { data, cache, code in
                 if code != MessageCode.createSuccess.rawValue {
                     return
                 }
-                print("upload success \(fileName)")
+                
+                guard let item = data?.first else { return }
+                
+//                item.content
+                
             }
+
         })
     }
     

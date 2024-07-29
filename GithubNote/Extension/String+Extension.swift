@@ -56,6 +56,6 @@ extension String {
     
     func isImage() -> Bool {
         guard let suffix = self.split(separator: ".").last?.lowercased() else { return false }
-        return ["jpeg","jpg", "png", "tiff", "gif", "webp", "heic"].contains(suffix)
+        return ["jpeg","jpg", "png", "tiff", "gif", "webp", "heic", "avif"].contains(suffix)
     }
 }

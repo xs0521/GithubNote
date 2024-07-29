@@ -21,6 +21,7 @@ enum API {
     case createImagesDirectory
     case repoImages
     case updateImage(imageBase64: String, fileName: String)
+    case deleteImage(filePath: String, sha: String)
     
     
     var owner: String { Account.owner }
@@ -75,6 +76,8 @@ extension API: TargetType {
             return "/repos/\(owner)/\(selectRepo)/contents/images"
         case .updateImage(_, let fileName):
             return "repos/\(owner)/\(selectRepo)/contents/images/\(fileName)"
+        case .deleteImage(let filePath, _):
+            return "repos/\(owner)/\(selectRepo)/contents/\(filePath)"
         }
     }
     
@@ -84,7 +87,7 @@ extension API: TargetType {
             return .post
         case .updateIssue:
             return .patch
-        case .deleteComment:
+        case .deleteComment, .deleteImage:
             return .delete
         case .createImagesDirectory, .updateImage:
             return .put
@@ -97,7 +100,7 @@ extension API: TargetType {
         var params = [String : String]()
         params["Authorization"] = "token \(accessToken)"
         switch self {
-        case .newIssue, .deleteComment, .updateImage:
+        case .newIssue, .deleteComment, .updateImage, .deleteImage:
             params["Accept"] = "application/vnd.github.v3+json"
         default: break
         }
@@ -125,6 +128,10 @@ extension API: TargetType {
         case .updateImage(let imageBase64, let fileName):
             parameters["message"] = "upload image \(fileName)"
             parameters["content"] = imageBase64
+            parameters["branch"] = "main"
+        case .deleteImage(let filePath, let sha):
+            parameters["message"] = "delete image \(filePath.split(separator: "/").last ?? "")"
+            parameters["sha"] = sha
             parameters["branch"] = "main"
         default: break
         }
