@@ -18,7 +18,6 @@ struct NoteImageBrowserView: View {
     @Binding var showToast: Bool
     @Binding var toastMessage: String
     @Binding var showLoading: Bool
-    @Binding var syncImages: Bool
     
     @State private var showProgress = false
     
@@ -61,9 +60,12 @@ struct NoteImageBrowserView: View {
                 showToast = true
             }
         })
-        .onChange(of: syncImages) { oldValue, newValue in
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name.syncNetImagesNotification), perform: { _ in
             requestImagesData(false, false)
-        }
+        })
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name.syncLocalImagesNotification), perform: { _ in
+            requestImagesData(true, true)
+        })
         .onAppear(perform: {
             progressValue = 0.0
         })

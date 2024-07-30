@@ -26,8 +26,10 @@ struct NoteSidebarView: View {
     @State var showReposView: Bool = false
     @State var isNewIssueSending: Bool = false
     @State var isNewCommentSending: Bool = false
+    @State var isSyncRepos: Bool = false
     
     var issueSyncCallBack: (_ callBack: @escaping CommonCallBack) -> ()
+    var reposSyncCallBack: (_ callBack: @escaping CommonCallBack) -> ()
     
     var body: some View {
         ZStack {
@@ -47,6 +49,7 @@ struct NoteSidebarView: View {
                         if isNewCommentSending {
                             ProgressView()
                                 .controlSize(.mini)
+                                .frame(width: 20, height: 30)
                         } else {
                             Button {
                                 createComment(selectionIssue)
@@ -54,6 +57,7 @@ struct NoteSidebarView: View {
                                 Image(systemName: "plus")
                             }
                             .buttonStyle(.plain)
+                            .frame(width: 20, height: 30)
                         }
                     }
                     .padding(.trailing, 12)
@@ -99,6 +103,7 @@ struct NoteSidebarView: View {
                         if isNewIssueSending {
                             ProgressView()
                                 .controlSize(.mini)
+                                .frame(width: 20, height: 30)
                         } else {
                             Button {
                                 createIssue()
@@ -106,6 +111,7 @@ struct NoteSidebarView: View {
                                 Image(systemName: "plus")
                             }
                             .buttonStyle(.plain)
+                            .frame(width: 20, height: 30)
                         }
                     }
                     .frame(width: 40, height: 40)
@@ -167,14 +173,34 @@ struct NoteSidebarView: View {
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
-                Button(action: {
-                    showImageBrowser?.toggle()
-                }, label: {
-                    Image(systemName: "photo.on.rectangle.angled")
-                })
-                .buttonStyle(.plain)
-                .padding()
-                .frame(maxWidth: .infinity, alignment: .trailing)
+                if showReposView {
+                    if isSyncRepos {
+                        ProgressView()
+                            .controlSize(.mini)
+                            .padding()
+                            .padding(.trailing, 5)
+                    } else {
+                        Button {
+                            isSyncRepos = true
+                            reposSyncCallBack({
+                                isSyncRepos = false
+                            })
+                        } label: {
+                            Image(systemName: "arrow.triangle.2.circlepath")
+                        }
+                        .buttonStyle(.plain)
+                        .padding()
+                    }
+                } else {
+                    Button(action: {
+                        showImageBrowser?.toggle()
+                    }, label: {
+                        Image(systemName: "photo.on.rectangle.angled")
+                    })
+                    .buttonStyle(.plain)
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                }
             }
         }
         .onChange(of: selectionRepo) { oldValue, newValue in

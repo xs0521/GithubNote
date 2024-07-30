@@ -76,12 +76,12 @@ struct PushContent: Codable {
     let downloadURL: String?
     let type: String?
 
-//    enum CodingKeys: String, CodingKey {
-//        case name, path, sha, size, url
-//        case htmlURL
-//        case gitURL
-//        case downloadURL
-//        case type
-//        case links
-//    }
+    enum CodingKeys: String, CodingKey {
+        case name, path, sha, size, url
+        case htmlURL = "html_url"
+        case gitURL = "git_url"
+        case downloadURL = "download_url"
+        case type
+    }
+    
 }

@@ -43,4 +43,27 @@ class CacheManager {
         guard let path = API.repoImages.cachePath else { return }
         try? CacheManager.shared.store.setObject(jsonData, forKey: path)
     }
+    
+    func appendImage(_ image: GithubImage, repoName: String) -> Void {
+        
+        guard let path = API.repoImages.cachePath else { return }
+        let data = try? CacheManager.shared.store.object(forKey: path)
+        
+        var modelList = [GithubImage]()
+        
+        if let data = data {
+            let json = try? JSONSerialization.jsonObject(with: data, options: [])
+            if let list = json as? [[String: Any]] {
+                let generator = ModelGenerator<GithubImage>()
+                let values = list.compactMap({generator.handle($0)})
+                modelList.append(contentsOf: values)
+            }
+        }
+        
+        modelList.append(image)
+        
+        let saveData = modelList.compactMap({$0.data()}).compactMap({$0.anyObj()})
+        let jsonData = try? JSONSerialization.data(withJSONObject: saveData, options: .prettyPrinted)
+        try? CacheManager.shared.store.setObject(jsonData, forKey: path)
+    }
 }

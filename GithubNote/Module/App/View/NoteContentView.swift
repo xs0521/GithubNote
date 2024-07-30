@@ -32,8 +32,6 @@ struct NoteContentView: View {
     @State private var showToast: Bool = false
     @State private var toastMessage: String = ""
     
-    @State private var syncImages: Bool = false
-    
     
     var body: some View {
         ZStack {
@@ -46,17 +44,15 @@ struct NoteContentView: View {
                                 commentGroups: $allComment,
                                 selectionComment: $selectionComment, 
                                 showImageBrowser: $showImageBrowser,
-                                issueSyncCallBack: { callBack in
-                    requestIssue(false, callBack)
-                })
+                                issueSyncCallBack: { callBack in requestIssue(false, callBack)},
+                                reposSyncCallBack: { callBack in requestRepo(false, callBack) })
               
             } detail: {
                 NoteWritePannelView(commentGroups: $allComment,
                                           comment: $selectionComment,
                                             issue: $selectionIssue,
                                  showImageBrowser: $showImageBrowser,
-                                    progressValue: $progressValue,
-                                    syncImages: $syncImages)
+                                      showLoading: $showLoading)
                 .background(Color.white)
             }
             .onAppear(perform: {
@@ -78,7 +74,7 @@ struct NoteContentView: View {
                                      progressValue: $progressValue,
                                      showToast: $showToast,
                                      toastMessage: $toastMessage,
-                                     showLoading: $showLoading, syncImages: $syncImages)
+                                     showLoading: $showLoading)
             }
             
         }
@@ -89,6 +85,7 @@ extension NoteContentView {
     
     private func requestRepo(_ readCache: Bool = true, _ completion: @escaping CommonCallBack) -> Void {
         Networking<RepoModel>().request(API.repos, readCache: readCache, parseHandler: ModelGenerator(snakeCase: true)) { (data, _, _) in
+            completion()
             guard let list = data, !list.isEmpty else {
                 allRepo.removeAll()
                 return

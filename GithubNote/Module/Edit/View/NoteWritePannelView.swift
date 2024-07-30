@@ -29,9 +29,7 @@ struct NoteWritePannelView: View {
     
     @State var uploadState: UploadType = .normal
     
-    @Binding var progressValue: Double
-    
-    @Binding var syncImages: Bool
+    @Binding var showLoading: Bool
     
     
     var body: some View {
@@ -50,23 +48,6 @@ struct NoteWritePannelView: View {
             .toolbar {
                 ToolbarItemGroup {
                     if !(showImageBrowser ?? false) {
-                        ZStack {
-                            if uploadState == .sending {
-                                ProgressView()
-                                    .controlSize(.mini)
-                            } else {
-                                Button {
-                                    if uploadState != .normal {
-                                        return
-                                    }
-                                    updateContent()
-                                } label: {
-                                    Label("Show inspector", systemImage: uploadState.imageName)
-                                }
-                                .disabled(!editIsShown)
-                            }
-                        }
-                        .frame(width: 30, height: 40)
                         Button {
                             editIsShown.toggle()
                         } label: {
@@ -94,7 +75,7 @@ struct NoteWritePannelView: View {
                                 }
                             }
                             Button {
-                                syncImages.toggle()
+                                NotificationCenter.default.post(name: NSNotification.Name.syncNetImagesNotification, object: nil)
                             } label: {
                                 Image(systemName: "arrow.triangle.2.circlepath")
                             }
@@ -106,6 +87,23 @@ struct NoteWritePannelView: View {
                         }, label: {
                             Image(systemName: "photo.on.rectangle.angled")
                         })
+                        ZStack {
+                            if uploadState == .sending {
+                                ProgressView()
+                                    .controlSize(.mini)
+                            } else {
+                                Button {
+                                    if uploadState != .normal {
+                                        return
+                                    }
+                                    updateContent()
+                                } label: {
+                                    Label("Show inspector", systemImage: uploadState.imageName)
+                                }
+                                .disabled(!editIsShown)
+                            }
+                        }
+                        .frame(width: 30, height: 40)
                     }
                 }
                
@@ -163,31 +161,50 @@ struct NoteWritePannelView: View {
     }
     
     private func uploadImage(filePath: URL) -> Void {
+        
+        showLoading = true
+        
         DispatchQueue.global().async(execute: {
             let data = try? Data(contentsOf: filePath)
             guard let data = data, !data.isEmpty else { return }
             let imageBase64 = data.base64EncodedString()
-            
-            let now = Date()
-            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            let dateString = formatter.string(from: now)
+
             let pathExtension = filePath.pathExtension
-            let fileName = dateString + ".\(pathExtension)"
+            let fileName = fileName() + ".\(pathExtension)"
             
-            Networking<PushCommitModel>().uploadImage(API.updateImage(imageBase64: imageBase64, fileName: fileName)) { progress in
-                progressValue = progress.progress
+            Networking<PushCommitModel>().uploadImage(API.updateImage(imageBase64: imageBase64, fileName: fileName)) { _ in
             } completionModelHandler: { data, cache, code in
+                
+                showLoading = false
+                
                 if code != MessageCode.createSuccess.rawValue {
                     return
                 }
                 
                 guard let item = data?.first else { return }
                 
-//                item.content
+                let content = item.content
+                let encoder = JSONEncoder()
+                let decoder = JSONDecoder()
                 
+                do {
+                    let data = try encoder.encode(content)
+                    let githubImage = try decoder.decode(GithubImage.self, from: data)
+                    CacheManager.shared.appendImage(githubImage, repoName: Account.repo)
+                } catch let err {
+                    print(err)
+                }
+                
+                NotificationCenter.default.post(name: NSNotification.Name.syncLocalImagesNotification, object: nil)
             }
 
         })
+    }
+    
+    func fileName() -> String {
+        let now = Date()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        return formatter.string(from: now)
     }
     
     private var theme: Splash.Theme {
