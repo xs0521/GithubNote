@@ -35,7 +35,7 @@ struct Issue: APIModelable, Identifiable, Hashable, Equatable {
     let id: Int?
     let nodeid: String?
     let number: Int?
-    let title: String?
+    var title: String?
     let user: User?
     let state: IssueState?
     let locked: Bool?

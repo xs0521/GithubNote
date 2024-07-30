@@ -10,6 +10,10 @@ import AppKit
 
 struct NoteSidebarView: View {
     
+    private enum Field: Int, Hashable {
+        case title
+    }
+    
     @Binding var userCreatedGroups: [RepoModel]
     
     @Binding var reposGroups: [RepoModel]
@@ -27,6 +31,12 @@ struct NoteSidebarView: View {
     @State var isNewIssueSending: Bool = false
     @State var isNewCommentSending: Bool = false
     @State var isSyncRepos: Bool = false
+    
+    @State var editIssue: Issue?
+    @State private var editText: String = ""
+    @State var isEditIssueTitleSending: Bool = false
+    
+    @FocusState private var focusedField: Field?
     
     var issueSyncCallBack: (_ callBack: @escaping CommonCallBack) -> ()
     var reposSyncCallBack: (_ callBack: @escaping CommonCallBack) -> ()
@@ -126,17 +136,53 @@ struct NoteSidebarView: View {
                     } else {
                         List(selection: $selectionIssue) {
                             ForEach(issueGroups) { selection in
-                                Label(title: {
-                                    Text(selection.title ?? "unknow")
-                                }, icon: {
-                                    Image(systemName: "menucard")
-                                        .foregroundStyle(Color.primary)
-                                })
-                                .tag(selection)
-                                .contextMenu {
-                                    Button("Delete", role: .destructive) {
-                                        "delete \(selection.title ?? "")".p()
-                                        closeIssue(selection)
+                                if selection == editIssue {
+                                    HStack {
+                                        Image(systemName: "menucard")
+                                            .foregroundStyle(Color.primary)
+                                            .padding(.leading, 3)
+                                        HStack {
+                                            TextField("", text: $editText)
+                                                .focused($focusedField, equals: .title)
+                                                .frame(height: 18)
+                                                .font(.system(size: 13))
+                                                .padding(EdgeInsets(top: 0, leading: 2, bottom: 0, trailing: 2))
+                                        }
+                                        .background(Color.white)
+                                        .clipShape(RoundedRectangle(cornerRadius: 4))
+                                        if isEditIssueTitleSending {
+                                            ProgressView()
+                                                .controlSize(.mini)
+                                                .frame(width: 20, height: 20)
+                                        } else {
+                                            Button {
+                                                updateIssueTitle(editIssue, editText)
+                                            } label: {
+                                                Image(systemName: "greaterthan.circle")
+                                            }
+                                            .buttonStyle(.plain)
+                                            .frame(width: 20, height: 20)
+                                        }
+                                    }
+                                } else {
+                                    Label(title: {
+                                        Text(selection.title ?? "unknow")
+                                    }, icon: {
+                                        Image(systemName: "menucard")
+                                            .foregroundStyle(Color.primary)
+                                    })
+                                    .tag(selection)
+                                    .contextMenu {
+                                        Button("Delete", role: .destructive) {
+                                            "delete \(selection.title ?? "")".p()
+                                            closeIssue(selection)
+                                        }
+                                        Button("Edit", role: .destructive) {
+                                            "edit \(selection.title ?? "")".p()
+                                            editIssue = selection
+                                            editText = editIssue?.title ?? ""
+                                            focusedField = .title
+                                        }
                                     }
                                 }
                             }
@@ -209,15 +255,25 @@ struct NoteSidebarView: View {
                 UserDefaults.save(value: repoName, key: AccountType.repo.key)
                 showReposView = false
             }
+            endEdit()
         }
         .onChange(of: selectionIssue) { oldValue, newValue in
             if oldValue != newValue {
                 commentsData {}
             }
+            endEdit()
         }
     }
     
     
+}
+
+extension NoteSidebarView {
+    
+    func endEdit() -> Void {
+        focusedField = nil
+        editIssue = nil
+    }
 }
 
 extension NoteSidebarView {
@@ -258,6 +314,31 @@ extension NoteSidebarView {
             if data != nil {
                 issueGroups.removeAll(where: {$0.number == issueId})
                 CacheManager.shared.updateIssues(issueGroups, repoName: repoName)
+            }
+        }
+    }
+    
+    private func updateIssueTitle(_ issue: Issue?, _ title: String) -> Void {
+        
+        guard let issue = issue else { return }
+        
+        isEditIssueTitleSending = true
+        guard let issueId = issue.number, let body = issue.body, let repoName = selectionRepo?.name else { return }
+        Networking<Issue>().request(API.updateIssue(issueId: issueId, state: .open, title: title, body: body), writeCache: false, readCache: false) { data, cache, _ in
+            isEditIssueTitleSending = false
+            
+            if data != nil {
+                guard let index = issueGroups.firstIndex(where: {$0 == issue}) else {
+                    return
+                }
+                var issue = issue
+                issue.defultModel()
+                issue.title = title
+                var list = issueGroups
+                list[index] = issue
+                issueGroups = list
+                CacheManager.shared.updateIssues(issueGroups, repoName: repoName)
+                endEdit()
             }
         }
     }
