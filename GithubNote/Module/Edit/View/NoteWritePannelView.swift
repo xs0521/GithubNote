@@ -7,8 +7,6 @@
 
 import Foundation
 import SwiftUI
-import MarkdownUI
-import Splash
 
 struct NoteWritePannelView: View {
     
@@ -35,14 +33,9 @@ struct NoteWritePannelView: View {
     var body: some View {
         VStack {
             ZStack {
-                ScrollView(.vertical) {
-                    Markdown(markdownString ?? "")
-                        .markdownCodeSyntaxHighlighter(.splash(theme: self.theme))
-                        .markdownImageProvider(.default)
-                        .markdownTheme(.gitHub)
-                        .padding(EdgeInsets(top: 0, leading: 10, bottom: 20, trailing: 10))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
+                MarkdownWebView(markdownText: $markdownString.toUnwrapped(defaultValue: ""))
+                    .padding(EdgeInsets(top: 0, leading: 10, bottom: 20, trailing: 10))
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
             .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
             .toolbar {
@@ -205,10 +198,5 @@ struct NoteWritePannelView: View {
         let now = Date()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         return formatter.string(from: now)
-    }
-    
-    private var theme: Splash.Theme {
-        // NOTE: We are ignoring the Splash theme font
-        return .sunset(withFont: .init(size: 14))
     }
 }

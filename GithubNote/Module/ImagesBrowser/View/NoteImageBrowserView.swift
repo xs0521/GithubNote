@@ -22,6 +22,8 @@ struct NoteImageBrowserView: View {
     @State private var showProgress = false
     
     @State var data: [GithubImage] = []
+    
+    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         ZStack {
@@ -49,7 +51,7 @@ struct NoteImageBrowserView: View {
                     Spacer()
                     ProgressView(value: progressValue, total: 1.0)
                         .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 10))
-                        .tint(.init(light: Color.gray, dark: Color.white))
+                        .tint(colorScheme == .dark ? Color.white : Color.gray)
                 }
             }
         }

@@ -57,7 +57,7 @@ public extension Color {
     static let tertiaryBackground = Color(UIColor.tertiarySystemBackground)
     #endif
     
-    static let markdownBackground = Color(hex: "#18191D")
+    static let markdownBackground = Color(hex: "#292c33")
     static let editBackground = Color(hex: "#1E1E1E")
     
 }

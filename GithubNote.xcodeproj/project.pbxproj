@@ -14,10 +14,8 @@
 		B10930FF2C3D8748006B5DB0 /* NoteTaskListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10930FE2C3D8748006B5DB0 /* NoteTaskListView.swift */; };
 		B10931012C3D8784006B5DB0 /* NoteTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10931002C3D8784006B5DB0 /* NoteTaskView.swift */; };
 		B11FDA8B2BBFE8C500EC7083 /* AppConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11FDA8A2BBFE8C500EC7083 /* AppConst.swift */; };
-		B12A05E32BCAB37300D0D0F9 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = B12A05E22BCAB37300D0D0F9 /* MarkdownUI */; };
 		B148A5BA2BC1506000B7FBA8 /* LoginOutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B148A5B92BC1506000B7FBA8 /* LoginOutView.swift */; };
 		B148A5BC2BC154FA00B7FBA8 /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B148A5BB2BC154FA00B7FBA8 /* Color+Extension.swift */; };
-		B164626E2BB041E200F57548 /* Splash in Frameworks */ = {isa = PBXBuildFile; productRef = B164626D2BB041E200F57548 /* Splash */; };
 		B16462722BB0464A00F57548 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16462712BB0464A00F57548 /* Account.swift */; };
 		B16C4AD42BB3164800F417D3 /* Binding+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16C4AD32BB3164800F417D3 /* Binding+Extension.swift */; };
 		B1922A4D2BAFF1FB00200828 /* GithubNoteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1922A4C2BAFF1FB00200828 /* GithubNoteApp.swift */; };
@@ -26,20 +24,17 @@
 		B1922A5F2BAFF1FC00200828 /* GithubNoteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1922A5E2BAFF1FC00200828 /* GithubNoteTests.swift */; };
 		B1922A692BAFF1FC00200828 /* GithubNoteUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1922A682BAFF1FC00200828 /* GithubNoteUITests.swift */; };
 		B1922A6B2BAFF1FC00200828 /* GithubNoteUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1922A6A2BAFF1FC00200828 /* GithubNoteUITestsLaunchTests.swift */; };
-		B1922A8C2BB03CF300200828 /* SplashCodeSyntaxHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1922A8B2BB03CF300200828 /* SplashCodeSyntaxHighlighter.swift */; };
 		B19DC5A02BBFD51B009C7DBE /* CommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19DC59F2BBFD51B009C7DBE /* CommentModel.swift */; };
-		B1A529822BCA1813003F6B78 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = B1A529812BCA1813003F6B78 /* MarkdownUI */; };
-		B1A529852BCAB331003F6B78 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = B1A529842BCAB331003F6B78 /* MarkdownUI */; };
 		B1AE88372C4FFDAC00BB8047 /* WriteCachePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1AE88362C4FFDAC00BB8047 /* WriteCachePlugin.swift */; };
 		B1B55A892C515C3300820689 /* NoteWriteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B55A882C515C3300820689 /* NoteWriteModel.swift */; };
 		B1B55A8B2C515C9000820689 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B55A8A2C515C9000820689 /* AppModel.swift */; };
 		B1B55A922C52A0C000820689 /* Data+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B55A912C52A0C000820689 /* Data+Extension.swift */; };
-		B1B617E92BCAB3CD005652FF /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = B1B617E82BCAB3CD005652FF /* MarkdownUI */; };
 		B1C01ACA2BCA16BB009E9C20 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = B1C01AC92BCA16BB009E9C20 /* SDWebImageSwiftUI */; };
 		B1CE86582C57EF77002C8335 /* NoteImageBrowserImagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1CE86572C57EF77002C8335 /* NoteImageBrowserImagesView.swift */; };
 		B1CE865B2C5926B8002C8335 /* NotificationNameModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1CE865A2C5926B8002C8335 /* NotificationNameModule.swift */; };
 		B1D7CF542BCA11DE00362C35 /* ImagesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D7CF532BCA11DE00362C35 /* ImagesModel.swift */; };
-		B1DF969C2BC5877F0056FE99 /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = B1DF969B2BC5877F0056FE99 /* MarkdownUI */; };
+		B1DA105B2C9DB6C30074DA32 /* index in Resources */ = {isa = PBXBuildFile; fileRef = B1DA105A2C9DB6C30074DA32 /* index */; };
+		B1DA105D2C9DB6CA0074DA32 /* MarkdownWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1DA105C2C9DB6CA0074DA32 /* MarkdownWebView.swift */; };
 		B1E538622C43816F00A4B3C4 /* NoteWritePannelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E538612C43816F00A4B3C4 /* NoteWritePannelView.swift */; };
 		B1E55A422BBF96B7000209ED /* IssuesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E55A412BBF96B7000209ED /* IssuesModel.swift */; };
 		B1EC0DE82BBB8DD4007975D9 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EC0DE72BBB8DD4007975D9 /* String+Extension.swift */; };
@@ -102,7 +97,6 @@
 		B1922A642BAFF1FC00200828 /* GithubNoteUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GithubNoteUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1922A682BAFF1FC00200828 /* GithubNoteUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubNoteUITests.swift; sourceTree = "<group>"; };
 		B1922A6A2BAFF1FC00200828 /* GithubNoteUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubNoteUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		B1922A8B2BB03CF300200828 /* SplashCodeSyntaxHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashCodeSyntaxHighlighter.swift; sourceTree = "<group>"; };
 		B19DC59F2BBFD51B009C7DBE /* CommentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentModel.swift; sourceTree = "<group>"; };
 		B1AE88362C4FFDAC00BB8047 /* WriteCachePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCachePlugin.swift; sourceTree = "<group>"; };
 		B1B55A882C515C3300820689 /* NoteWriteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteWriteModel.swift; sourceTree = "<group>"; };
@@ -111,6 +105,8 @@
 		B1CE86572C57EF77002C8335 /* NoteImageBrowserImagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteImageBrowserImagesView.swift; sourceTree = "<group>"; };
 		B1CE865A2C5926B8002C8335 /* NotificationNameModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNameModule.swift; sourceTree = "<group>"; };
 		B1D7CF532BCA11DE00362C35 /* ImagesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesModel.swift; sourceTree = "<group>"; };
+		B1DA105A2C9DB6C30074DA32 /* index */ = {isa = PBXFileReference; lastKnownFileType = folder; path = index; sourceTree = "<group>"; };
+		B1DA105C2C9DB6CA0074DA32 /* MarkdownWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkdownWebView.swift; sourceTree = "<group>"; };
 		B1E538612C43816F00A4B3C4 /* NoteWritePannelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteWritePannelView.swift; sourceTree = "<group>"; };
 		B1E55A412BBF96B7000209ED /* IssuesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssuesModel.swift; sourceTree = "<group>"; };
 		B1EC0DE72BBB8DD4007975D9 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
@@ -136,12 +132,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B1C01ACA2BCA16BB009E9C20 /* SDWebImageSwiftUI in Frameworks */,
-				B12A05E32BCAB37300D0D0F9 /* MarkdownUI in Frameworks */,
-				B1DF969C2BC5877F0056FE99 /* MarkdownUI in Frameworks */,
-				B1B617E92BCAB3CD005652FF /* MarkdownUI in Frameworks */,
-				B1A529852BCAB331003F6B78 /* MarkdownUI in Frameworks */,
-				B164626E2BB041E200F57548 /* Splash in Frameworks */,
-				B1A529822BCA1813003F6B78 /* MarkdownUI in Frameworks */,
 				E9A119FC00268F2F27DE1D6F /* Pods_GithubNote.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -270,6 +260,7 @@
 		B1AE88382C51564E00BB8047 /* Module */ = {
 			isa = PBXGroup;
 			children = (
+				B1DA10592C9DB6A20074DA32 /* Markdown */,
 				B1EC0DEB2BBE428F007975D9 /* App */,
 				B1B55A8D2C515D8100820689 /* Repo */,
 				B1D7CF512BCA11BB00362C35 /* ImagesBrowser */,
@@ -356,6 +347,15 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		B1DA10592C9DB6A20074DA32 /* Markdown */ = {
+			isa = PBXGroup;
+			children = (
+				B1DA105C2C9DB6CA0074DA32 /* MarkdownWebView.swift */,
+				B1DA105A2C9DB6C30074DA32 /* index */,
+			);
+			path = Markdown;
+			sourceTree = "<group>";
+		};
 		B1E55A472BBFD482000209ED /* Comment */ = {
 			isa = PBXGroup;
 			children = (
@@ -430,7 +430,6 @@
 		B1EC0DF12BBE42E8007975D9 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				B1922A8B2BB03CF300200828 /* SplashCodeSyntaxHighlighter.swift */,
 				B1B55A882C515C3300820689 /* NoteWriteModel.swift */,
 			);
 			path = Model;
@@ -522,13 +521,7 @@
 			);
 			name = GithubNote;
 			packageProductDependencies = (
-				B164626D2BB041E200F57548 /* Splash */,
-				B1DF969B2BC5877F0056FE99 /* MarkdownUI */,
 				B1C01AC92BCA16BB009E9C20 /* SDWebImageSwiftUI */,
-				B1A529812BCA1813003F6B78 /* MarkdownUI */,
-				B1A529842BCAB331003F6B78 /* MarkdownUI */,
-				B12A05E22BCAB37300D0D0F9 /* MarkdownUI */,
-				B1B617E82BCAB3CD005652FF /* MarkdownUI */,
 			);
 			productName = GithubNote;
 			productReference = B1922A492BAFF1FB00200828 /* GithubNote.app */;
@@ -606,9 +599,7 @@
 			);
 			mainGroup = B1922A402BAFF1FB00200828;
 			packageReferences = (
-				B164626C2BB041E200F57548 /* XCRemoteSwiftPackageReference "Splash" */,
 				B1C01AC82BCA16BB009E9C20 /* XCLocalSwiftPackageReference "GithubNote/Local/SDWebImageSwiftUI" */,
-				B1B617E72BCAB3CD005652FF /* XCLocalSwiftPackageReference "GithubNote/Local/swift-markdown-ui" */,
 			);
 			productRefGroup = B1922A4A2BAFF1FB00200828 /* Products */;
 			projectDirPath = "";
@@ -626,6 +617,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1DA105B2C9DB6C30074DA32 /* index in Resources */,
 				B1922A552BAFF1FC00200828 /* Preview Assets.xcassets in Resources */,
 				B1922A512BAFF1FC00200828 /* Assets.xcassets in Resources */,
 			);
@@ -760,7 +752,6 @@
 				B1B55A892C515C3300820689 /* NoteWriteModel.swift in Sources */,
 				B10930FB2C3D848B006B5DB0 /* NoteContentView.swift in Sources */,
 				B1E538622C43816F00A4B3C4 /* NoteWritePannelView.swift in Sources */,
-				B1922A8C2BB03CF300200828 /* SplashCodeSyntaxHighlighter.swift in Sources */,
 				B1FE67542C480B0200970DA0 /* NoteImageBrowserView.swift in Sources */,
 				B1B55A922C52A0C000820689 /* Data+Extension.swift in Sources */,
 				B1EC0DF82BBE47A8007975D9 /* UserDefaults+Extension.swift in Sources */,
@@ -781,6 +772,7 @@
 				B1CE86582C57EF77002C8335 /* NoteImageBrowserImagesView.swift in Sources */,
 				B1ED886A2C4ACAFE00FD8DEB /* API.swift in Sources */,
 				B1ED88712C4ACE0E00FD8DEB /* Modelable.swift in Sources */,
+				B1DA105D2C9DB6CA0074DA32 /* MarkdownWebView.swift in Sources */,
 				B1FE67502C46B72400970DA0 /* View+Extension.swift in Sources */,
 				B1EC0DF62BBE434F007975D9 /* LoginView.swift in Sources */,
 				B10930FD2C3D85C5006B5DB0 /* NoteSidebarView.swift in Sources */,
@@ -1157,56 +1149,16 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		B1B617E72BCAB3CD005652FF /* XCLocalSwiftPackageReference "GithubNote/Local/swift-markdown-ui" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = "GithubNote/Local/swift-markdown-ui";
-		};
 		B1C01AC82BCA16BB009E9C20 /* XCLocalSwiftPackageReference "GithubNote/Local/SDWebImageSwiftUI" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = GithubNote/Local/SDWebImageSwiftUI;
 		};
 /* End XCLocalSwiftPackageReference section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		B164626C2BB041E200F57548 /* XCRemoteSwiftPackageReference "Splash" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/JohnSundell/Splash";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.16.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
 /* Begin XCSwiftPackageProductDependency section */
-		B12A05E22BCAB37300D0D0F9 /* MarkdownUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MarkdownUI;
-		};
-		B164626D2BB041E200F57548 /* Splash */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = B164626C2BB041E200F57548 /* XCRemoteSwiftPackageReference "Splash" */;
-			productName = Splash;
-		};
-		B1A529812BCA1813003F6B78 /* MarkdownUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MarkdownUI;
-		};
-		B1A529842BCAB331003F6B78 /* MarkdownUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MarkdownUI;
-		};
-		B1B617E82BCAB3CD005652FF /* MarkdownUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MarkdownUI;
-		};
 		B1C01AC92BCA16BB009E9C20 /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SDWebImageSwiftUI;
-		};
-		B1DF969B2BC5877F0056FE99 /* MarkdownUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MarkdownUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
