@@ -7,12 +7,14 @@
 
 import SwiftUI
 import AppKit
+import AlertToast
 
 enum SettingType {
     case account
     case feedback
     case help
     case logout
+    case log
     
     var title: String {
         switch self {
@@ -24,6 +26,8 @@ enum SettingType {
             return "Help Center"
         case .logout:
             return "Log out"
+        case .log:
+            return "Log export"
         }
     }
     
@@ -37,6 +41,8 @@ enum SettingType {
             return "questionmark.circle"
         case .logout:
             return "rectangle.portrait.and.arrow.right"
+        case .log:
+            return "filemenu.and.selection"
         }
     }
     
@@ -47,10 +53,6 @@ enum SettingType {
         default:
             return ""
         }
-    }
-    
-    var disabledNavigation: Bool {
-        return true
     }
 }
 
@@ -64,6 +66,7 @@ let settings: Array<SettingType> = [
     .account,
     .feedback,
     .help,
+    .log,
     .logout
 ]
 
@@ -95,6 +98,9 @@ struct RootSettingView: View {
 
 struct SettingsView: View {
     
+    @State var showToast: Bool = false
+    @State private var toastMessage: String = ""
+    
     var body: some View {
         NavigationStack {
             Form {
@@ -120,6 +126,12 @@ struct SettingsView: View {
                                 if setting == .help {
                                     if let url = URL(string: "https://github.com/xs0521/GithubNote-MacOS") {
                                         NSWorkspace.shared.open(url)
+                                    }
+                                }
+                                if setting == .log {
+                                    LogManager.exportLogs { success in
+                                        toastMessage = "success"
+                                        showToast = true
                                     }
                                 }
                             }, label: {
@@ -159,6 +171,9 @@ struct SettingsView: View {
             .background(Color.init(hex: "#EFEFEE"))
         }
         .frame(width: 500)
+        .toast(isPresenting: $showToast, duration: 2.0, tapToDismiss: true){
+            AlertToast(displayMode: .hud, type: .systemImage("party.popper", .primary), title: toastMessage)
+        }
         
     }
 }

@@ -8,3 +8,4 @@
 import Foundation
 
 typealias CommonCallBack = () -> ()
+typealias CommonTCallBack<T> = (T) -> ()

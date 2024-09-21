@@ -7,7 +7,6 @@
 
 import SwiftUI
 import SDWebImage
-import CocoaLumberjack
 
 @main
 struct GithubNoteApp: App {
@@ -29,7 +28,7 @@ struct GithubNoteApp: App {
                 ZStack {
                     NoteContentView()
                         .onAppear(perform: {
-                    SDWebImageDownloader.shared.setValue("Bearer \(Account.accessToken)", forHTTPHeaderField: "Authorization")
+                            SDWebImageDownloader.shared.setValue("Bearer \(Account.accessToken)", forHTTPHeaderField: "Authorization")
                         })
                     if willLoginOut {
                         LoginOutView(cancelCallBack: {
@@ -72,13 +71,4 @@ struct GithubNoteApp: App {
     }
 }
 
-class LaunchApp {
-    
-    static let shared = LaunchApp()
-    
-    init() {
-        DDLog.add(DDTTYLogger.sharedInstance!) // 控制台输出
-        DDTTYLogger.sharedInstance?.logFormatter = CustomLogFormatter()
-        DDLogInfo("CocoaLumberjack has been set up.")
-    }
-}
+
