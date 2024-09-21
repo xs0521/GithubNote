@@ -8,6 +8,7 @@
 import SwiftUI
 import WebKit
 import AppKit
+import ObjectiveC.runtime
 
 // WKWebView Wrapper for SwiftUI
 
@@ -19,6 +20,7 @@ struct MarkdownWebView: NSViewRepresentable {
         
         var isLoaded = false
         var isDidFinish = false
+        var isLaunched = false
         
         var parent: MarkdownWebView
         
@@ -37,7 +39,15 @@ struct MarkdownWebView: NSViewRepresentable {
     }
     
     func makeNSView(context: Context) -> WKWebView {
-        let webView = WKWebView()
+        
+        let schemeHandler = CustomURLSchemeHandler()
+        let configuration = WKWebViewConfiguration()
+        configuration.setURLSchemeHandler(schemeHandler, forURLScheme: "http")
+        configuration.setURLSchemeHandler(schemeHandler, forURLScheme: "https")
+        let webView = WKWebView(frame: .zero, configuration: configuration)
+#if DEBUG
+        webView.isInspectable = true
+#endif
         webView.navigationDelegate = context.coordinator
         return webView
     }
@@ -50,7 +60,7 @@ struct MarkdownWebView: NSViewRepresentable {
             // Load local HTML file from the app bundle
             if let htmlPath = Bundle.main.path(forResource: "index/index", ofType: "html") {
                 let htmlUrl = URL(fileURLWithPath: htmlPath)
-                let request = URLRequest(url: htmlUrl)
+                var request = URLRequest(url: htmlUrl)
                 webView.load(request)
             }
             context.coordinator.isLoaded = true
@@ -61,6 +71,20 @@ struct MarkdownWebView: NSViewRepresentable {
         if !context.coordinator.isDidFinish {
             return
         }
+        
+        if !context.coordinator.isLaunched {
+#if DEBUG
+            let jsCode = "debugExecute()"
+            webView.evaluateJavaScript(jsCode) { (result, error) in
+                if let error = error {
+                    "JavaScript injection error: \(error)".logI()
+                }
+            }
+#endif
+            "#MD# isLaunched".logI()
+            context.coordinator.isLaunched = true
+        }
+        
         "#MD# title \(markdownText.prefix(20))".logI()
         // Inject the Markdown content into the HTML using the `renderMarkdown` function
         let escapedMarkdownText = markdownText.replacingOccurrences(of: "`", with: "\\`")
@@ -92,3 +116,23 @@ struct MarkdownWebView: NSViewRepresentable {
 //        MarkdownWebViewContentView()
 //    }
 //}
+
+extension WKWebView {
+    static let swizzleHandlesURLScheme: Void = {
+        let originalSelector = #selector(handlesURLScheme(_:))
+        let swizzledSelector = #selector(swizzledHandlesURLScheme(_:))
+
+        if let originalMethod = class_getClassMethod(WKWebView.self, originalSelector),
+           let swizzledMethod = class_getClassMethod(WKWebView.self, swizzledSelector) {
+            method_exchangeImplementations(originalMethod, swizzledMethod)
+        }
+    }()
+
+    @objc class func swizzledHandlesURLScheme(_ urlScheme: String) -> Bool {
+        if urlScheme == "http" || urlScheme == "https" {
+            return false  // 这里返回 NO，避免系统处理，使用自定义 handler 处理
+        } else {
+            return swizzledHandlesURLScheme(urlScheme)  // 调用原始实现
+        }
+    }
+}

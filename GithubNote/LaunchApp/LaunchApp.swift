@@ -6,10 +6,14 @@
 //
 
 import Foundation
+import WebKit
+import SDWebImage
 
 class LaunchApp {
     static let shared = LaunchApp()
     init() {
         LogManager.setup()
+        WKWebView.swizzleHandlesURLScheme
+        SDWebImageDownloader.shared.setValue("Bearer \(Account.accessToken)", forHTTPHeaderField: "Authorization")
     }
 }
