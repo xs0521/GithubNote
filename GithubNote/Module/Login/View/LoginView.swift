@@ -47,7 +47,7 @@ struct LoginView: View {
                 .padding(EdgeInsets(top: 0, leading: 10, bottom: 40, trailing: 10))
             
             Button(action: {
-                "start".p()
+                "start".logI()
                 if !enbleStart() {
                     return
                 }

@@ -51,7 +51,8 @@ struct MarkdownWebView: NSViewRepresentable {
     
     func updateNSView(_ webView: WKWebView, context: Context) {
         
-        "#MD# isLoaded \(context.coordinator.isLoaded)".p()
+        "#MD# isLoaded \(context.coordinator.isLoaded)".logI()
+        
         
         if !context.coordinator.isLoaded {
             // Load local HTML file from the app bundle
@@ -64,16 +65,17 @@ struct MarkdownWebView: NSViewRepresentable {
             return
         }
         
-        "#MD# isDidFinish \(context.coordinator.isDidFinish)".p()
+        "#MD# isDidFinish \(context.coordinator.isDidFinish)".logI()
         if !context.coordinator.isDidFinish {
             return
         }
-        "#MD# title \(markdownText.prefix(20))".p()
+        "#MD# title \(markdownText.prefix(20))".logI()
         // Inject the Markdown content into the HTML using the `renderMarkdown` function
-        let jsCode = "renderMarkdown(`\(markdownText.replacingOccurrences(of: "`", with: "\\`"))`)"
+        let escapedMarkdownText = markdownText.replacingOccurrences(of: "`", with: "\\`")
+        let jsCode = "renderMarkdown(`\(escapedMarkdownText)`)"
         webView.evaluateJavaScript(jsCode) { (result, error) in
             if let error = error {
-                "JavaScript injection error: \(error)".p()
+                "JavaScript injection error: \(error)".logI()
             }
         }
     }

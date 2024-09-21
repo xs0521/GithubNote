@@ -7,6 +7,7 @@
 
 import Foundation
 import CommonCrypto
+import CocoaLumberjack
 
 extension String {
     
@@ -14,9 +15,7 @@ extension String {
         var value = trimmingCharacters(in: CharacterSet(charactersIn: "#"))
         value = value.trimmingCharacters(in: .whitespaces)
         
-        if value.count > 20 {
-            value = String(value.prefix(20))
-        }
+        value = String(value.prefix(100))
         let values = value.components(separatedBy: "\n")
         if values.count > 0 {
             value = values.first ?? value
@@ -24,10 +23,24 @@ extension String {
         return value
     }
     
-    @discardableResult
-    func p() -> Self {
-        print("#GN# \(self)")
-        return self
+    func logV(file: StaticString = #fileID, function: StaticString = #function, line: UInt = #line) -> Void {
+        DDLogVerbose(self, file: file, function: function, line: line)
+    }
+
+    func logE(file: StaticString = #fileID, function: StaticString = #function, line: UInt = #line) -> Void {
+        DDLogError(self, file: file, function: function, line: line)
+    }
+
+    func logI(file: StaticString = #fileID, function: StaticString = #function, line: UInt = #line) -> Void {
+        DDLogInfo(self, file: file, function: function, line: line)
+    }
+
+    func logW(file: StaticString = #fileID, function: StaticString = #function, line: UInt = #line) -> Void {
+        DDLogWarn(self, file: file, function: function, line: line)
+    }
+
+    func logD(file: StaticString = #fileID, function: StaticString = #function, line: UInt = #line) -> Void {
+        DDLogDebug(self, file: file, function: function, line: line)
     }
     
     func encrypt(_ maxLength: Int) -> String {

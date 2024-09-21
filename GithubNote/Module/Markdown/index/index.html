@@ -89,18 +89,10 @@
       });
 
       function renderMarkdown(markdown) {
-        console.log("render start");
-        // 获取当前的滚动位置
-        const currentScrollY = window.scrollY;
-
         document.getElementById("content").innerHTML = marked.parse(markdown);
         // After rendering, apply syntax highlighting
         document.querySelectorAll("pre code").forEach((block) => {
           hljs.highlightElement(block);
-        });
-        // 使用 requestAnimationFrame 恢复滚动位置
-        requestAnimationFrame(() => {
-          window.scrollTo(0, currentScrollY);
         });
       }
     </script>

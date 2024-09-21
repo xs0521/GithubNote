@@ -9,6 +9,7 @@ target 'GithubNote' do
   pod 'Moya', '~> 15.0'
   pod 'Cache', :git => 'https://github.com/hyperoslo/Cache.git', :tag => '7.2.0'
   pod 'AlertToast', '1.3.9'
+  pod 'CocoaLumberjack/Swift', '3.8.5'
 
   # Pods for GithubNote
 

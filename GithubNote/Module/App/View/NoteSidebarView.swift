@@ -89,7 +89,7 @@ struct NoteSidebarView: View {
                                 .tag(selection)
                                 .contextMenu {
                                     Button("Delete", role: .destructive) {
-                                        "delete \(selection.body?.toTitle() ?? "")".p()
+                                        "delete \(selection.body?.toTitle() ?? "")".logI()
                                         deleteComment(selection)
                                     }
                                 }
@@ -174,11 +174,11 @@ struct NoteSidebarView: View {
                                     .tag(selection)
                                     .contextMenu {
                                         Button("Delete", role: .destructive) {
-                                            "delete \(selection.title ?? "")".p()
+                                            "delete \(selection.title ?? "")".logI()
                                             closeIssue(selection)
                                         }
                                         Button("Edit", role: .destructive) {
-                                            "edit \(selection.title ?? "")".p()
+                                            "edit \(selection.title ?? "")".logI()
                                             editIssue = selection
                                             editText = editIssue?.title ?? ""
                                             focusedField = .title
@@ -213,6 +213,7 @@ struct NoteSidebarView: View {
                 }, label: {
                     Label("Repos", systemImage: "chevron.right")
                         .foregroundStyle(Color.primary)
+                        .lineLimit(1)
                 })
                 .buttonStyle(.borderless)
                 .foregroundColor(.accentColor)

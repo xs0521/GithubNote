@@ -36,18 +36,26 @@ struct NoteWritePannelView: View {
                 MarkdownWebView(markdownText: $markdownString.toUnwrapped(defaultValue: ""))
                     .padding(EdgeInsets(top: 0, leading: 10, bottom: 20, trailing: 10))
                     .frame(maxWidth: .infinity, alignment: .leading)
+                if editIsShown {
+                    TextEditor(text: $markdownString.toUnwrapped(defaultValue: ""))
+                        .transparentScrolling()
+                        .font(.system(size: 14))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
+                        .padding(.leading, 16)
+                    
+                }
+                VStack {
+                    CustomDivider()
+                        .frame(maxWidth: .infinity)
+                    Spacer()
+                }
             }
             .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
             .toolbar {
                 ToolbarItemGroup {
-                    if !(showImageBrowser ?? false) {
-                        Button {
-                            editIsShown.toggle()
-                        } label: {
-                            Label("Show inspector", systemImage: "sidebar.right")
-                        }
-                    }
                     Spacer()
+                    
                     if showImageBrowser! {
                         HStack {
                             Button(action: {
@@ -71,6 +79,11 @@ struct NoteWritePannelView: View {
                                 NotificationCenter.default.post(name: NSNotification.Name.syncNetImagesNotification, object: nil)
                             } label: {
                                 Image(systemName: "arrow.triangle.2.circlepath")
+                            }
+                            Button {
+                                showImageBrowser = false
+                            } label: {
+                                Image(systemName: "xmark.circle")
                             }
                         }
                     }
@@ -98,18 +111,25 @@ struct NoteWritePannelView: View {
                         }
                         .frame(width: 30, height: 40)
                     }
+                    if !(showImageBrowser ?? false) {
+                        Button {
+                            editIsShown.toggle()
+                        } label: {
+                            Label("Show inspector", systemImage: editIsShown ? "doc.text.image" : "pencil.circle")
+                        }
+                    }
                 }
                
             }
-            .inspector(isPresented: $editIsShown) {
-                Group {
-                    TextEditor(text: $markdownString.toUnwrapped(defaultValue: ""))
-                        .transparentScrolling()
-                        .font(.system(size: 14))
-                        .inspectorColumnWidth(min: 100, ideal: 500, max: 800)
-                }
-                .background(Color.background)
-            }
+//            .inspector(isPresented: $editIsShown) {
+//                Group {
+//                    TextEditor(text: $markdownString.toUnwrapped(defaultValue: ""))
+//                        .transparentScrolling()
+//                        .font(.system(size: 14))
+//                        .inspectorColumnWidth(min: 100, ideal: 500, max: 800)
+//                }
+//                .background(Color.background)
+//            }
             .onChange(of: comment) { oldValue, newValue in
                 if oldValue?.identifier != newValue?.identifier {
                     markdownString = newValue?.body

@@ -2,6 +2,9 @@ PODS:
   - Alamofire (5.9.0)
   - AlertToast (1.3.9)
   - Cache (7.1.0)
+  - CocoaLumberjack/Core (3.8.5)
+  - CocoaLumberjack/Swift (3.8.5):
+    - CocoaLumberjack/Core
   - Highlightr (2.1.0)
   - Moya (15.0.0):
     - Moya/Core (= 15.0.0)
@@ -9,8 +12,9 @@ PODS:
     - Alamofire (~> 5.0)
 
 DEPENDENCIES:
-  - AlertToast
+  - AlertToast (= 1.3.9)
   - Cache (from `https://github.com/hyperoslo/Cache.git`, tag `7.2.0`)
+  - CocoaLumberjack/Swift
   - Highlightr (= 2.1.0)
   - Moya (~> 15.0)
 
@@ -18,6 +22,7 @@ SPEC REPOS:
   trunk:
     - Alamofire
     - AlertToast
+    - CocoaLumberjack
     - Highlightr
     - Moya
 
@@ -35,9 +40,10 @@ SPEC CHECKSUMS:
   Alamofire: 02b772c9910e8eba1a079227c32fbd9e46c90a24
   AlertToast: e8db15da727beff75500bcf33a78cd617f408fa1
   Cache: 79717afe1491def3c772c242bc1166766d7b9b36
+  CocoaLumberjack: 6a459bc897d6d80bd1b8c78482ec7ad05dffc3f0
   Highlightr: 595f3e100737c8de41113385da8bd0b5b65212c6
   Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
 
-PODFILE CHECKSUM: 413bc76e8f335158090f1611cc3e0759e9fc1f73
+PODFILE CHECKSUM: f98e1fcaf9e77ee51e66e0e8b5d8d5bbd5319813
 
 COCOAPODS: 1.14.3
