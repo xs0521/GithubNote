@@ -91,9 +91,11 @@ struct MarkdownWebView: NSViewRepresentable {
                 "#MD# content no change".logI()
                 return
             }
+            context.coordinator.currentText = markdownText
             "#MD# title \(markdownText.prefix(20))".logI()
             // Inject the Markdown content into the HTML using the `renderMarkdown` function
             let escapedMarkdownText = markdownText.replacingOccurrences(of: "`", with: "\\`")
+            
             let jsCode = "renderMarkdown(`\(escapedMarkdownText)`)"
             DispatchQueue.main.async {
                 webView.evaluateJavaScript(jsCode) { (result, error) in
