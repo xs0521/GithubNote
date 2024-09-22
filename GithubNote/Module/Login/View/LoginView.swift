@@ -71,7 +71,7 @@ struct LoginView: View {
     }
     
     func enbleStart() -> Bool {
-        return !repoName.isEmpty && !token.isEmpty && !ownerName.isEmpty
+        return !repoName.isEmpty && !ownerName.isEmpty
     }
 }
 

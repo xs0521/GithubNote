@@ -61,7 +61,7 @@ struct MarkdownWebView: NSViewRepresentable {
             // Load local HTML file from the app bundle
             if let htmlPath = Bundle.main.path(forResource: "index/index", ofType: "html") {
                 let htmlUrl = URL(fileURLWithPath: htmlPath)
-                var request = URLRequest(url: htmlUrl)
+                let request = URLRequest(url: htmlUrl)
                 webView.load(request)
             }
             context.coordinator.isLoaded = true

@@ -9,3 +9,4 @@ import Foundation
 
 typealias CommonCallBack = () -> ()
 typealias CommonTCallBack<T> = (T) -> ()
+typealias RequestCallBack = (_ success: Bool, _ more: Bool) -> ()

@@ -9,6 +9,8 @@ import Foundation
 import AppKit
 import Moya
 
+private let line = "\n########################################"
+
 class Networking<T> where T: APIModelable {
     
     typealias CompletionModelClosure = (_ data: [T]?, _ cache: Bool, _ code: Int) -> Void
@@ -52,11 +54,51 @@ class Networking<T> where T: APIModelable {
             }
         }
         
+        let targetType = type as! API
+        
+        // 记录请求开始时间
+        let startTime = Date()
+        // 合成日志的字符串
+        
+        var logMessage = line + """
+                        \nurl: \(type.baseURL)\(type.path)
+                        method: \(type.method.rawValue)
+            """
+        
+        if case let .requestParameters(parameters, _) = targetType.task {
+            // 请求参数 (如果有的话)
+            if parameters.count > 0 {
+                logMessage += "\nparams: \(parameters)"
+            } else {
+                logMessage += "\nparams: null"
+            }
+        }
+        
+        
+        
+        let endTime = Date()
+        let duration = endTime.timeIntervalSince(startTime)
+        
         let cancellable = provider.request(type, callbackQueue: DispatchQueue.global(), progress: progress) { response in
+            
+            let endTime = Date()
+            let duration = endTime.timeIntervalSince(startTime)
+            
+            // 增加请求耗时
+            logMessage += "\nduration: \(String(format: "%.2f", duration)) s"
+            
             switch response {
             case .success(let resp):
-                self.handleData(type, parseHandler: parseHandler, respone: resp, data: resp.data, completionModelHandler: completionModelHandler)
+                self.handleData(type, 
+                                parseHandler: parseHandler,
+                                respone: resp,
+                                data: resp.data,
+                                logMessage: logMessage,
+                                completionModelHandler: completionModelHandler)
             case .failure(let error):
+                logMessage += "\nfail: \(error.localizedDescription)"
+                logMessage += line
+                logMessage.logD()
                 completionModelHandler?(nil, false, error.errorCode)
             }
         }
@@ -89,11 +131,11 @@ class Networking<T> where T: APIModelable {
         
         networkActivityPlugin()
         cachePolicyPlugin()
-        networkLoggerPlugin()
+//        networkLoggerPlugin()
         if writeCache {
             writeCachePlugin()
         }
-
+        
         let provider = MoyaProvider<R>(plugins: plugins)
         return provider
     }
@@ -107,7 +149,10 @@ extension Networking {
                                            respone: Response? = nil,
                                            data: Data,
                                            isCache: Bool = false,
+                                           logMessage: String = "",
                                            completionModelHandler: CompletionModelClosure?) -> Void {
+        
+        var logMessage = logMessage
         
         let parseHandler = parseHandler ?? ModelGenerator()
         let code = (respone != nil) ? respone!.statusCode : MessageCode.success.rawValue
@@ -122,10 +167,24 @@ extension Networking {
         case .uploadMultipart, .requestParameters:
             do {
                 if data.isEmpty {
+                    logMessage += "\nfail: data empty"
+                    logMessage.logD()
                     callBack(nil, isCache, code)
                     return
                 }
                 let json = try JSONSerialization.jsonObject(with: data, options: [])
+                
+                // 请求结果 (尝试解析为 JSON)
+                if isCache {
+                    logMessage += line
+                    logMessage += "\nresponse cache: \n\(json)"
+                    logMessage += line
+                } else {
+                    logMessage += "\nresponse: \n\(json)"
+                    logMessage += line
+                }
+                logMessage.logD()
+                
                 if let list = json as? [[String: Any]] {
                     let modelList = list.compactMap({parseHandler.handle($0)})
                     callBack(modelList, isCache, code)
@@ -139,6 +198,9 @@ extension Networking {
                     callBack(nil, isCache, code)
                 }
             } catch {
+                
+                logMessage += "\nresponse: JSON error"
+                logMessage.logD()
 #if Debug
                 fatalError("unknow error")
 #endif

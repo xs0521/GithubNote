@@ -80,7 +80,7 @@ struct Account {
     }
     
     static var enble: Bool {
-        return !Account.owner.isEmpty && !Account.repo.isEmpty && !Account.accessToken.isEmpty
+        return !Account.owner.isEmpty && !Account.repo.isEmpty
     }
     
     static func reset() -> Void {

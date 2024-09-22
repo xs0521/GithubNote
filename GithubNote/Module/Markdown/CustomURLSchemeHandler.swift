@@ -34,8 +34,7 @@ class CustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
         
         if url.isImage() {
             "#web# img is image \(url)".logI()
-            SDWebImageDownloader.shared.downloadImage(with: Url) { [weak self] _, data, error, finish in
-                guard let self = self else { return }
+            SDWebImageDownloader.shared.downloadImage(with: Url) { _, data, error, finish in
                 if let data = data, error == nil {
                     callBack(data)
                     "#web# img sccess \(url)".logI()
@@ -47,8 +46,7 @@ class CustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
         }
         // 发起请求
         let session = URLSession.shared
-        let task = session.dataTask(with: urlSchemeTask.request) { [weak self] data, response, error in
-            guard let self = self else { return }
+        let task = session.dataTask(with: urlSchemeTask.request) { data, response, error in
             if let data = data, let _ = response {
                 callBack(data)
                 "#web# file \(url)".logI()

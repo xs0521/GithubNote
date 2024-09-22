@@ -33,6 +33,7 @@ struct NoteContentView: View {
     @State private var toastMessage: String = ""
     @State private var toastItem: ToastItem?
     
+    @State private var repoPage = 1
     
     var body: some View {
         ZStack {
@@ -46,7 +47,13 @@ struct NoteContentView: View {
                                 selectionComment: $selectionComment, 
                                 showImageBrowser: $showImageBrowser,
                                 issueSyncCallBack: { callBack in requestIssue(false, callBack)},
-                                reposSyncCallBack: { callBack in requestRepo(false, callBack) })
+                                reposSyncCallBack: { callBack in
+                    repoPage = 1
+                    requestRepo(repoPage, false, callBack)
+                }, reposMoreCallBack: { callBack in
+                    repoPage += 1
+                    requestRepo(repoPage, false, callBack)
+                })
               
             } detail: {
                 NoteWritePannelView(commentGroups: $allComment,
@@ -61,7 +68,8 @@ struct NoteContentView: View {
                     toastItem = item
                     showToast = true
                 }
-                requestRepo {}
+                requestRepo(repoPage) {_, _ in
+                }
             })
             .onChange(of: selectionRepo) { oldValue, newValue in
                 if oldValue != newValue {
@@ -88,11 +96,11 @@ struct NoteContentView: View {
 
 extension NoteContentView {
     
-    private func requestRepo(_ readCache: Bool = true, _ completion: @escaping CommonCallBack) -> Void {
-        Networking<RepoModel>().request(API.repos, readCache: readCache, parseHandler: ModelGenerator(snakeCase: true)) { (data, _, _) in
-            completion()
-            guard let list = data, !list.isEmpty else {
-                allRepo.removeAll()
+    private func requestRepo(_ page: Int, _ readCache: Bool = true, _ completion: @escaping RequestCallBack) -> Void {
+        Networking<RepoModel>().request(API.repos(page: page), readCache: readCache, parseHandler: ModelGenerator(snakeCase: true)) { (data, _, _) in
+            
+            guard let list = data else {
+                completion(false, false)
                 return
             }
             
@@ -103,15 +111,22 @@ extension NoteContentView {
                 }
             }
             
-            allRepo = list
+            if page <= 1 {
+                allRepo.removeAll()
+            }
+            
+            allRepo.append(contentsOf: list)
             if let repo = allRepo.first(where: {$0.name == Account.repo}) {
                 selectionRepo = repo
+                completion(true, !list.isEmpty)
                 return
             }
             if let firstRepo = allRepo.first {
                 selectionRepo = firstRepo
+                completion(true, !list.isEmpty)
                 return
             }
+            completion(true, !list.isEmpty)
         }
     }
     

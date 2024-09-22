@@ -10,7 +10,7 @@ import Moya
 
 enum API {
     
-    case repos
+    case repos(page: Int)
     case repoIssues(repoName: String)
     case comments(issueId: Int)
     case newComment(issueId: Int, body: String)
@@ -57,7 +57,7 @@ extension API: TargetType {
     var path: String {
         switch self {
         case .repos:
-            return accessToken.isEmpty ? "users/\(owner)/repos" : "/user/repos"
+            return accessToken.isEmpty ? "/users/\(owner)/repos" : "/user/repos"
         case .repoIssues(let repoName):
             return "/repos/\(owner)/\(repoName)/issues"
         case .comments(let issueId), .newComment(let issueId, _):
@@ -112,6 +112,9 @@ extension API: TargetType {
     var task: Moya.Task {
         var parameters = [String : Any]()
         switch self {
+        case .repos(let page):
+            parameters["per_page"] = 30
+            parameters["page"] = page
         case .newComment(_, let body):
             parameters["body"] = body
         case .newIssue(let title, let body):
