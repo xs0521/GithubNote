@@ -22,6 +22,8 @@ struct MarkdownWebView: NSViewRepresentable {
         var isDidFinish = false
         var isLaunched = false
         
+        var currentText = ""
+        
         var parent: MarkdownWebView
         
         init(_ parent: MarkdownWebView) {
@@ -54,9 +56,8 @@ struct MarkdownWebView: NSViewRepresentable {
     
     func updateNSView(_ webView: WKWebView, context: Context) {
         
-        "#MD# isLoaded \(context.coordinator.isLoaded)".logI()
-        
         if !context.coordinator.isLoaded {
+            "#MD# isLoaded \(context.coordinator.isLoaded)".logI()
             // Load local HTML file from the app bundle
             if let htmlPath = Bundle.main.path(forResource: "index/index", ofType: "html") {
                 let htmlUrl = URL(fileURLWithPath: htmlPath)
@@ -67,8 +68,8 @@ struct MarkdownWebView: NSViewRepresentable {
             return
         }
         
-        "#MD# isDidFinish \(context.coordinator.isDidFinish)".logI()
         if !context.coordinator.isDidFinish {
+            "#MD# no isDidFinished".logW()
             return
         }
         
@@ -77,7 +78,7 @@ struct MarkdownWebView: NSViewRepresentable {
             let jsCode = "debugExecute()"
             webView.evaluateJavaScript(jsCode) { (result, error) in
                 if let error = error {
-                    "JavaScript injection error: \(error)".logI()
+                    "JavaScript injection error: \(error)".logE()
                 }
             }
 #endif
@@ -85,13 +86,21 @@ struct MarkdownWebView: NSViewRepresentable {
             context.coordinator.isLaunched = true
         }
         
-        "#MD# title \(markdownText.prefix(20))".logI()
-        // Inject the Markdown content into the HTML using the `renderMarkdown` function
-        let escapedMarkdownText = markdownText.replacingOccurrences(of: "`", with: "\\`")
-        let jsCode = "renderMarkdown(`\(escapedMarkdownText)`)"
-        webView.evaluateJavaScript(jsCode) { (result, error) in
-            if let error = error {
-                "JavaScript injection error: \(error)".logI()
+        DispatchQueue.global().async {
+            if context.coordinator.currentText == markdownText {
+                "#MD# content no change".logI()
+                return
+            }
+            "#MD# title \(markdownText.prefix(20))".logI()
+            // Inject the Markdown content into the HTML using the `renderMarkdown` function
+            let escapedMarkdownText = markdownText.replacingOccurrences(of: "`", with: "\\`")
+            let jsCode = "renderMarkdown(`\(escapedMarkdownText)`)"
+            DispatchQueue.main.async {
+                webView.evaluateJavaScript(jsCode) { (result, error) in
+                    if let error = error {
+                        "JavaScript injection error: \(error)".logE()
+                    }
+                }
             }
         }
     }

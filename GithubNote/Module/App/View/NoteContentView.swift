@@ -31,6 +31,7 @@ struct NoteContentView: View {
     
     @State private var showToast: Bool = false
     @State private var toastMessage: String = ""
+    @State private var toastItem: ToastItem?
     
     
     var body: some View {
@@ -56,6 +57,10 @@ struct NoteContentView: View {
                 .background(Color.white)
             }
             .onAppear(perform: {
+                ToastManager.shared.homeCallBack = { (item) in
+                    toastItem = item
+                    showToast = true
+                }
                 requestRepo {}
             })
             .onChange(of: selectionRepo) { oldValue, newValue in
@@ -64,7 +69,7 @@ struct NoteContentView: View {
                 }
             }
             .toast(isPresenting: $showToast, duration: 2.0, tapToDismiss: true){
-                AlertToast(displayMode: .hud, type: .systemImage("party.popper", .primary), title: toastMessage)
+                AlertToast(displayMode: toastItem?.mode ?? .hud, type: toastItem?.type ?? .regular, title: toastItem?.title ?? "")
             }
             .toast(isPresenting: $showLoading){
                 AlertToast(type: .loading, title: nil, subTitle: nil)
@@ -90,6 +95,14 @@ extension NoteContentView {
                 allRepo.removeAll()
                 return
             }
+            
+            if let owner = list.first?.fullName?.split(separator: "/").first {
+                "#repo# owner \(owner) - \(Account.owner)".logI()
+                if owner != Account.owner {
+                    ToastManager.shared.showFail("owner error")
+                }
+            }
+            
             allRepo = list
             if let repo = allRepo.first(where: {$0.name == Account.repo}) {
                 selectionRepo = repo

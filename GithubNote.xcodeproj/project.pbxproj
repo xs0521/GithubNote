@@ -43,6 +43,7 @@
 		B1EBBD9D2C9EF525005FB760 /* EmailManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EBBD9C2C9EF525005FB760 /* EmailManager.swift */; };
 		B1EBBDA02C9F0079005FB760 /* LaunchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EBBD9F2C9F0079005FB760 /* LaunchApp.swift */; };
 		B1EBBDA22C9F2AA9005FB760 /* CustomURLSchemeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EBBDA12C9F2AA9005FB760 /* CustomURLSchemeHandler.swift */; };
+		B1EBBDA42C9FDB28005FB760 /* ToastManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EBBDA32C9FDB28005FB760 /* ToastManager.swift */; };
 		B1EC0DE82BBB8DD4007975D9 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EC0DE72BBB8DD4007975D9 /* String+Extension.swift */; };
 		B1EC0DF62BBE434F007975D9 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EC0DF52BBE434F007975D9 /* LoginView.swift */; };
 		B1EC0DF82BBE47A8007975D9 /* UserDefaults+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EC0DF72BBE47A8007975D9 /* UserDefaults+Extension.swift */; };
@@ -121,6 +122,7 @@
 		B1EBBD9C2C9EF525005FB760 /* EmailManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailManager.swift; sourceTree = "<group>"; };
 		B1EBBD9F2C9F0079005FB760 /* LaunchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchApp.swift; sourceTree = "<group>"; };
 		B1EBBDA12C9F2AA9005FB760 /* CustomURLSchemeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomURLSchemeHandler.swift; sourceTree = "<group>"; };
+		B1EBBDA32C9FDB28005FB760 /* ToastManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastManager.swift; sourceTree = "<group>"; };
 		B1EC0DE72BBB8DD4007975D9 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		B1EC0DF52BBE434F007975D9 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		B1EC0DF72BBE47A8007975D9 /* UserDefaults+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extension.swift"; sourceTree = "<group>"; };
@@ -542,6 +544,7 @@
 		B1FE674C2C45766800970DA0 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				B1EBBDA32C9FDB28005FB760 /* ToastManager.swift */,
 				B1EBBD9B2C9EF50F005FB760 /* Email */,
 				B1EBBD982C9ED683005FB760 /* View */,
 				B1CE86592C592690002C8335 /* Notification */,
@@ -831,6 +834,7 @@
 				B1EBBD972C9E93EE005FB760 /* SettingsView.swift in Sources */,
 				B10931012C3D8784006B5DB0 /* NoteTaskView.swift in Sources */,
 				B1EC0DE82BBB8DD4007975D9 /* String+Extension.swift in Sources */,
+				B1EBBDA42C9FDB28005FB760 /* ToastManager.swift in Sources */,
 				B1CE86582C57EF77002C8335 /* NoteImageBrowserImagesView.swift in Sources */,
 				B1ED886A2C4ACAFE00FD8DEB /* API.swift in Sources */,
 				B1ED88712C4ACE0E00FD8DEB /* Modelable.swift in Sources */,

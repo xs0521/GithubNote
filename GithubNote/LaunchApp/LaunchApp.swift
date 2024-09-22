@@ -14,6 +14,8 @@ class LaunchApp {
     init() {
         LogManager.setup()
         WKWebView.swizzleHandlesURLScheme
-        SDWebImageDownloader.shared.setValue("Bearer \(Account.accessToken)", forHTTPHeaderField: "Authorization")
+        if !Account.accessToken.isEmpty {
+            SDWebImageDownloader.shared.setValue("Bearer \(Account.accessToken)", forHTTPHeaderField: "Authorization")
+        }
     }
 }

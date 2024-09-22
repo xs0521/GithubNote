@@ -57,7 +57,7 @@ extension API: TargetType {
     var path: String {
         switch self {
         case .repos:
-            return "/user/repos"
+            return accessToken.isEmpty ? "users/\(owner)/repos" : "/user/repos"
         case .repoIssues(let repoName):
             return "/repos/\(owner)/\(repoName)/issues"
         case .comments(let issueId), .newComment(let issueId, _):
@@ -98,7 +98,9 @@ extension API: TargetType {
     
     var headers: [String : String]? {
         var params = [String : String]()
-        params["Authorization"] = "token \(accessToken)"
+        if !accessToken.isEmpty {
+            params["Authorization"] = "token \(accessToken)"
+        }
         switch self {
         case .newIssue, .deleteComment, .updateImage, .deleteImage:
             params["Accept"] = "application/vnd.github.v3+json"
