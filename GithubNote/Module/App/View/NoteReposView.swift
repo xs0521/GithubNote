@@ -15,18 +15,13 @@ struct NoteReposView: View {
     var body: some View {
         List(selection: $selectionRepo) {
             ForEach(reposGroups) { selection in
-                VStack {
-                    HStack {
-                        Label(title: {
-                            Text(selection.name ?? "unknow")
-                        }, icon: {
-                            Image(systemName: "star")
-                                .foregroundStyle(Color.primary)
-                        })
-                        .tag(selection)
-                        Spacer()
-                    }
-                }
+                Label(title: {
+                    Text(selection.name ?? "unknow")
+                }, icon: {
+                    Image(systemName: "square.stack.3d.up.fill")
+                        .foregroundStyle(Color.primary)
+                })
+                .tag(selection)
             }
         }
         .background(Color.background)

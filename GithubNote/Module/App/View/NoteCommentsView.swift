@@ -25,7 +25,7 @@ struct NoteCommentsView: View {
                         Label(title: {
                             Text(selection.body?.toTitle() ?? "")
                         }, icon: {
-                            Image(systemName: "note.text")
+                            Image(systemName: "note")
                                 .foregroundStyle(Color.primary)
                         })
                         .tag(selection)

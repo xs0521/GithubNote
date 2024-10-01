@@ -14,7 +14,7 @@ struct CustomDivider: View {
     var body: some View {
         Rectangle()
             .fill(colorScheme == .dark ? Color.init(hex: "#000000") : Color.init(hex: "#DCDCDC"))
-            .frame(height: 1.0)
+            .frame(height: 0.5)
             .edgesIgnoringSafeArea(.horizontal)
     }
 }
