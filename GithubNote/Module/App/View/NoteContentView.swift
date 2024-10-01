@@ -46,6 +46,8 @@ struct NoteContentView: View {
               
             } detail: {
                 NoteWritePannelView(commentGroups: $allComment,
+                                    selectionRepo: $selectionRepo,
+                                    selectionIssue: $selectionIssue,
                                           comment: $selectionComment,
                                             issue: $selectionIssue,
                                  showImageBrowser: $showImageBrowser,

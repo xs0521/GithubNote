@@ -17,9 +17,11 @@ struct NoteSidebarView: View {
     @Binding var selectionRepo: RepoModel?
     
     @State private var issueGroups = [Issue]()
+    @State private var issuePage = 1
     @Binding var selectionIssue: Issue?
     
     @Binding var commentGroups: [Comment]
+    @State private var commentPage = 1
     @Binding var selectionComment: Comment?
     
     @Binding var showImageBrowser: Bool?
@@ -66,9 +68,7 @@ struct NoteSidebarView: View {
                 }
             }
             .onAppear {
-                requestRepo(repoPage) { success, more in
-                    
-                }
+                requestAllRepo { }
             }
             if showReposView {
                 NoteReposView(reposGroups: $reposGroups, selectionRepo: $selectionRepo)
@@ -97,7 +97,7 @@ struct NoteSidebarView: View {
                     } else {
                         Button {
                             isSyncRepos = true
-                            requestRepo(repoPage, false) { success, more in
+                            requestAllRepo {
                                 isSyncRepos = false
                             }
                         } label: {
@@ -125,7 +125,12 @@ struct NoteSidebarView: View {
 
 extension NoteSidebarView {
     
-    private func requestRepo(_ page: Int, _ readCache: Bool = true, _ completion: @escaping RequestCallBack) -> Void {
+    private func requestAllRepo(_ completion: CommonCallBack) -> Void {
+        repoPage = 1
+        requestRepo(repoPage, false, true) { success, more in }
+    }
+    
+    private func requestRepo(_ page: Int, _ readCache: Bool = true, _ next: Bool = false, _ completion: @escaping RequestCallBack) -> Void {
         Networking<RepoModel>().request(API.repos(page: page), readCache: readCache, parseHandler: ModelGenerator(snakeCase: true)) { (data, _, _) in
             
             guard let list = data else {
@@ -133,35 +138,41 @@ extension NoteSidebarView {
                 return
             }
             
-            if let owner = list.first?.fullName?.split(separator: "/").first {
-                "#repo# owner \(owner) - \(Account.owner)".logI()
-                if owner != Account.owner {
-                    ToastManager.shared.showFail("owner error")
-                }
-            }
-            
             if page <= 1 {
+                if let owner = list.first?.fullName?.split(separator: "/").first {
+                    "#repo# owner \(owner) - \(Account.owner)".logI()
+                    if owner != Account.owner {
+                        ToastManager.shared.showFail("owner error")
+                    }
+                }
                 reposGroups.removeAll()
             }
             
             reposGroups.append(contentsOf: list)
             if let repo = reposGroups.first(where: {$0.name == Account.repo}) {
                 selectionRepo = repo
-                completion(true, !list.isEmpty)
-                return
+            } else {
+                if let firstRepo = reposGroups.first {
+                    selectionRepo = firstRepo
+                }
             }
-            if let firstRepo = reposGroups.first {
-                selectionRepo = firstRepo
+            
+            if next {
+                if list.isEmpty {
+                    completion(true, false)
+                } else {
+                    repoPage += 1
+                    requestRepo(repoPage, false, next, completion)
+                }
+            } else {
                 completion(true, !list.isEmpty)
-                return
             }
-            completion(true, !list.isEmpty)
         }
     }
     
     private func requestIssue(_ readCache: Bool = true, _ completion: @escaping CommonCallBack) -> Void {
         guard let repoName = selectionRepo?.name else { return }
-        Networking<Issue>().request(API.repoIssues(repoName: repoName), readCache: readCache,
+        Networking<Issue>().request(API.repoIssues(repoName: repoName, page: issuePage), readCache: readCache,
                                     parseHandler: ModelGenerator(snakeCase: true, filter: true)) { (data, _, _) in
             guard let list = data, !list.isEmpty else {
                 issueGroups.removeAll()
@@ -174,7 +185,7 @@ extension NoteSidebarView {
     
     private func commentsData(_ cache: Bool = true, _ complete: @escaping () -> Void) -> Void {
         guard let number = selectionIssue?.number else { return }
-        Networking<Comment>().request(API.comments(issueId: number), readCache: cache, parseHandler: ModelGenerator(snakeCase: true)) { (data, _, _) in
+        Networking<Comment>().request(API.comments(issueId: number, page: commentPage), readCache: cache, parseHandler: ModelGenerator(snakeCase: true)) { (data, _, _) in
             guard let list = data, !list.isEmpty else {
                 commentGroups.removeAll()
                 return

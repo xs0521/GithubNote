@@ -26,27 +26,27 @@ class CacheManager {
     func updateComments(_ list: [Comment], issueId: Int) -> Void {
         let data = list.compactMap({$0.data()}).compactMap({$0.anyObj()})
         let jsonData = try? JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
-        guard let path = API.comments(issueId: issueId).cachePath else { return }
+        guard let path = API.comments(issueId: issueId, page: 1).cachePath else { return }
         try? CacheManager.shared.store.setObject(jsonData, forKey: path)
     }
     
     func updateIssues(_ list: [Issue], repoName: String) -> Void {
         let data = list.compactMap({$0.data()}).compactMap({$0.anyObj()})
         let jsonData = try? JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
-        guard let path = API.repoIssues(repoName: repoName).cachePath else { return }
+        guard let path = API.repoIssues(repoName: repoName, page: 1).cachePath else { return }
         try? CacheManager.shared.store.setObject(jsonData, forKey: path)
     }
     
     func updateImages(_ list: [GithubImage], repoName: String) -> Void {
         let data = list.compactMap({$0.data()}).compactMap({$0.anyObj()})
         let jsonData = try? JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
-        guard let path = API.repoImages.cachePath else { return }
+        guard let path = API.repoImages(page: 1).cachePath else { return }
         try? CacheManager.shared.store.setObject(jsonData, forKey: path)
     }
     
     func appendImage(_ image: GithubImage, repoName: String) -> Void {
         
-        guard let path = API.repoImages.cachePath else { return }
+        guard let path = API.repoImages(page: 1).cachePath else { return }
         let data = try? CacheManager.shared.store.object(forKey: path)
         
         var modelList = [GithubImage]()

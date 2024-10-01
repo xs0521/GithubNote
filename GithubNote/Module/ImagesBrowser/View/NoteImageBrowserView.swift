@@ -21,7 +21,9 @@ struct NoteImageBrowserView: View {
     
     @State private var showProgress = false
     
+    
     @State var data: [GithubImage] = []
+    @State private var dataPage = 1
     
     @Environment(\.colorScheme) var colorScheme
 
@@ -82,7 +84,7 @@ struct NoteImageBrowserView: View {
     func requestImagesData(_ writeCache: Bool = true, _ readCache: Bool = true) -> Void {
         
         showLoading = true
-        Networking<GithubImage>().request(API.repoImages, writeCache: writeCache, readCache: readCache) { data, cache, code in
+        Networking<GithubImage>().request(API.repoImages(page: dataPage), writeCache: writeCache, readCache: readCache) { data, cache, code in
             if code == MessageCode.notFound.rawValue {
                 self.data.removeAll()
                 requestCreateImageDir(completion: {

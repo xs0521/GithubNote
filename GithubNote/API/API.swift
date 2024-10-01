@@ -8,18 +8,20 @@
 import Foundation
 import Moya
 
+private let kMaxPage = 100
+
 enum API {
     
     case repos(page: Int)
-    case repoIssues(repoName: String)
-    case comments(issueId: Int)
+    case repoIssues(repoName: String, page: Int)
+    case comments(issueId: Int, page: Int)
     case newComment(issueId: Int, body: String)
     case updateComment(commentId: Int, body: String)
     case deleteComment(commentId: Int)
     case newIssue(title: String, body: String)
     case updateIssue(issueId: Int, state: IssueState, title: String, body: String)
     case createImagesDirectory
-    case repoImages
+    case repoImages(page: Int)
     case updateImage(imageBase64: String, fileName: String)
     case deleteImage(filePath: String, sha: String)
     
@@ -58,9 +60,9 @@ extension API: TargetType {
         switch self {
         case .repos:
             return accessToken.isEmpty ? "/users/\(owner)/repos" : "/user/repos"
-        case .repoIssues(let repoName):
+        case .repoIssues(let repoName, _):
             return "/repos/\(owner)/\(repoName)/issues"
-        case .comments(let issueId), .newComment(let issueId, _):
+        case .comments(let issueId, _), .newComment(let issueId, _):
             return "/repos/\(owner)/\(selectRepo)/issues/\(issueId)/comments"
         case .updateComment(let commentId, _):
             return "/repos/\(owner)/\(selectRepo)/issues/comments/\(commentId)"
@@ -112,8 +114,11 @@ extension API: TargetType {
     var task: Moya.Task {
         var parameters = [String : Any]()
         switch self {
-        case .repos(let page):
-            parameters["per_page"] = 30
+        case .repos(let page),
+             .repoIssues(_, let page),
+             .comments(_, let page),
+             .repoImages(let page):
+            parameters["per_page"] = kMaxPage
             parameters["page"] = page
         case .newComment(_, let body):
             parameters["body"] = body

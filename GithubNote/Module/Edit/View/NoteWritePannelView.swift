@@ -16,6 +16,9 @@ struct NoteWritePannelView: View {
     
     @Binding var commentGroups: [Comment]
     
+    @Binding var selectionRepo: RepoModel?
+    @Binding var selectionIssue: Issue?
+    
     @Binding var comment: Comment?
     @Binding var issue: Issue?
     @Binding var showImageBrowser: Bool?
@@ -54,6 +57,8 @@ struct NoteWritePannelView: View {
             .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
             .toolbar {
                 ToolbarItemGroup {
+                    Text(currentTitle())
+                        .foregroundColor(Color.init(hex: "#444443"))
                     Spacer()
                     
                     if showImageBrowser! {
@@ -140,6 +145,20 @@ struct NoteWritePannelView: View {
         }
     }
     
+    private func currentTitle() -> String {
+        
+        var title = "\(Account.owner)"
+        if let repoName = selectionRepo?.name {
+            title += " > \(repoName)"
+        }
+        if let issueName = selectionIssue?.title {
+            title += " > \(issueName)"
+        }
+        if let commentName = comment?.body?.toTitle() {
+            title += " > \(commentName)"
+        }
+        return title
+    }
     
     private func updateContent() -> Void {
         guard let body = markdownString, let commentid = comment?.id else { return }

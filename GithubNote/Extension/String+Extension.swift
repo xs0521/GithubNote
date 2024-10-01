@@ -15,7 +15,7 @@ extension String {
         var value = trimmingCharacters(in: CharacterSet(charactersIn: "#"))
         value = value.trimmingCharacters(in: .whitespaces)
         
-        value = String(value.prefix(100))
+        value = String(value.prefix(200))
         let values = value.components(separatedBy: "\n")
         if values.count > 0 {
             value = values.first ?? value
