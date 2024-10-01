@@ -115,9 +115,9 @@ struct NoteWritePannelView: View {
                         Button {
                             editIsShown.toggle()
                         } label: {
-                            Label("Show inspector", systemImage: editIsShown ? "doc.text.image" : "square.and.pencil")
-                                .font(.system(size: 16))
-                                .fontWeight(.bold)
+                            Label("Show inspector", systemImage: editIsShown ? "xmark.circle" : "square.and.pencil")
+                                .font(.system(size: editIsShown ? 14 : 16))
+                                .fontWeight(editIsShown ? .regular : .bold)
                         }
                     }
                 }

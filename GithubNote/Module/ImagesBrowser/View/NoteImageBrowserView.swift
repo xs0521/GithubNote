@@ -32,7 +32,7 @@ struct NoteImageBrowserView: View {
                                        showToast: $showToast,
                                        toastMessage: $toastMessage,
                                        showLoading: $showLoading)
-                .background(Color.white)
+                .background(Color.init(hex: "#ECECEB"))
                 .opacity(animated ? 1.0 : 0.0)
                 .onAppear(perform: {
                     let baseAnimation = Animation.easeInOut(duration: 0.6)

@@ -23,7 +23,7 @@ struct NoteIssuesHeaderView: View {
                 Button {
                     issueSyncCallBack({})
                 } label: {
-                    Image(systemName: "arrow.triangle.2.circlepath")
+                    Image(systemName: "icloud.and.arrow.down")
                 }
                 .buttonStyle(.plain)
                 .padding(.trailing, 5)

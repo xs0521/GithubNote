@@ -25,7 +25,7 @@ struct NoteImageBrowserImagesView: View {
     
     
     let adaptiveColumn = [
-        GridItem(.adaptive(minimum: NoteImageBrowserImagesView.size.width))
+        GridItem(.adaptive(minimum: NoteImageBrowserImagesView.size.width, maximum: NoteImageBrowserImagesView.size.width))
     ]
     
     var body: some View {
@@ -43,14 +43,19 @@ struct NoteImageBrowserImagesView: View {
                                 url = item.imageUrl()
                                 showPreview = true
                             }, label: {
-                                WebImage(url: URL(string: item.imageUrl()))
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: NoteImageBrowserImagesView.size.width,
-                                           height: NoteImageBrowserImagesView.size.height, alignment: .center)
-                                    .cornerRadius(10)
-                                    .transition(.fade(duration: 0.3))
-                                    .foregroundColor(.gray)
+                                ZStack {
+                                    Color.init(hex: "#D2D2D3")
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                        .opacity(0.3)
+                                    WebImage(url: URL(string: item.imageUrl()))
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                        
+                                }
+                                .frame(width: NoteImageBrowserImagesView.size.width, height: NoteImageBrowserImagesView.size.height)
+                                .cornerRadius(10)
+                                .transition(.fade(duration: 0.3))
                             })
                             .buttonStyle(.plain)
                             .contextMenu {
@@ -68,12 +73,12 @@ struct NoteImageBrowserImagesView: View {
             }
             .padding(.vertical, 160)
             .padding(.horizontal, 80)
-            .background(Color.background)
+            .background(Color.clear)
             .frame(minWidth: 220, maxWidth: .infinity, minHeight: 120, maxHeight: .infinity)
             if showPreview {
                 ZStack {
                     VStack {
-                        Color.gray
+                        Color.init(hex: "#EDEDEC")
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .onTapGesture {

@@ -12,10 +12,11 @@ struct NoteSidebarView: View {
     
     @Binding var userCreatedGroups: [RepoModel]
     
-    @Binding var reposGroups: [RepoModel]
+    @State private var reposGroups: [RepoModel] = [RepoModel]()
+    @State private var repoPage = 1
     @Binding var selectionRepo: RepoModel?
     
-    @Binding var issueGroups: [Issue]
+    @State private var issueGroups = [Issue]()
     @Binding var selectionIssue: Issue?
     
     @Binding var commentGroups: [Comment]
@@ -25,13 +26,6 @@ struct NoteSidebarView: View {
     
     @State private var isSyncRepos: Bool = false
     @State private var showReposView: Bool = false
-    
-    @State private var footerRefreshing: Bool = false
-    @State private var noMore: Bool = false
-    
-    var issueSyncCallBack: (_ callBack: @escaping CommonCallBack) -> ()
-    var reposSyncCallBack: (_ callBack: @escaping RequestCallBack) -> ()
-    var reposMoreCallBack: (_ callBack: @escaping RequestCallBack) -> ()
     
     var body: some View {
         ZStack {
@@ -54,12 +48,26 @@ struct NoteSidebarView: View {
                 NoteIssuesHeaderView(createIssueCallBack: { issue in
                     issueGroups.insert(issue, at: 0)
                     selectionIssue = issue
-                }, issueSyncCallBack: issueSyncCallBack)
+                }) { callBack in
+                    requestIssue(false) {
+                        
+                    }
+                }
                 NoteIssuesView(issueGroups: $issueGroups,
                                selectionIssue: $selectionIssue,
                                selectionRepo: $selectionRepo,
                                showReposView: $showReposView) {
                     commentsData {}
+                }
+            }
+            .onChange(of: selectionRepo) { oldValue, newValue in
+                if oldValue != newValue {
+                    requestIssue {}
+                }
+            }
+            .onAppear {
+                requestRepo(repoPage) { success, more in
+                    
                 }
             }
             if showReposView {
@@ -89,11 +97,11 @@ struct NoteSidebarView: View {
                     } else {
                         Button {
                             isSyncRepos = true
-                            reposSyncCallBack({ success, more in
+                            requestRepo(repoPage, false) { success, more in
                                 isSyncRepos = false
-                            })
+                            }
                         } label: {
-                            Image(systemName: "arrow.triangle.2.circlepath")
+                            Image(systemName: "icloud.and.arrow.down")
                         }
                         .buttonStyle(.plain)
                         .padding()
@@ -111,18 +119,58 @@ struct NoteSidebarView: View {
             }
         }
     }
-    
-    func loadMore() -> Void {
-        reposMoreCallBack({ success, more in
-            footerRefreshing = false
-            noMore = !more
-        })
-    }
 }
 
 
 
 extension NoteSidebarView {
+    
+    private func requestRepo(_ page: Int, _ readCache: Bool = true, _ completion: @escaping RequestCallBack) -> Void {
+        Networking<RepoModel>().request(API.repos(page: page), readCache: readCache, parseHandler: ModelGenerator(snakeCase: true)) { (data, _, _) in
+            
+            guard let list = data else {
+                completion(false, false)
+                return
+            }
+            
+            if let owner = list.first?.fullName?.split(separator: "/").first {
+                "#repo# owner \(owner) - \(Account.owner)".logI()
+                if owner != Account.owner {
+                    ToastManager.shared.showFail("owner error")
+                }
+            }
+            
+            if page <= 1 {
+                reposGroups.removeAll()
+            }
+            
+            reposGroups.append(contentsOf: list)
+            if let repo = reposGroups.first(where: {$0.name == Account.repo}) {
+                selectionRepo = repo
+                completion(true, !list.isEmpty)
+                return
+            }
+            if let firstRepo = reposGroups.first {
+                selectionRepo = firstRepo
+                completion(true, !list.isEmpty)
+                return
+            }
+            completion(true, !list.isEmpty)
+        }
+    }
+    
+    private func requestIssue(_ readCache: Bool = true, _ completion: @escaping CommonCallBack) -> Void {
+        guard let repoName = selectionRepo?.name else { return }
+        Networking<Issue>().request(API.repoIssues(repoName: repoName), readCache: readCache,
+                                    parseHandler: ModelGenerator(snakeCase: true, filter: true)) { (data, _, _) in
+            guard let list = data, !list.isEmpty else {
+                issueGroups.removeAll()
+                return
+            }
+            issueGroups = list
+            completion()
+        }
+    }
     
     private func commentsData(_ cache: Bool = true, _ complete: @escaping () -> Void) -> Void {
         guard let number = selectionIssue?.number else { return }

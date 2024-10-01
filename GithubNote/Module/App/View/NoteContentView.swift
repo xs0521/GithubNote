@@ -10,10 +10,10 @@ import AlertToast
 
 struct NoteContentView: View {
     
-    @State private var allRepo: [RepoModel] = [RepoModel]()
+    
     @State private var selectionRepo: RepoModel?
     
-    @State private var allIssue = [Issue]()
+    
     @State private var selectionIssue: Issue?
     
     @State private var allComment = [Comment]()
@@ -33,27 +33,16 @@ struct NoteContentView: View {
     @State private var toastMessage: String = ""
     @State private var toastItem: ToastItem?
     
-    @State private var repoPage = 1
     
     var body: some View {
         ZStack {
             NavigationSplitView {
                 NoteSidebarView(userCreatedGroups: $userCreatedGroups,
-                                reposGroups: $allRepo,
                                 selectionRepo: $selectionRepo,
-                                issueGroups: $allIssue,
                                 selectionIssue: $selectionIssue,
                                 commentGroups: $allComment,
                                 selectionComment: $selectionComment, 
-                                showImageBrowser: $showImageBrowser,
-                                issueSyncCallBack: { callBack in requestIssue(false, callBack)},
-                                reposSyncCallBack: { callBack in
-                    repoPage = 1
-                    requestRepo(repoPage, false, callBack)
-                }, reposMoreCallBack: { callBack in
-                    repoPage += 1
-                    requestRepo(repoPage, false, callBack)
-                })
+                                showImageBrowser: $showImageBrowser)
               
             } detail: {
                 NoteWritePannelView(commentGroups: $allComment,
@@ -63,19 +52,13 @@ struct NoteContentView: View {
                                       showLoading: $showLoading)
                 .background(Color.white)
             }
+            .blur(radius: (showImageBrowser ?? false) ? 5 : 0, opaque: true)
             .onAppear(perform: {
                 ToastManager.shared.homeCallBack = { (item) in
                     toastItem = item
                     showToast = true
                 }
-                requestRepo(repoPage) {_, _ in
-                }
             })
-            .onChange(of: selectionRepo) { oldValue, newValue in
-                if oldValue != newValue {
-                    requestIssue {}
-                }
-            }
             .toast(isPresenting: $showToast, duration: 2.0, tapToDismiss: true){
                 AlertToast(displayMode: toastItem?.mode ?? .hud, type: toastItem?.type ?? .regular, title: toastItem?.title ?? "")
             }
@@ -90,56 +73,6 @@ struct NoteContentView: View {
                                      showLoading: $showLoading)
             }
             
-        }
-    }
-}
-
-extension NoteContentView {
-    
-    private func requestRepo(_ page: Int, _ readCache: Bool = true, _ completion: @escaping RequestCallBack) -> Void {
-        Networking<RepoModel>().request(API.repos(page: page), readCache: readCache, parseHandler: ModelGenerator(snakeCase: true)) { (data, _, _) in
-            
-            guard let list = data else {
-                completion(false, false)
-                return
-            }
-            
-            if let owner = list.first?.fullName?.split(separator: "/").first {
-                "#repo# owner \(owner) - \(Account.owner)".logI()
-                if owner != Account.owner {
-                    ToastManager.shared.showFail("owner error")
-                }
-            }
-            
-            if page <= 1 {
-                allRepo.removeAll()
-            }
-            
-            allRepo.append(contentsOf: list)
-            if let repo = allRepo.first(where: {$0.name == Account.repo}) {
-                selectionRepo = repo
-                completion(true, !list.isEmpty)
-                return
-            }
-            if let firstRepo = allRepo.first {
-                selectionRepo = firstRepo
-                completion(true, !list.isEmpty)
-                return
-            }
-            completion(true, !list.isEmpty)
-        }
-    }
-    
-    private func requestIssue(_ readCache: Bool = true, _ completion: @escaping CommonCallBack) -> Void {
-        guard let repoName = selectionRepo?.name else { return }
-        Networking<Issue>().request(API.repoIssues(repoName: repoName), readCache: readCache,
-                                    parseHandler: ModelGenerator(snakeCase: true, filter: true)) { (data, _, _) in
-            guard let list = data, !list.isEmpty else {
-                allIssue.removeAll()
-                return
-            }
-            allIssue = list
-            completion()
         }
     }
 }
