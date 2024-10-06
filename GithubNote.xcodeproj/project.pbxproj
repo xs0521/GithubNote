@@ -49,6 +49,12 @@
 		B1EBBDBE2CA06A63005FB760 /* NoteIssuesHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EBBDBD2CA06A63005FB760 /* NoteIssuesHeaderView.swift */; };
 		B1EBBDC02CA06C99005FB760 /* NoteCommentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EBBDBF2CA06C99005FB760 /* NoteCommentsView.swift */; };
 		B1EBBDC22CA06CA4005FB760 /* NoteCommentsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EBBDC12CA06CA4005FB760 /* NoteCommentsHeaderView.swift */; };
+		B1EBBDC42CB23818005FB760 /* SQLManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EBBDC32CB23818005FB760 /* SQLManager.swift */; };
+		B1EBBDC62CB24D65005FB760 /* SQLManager+Repo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EBBDC52CB24D65005FB760 /* SQLManager+Repo.swift */; };
+		B1EBBDC82CB24D72005FB760 /* SQLManager+Issue.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EBBDC72CB24D72005FB760 /* SQLManager+Issue.swift */; };
+		B1EBBDCA2CB24DA9005FB760 /* SQLManager+Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EBBDC92CB24DA9005FB760 /* SQLManager+Comment.swift */; };
+		B1EBBDCC2CB2E718005FB760 /* WebServerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EBBDCB2CB2E718005FB760 /* WebServerManager.swift */; };
+		B1EBBDCE2CB2F31A005FB760 /* bool+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EBBDCD2CB2F31A005FB760 /* bool+Extension.swift */; };
 		B1EC0DE82BBB8DD4007975D9 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EC0DE72BBB8DD4007975D9 /* String+Extension.swift */; };
 		B1EC0DF62BBE434F007975D9 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EC0DF52BBE434F007975D9 /* LoginView.swift */; };
 		B1EC0DF82BBE47A8007975D9 /* UserDefaults+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EC0DF72BBE47A8007975D9 /* UserDefaults+Extension.swift */; };
@@ -133,6 +139,12 @@
 		B1EBBDBD2CA06A63005FB760 /* NoteIssuesHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteIssuesHeaderView.swift; sourceTree = "<group>"; };
 		B1EBBDBF2CA06C99005FB760 /* NoteCommentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCommentsView.swift; sourceTree = "<group>"; };
 		B1EBBDC12CA06CA4005FB760 /* NoteCommentsHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCommentsHeaderView.swift; sourceTree = "<group>"; };
+		B1EBBDC32CB23818005FB760 /* SQLManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLManager.swift; sourceTree = "<group>"; };
+		B1EBBDC52CB24D65005FB760 /* SQLManager+Repo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SQLManager+Repo.swift"; sourceTree = "<group>"; };
+		B1EBBDC72CB24D72005FB760 /* SQLManager+Issue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SQLManager+Issue.swift"; sourceTree = "<group>"; };
+		B1EBBDC92CB24DA9005FB760 /* SQLManager+Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SQLManager+Comment.swift"; sourceTree = "<group>"; };
+		B1EBBDCB2CB2E718005FB760 /* WebServerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebServerManager.swift; sourceTree = "<group>"; };
+		B1EBBDCD2CB2F31A005FB760 /* bool+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "bool+Extension.swift"; sourceTree = "<group>"; };
 		B1EC0DE72BBB8DD4007975D9 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		B1EC0DF52BBE434F007975D9 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		B1EC0DF72BBE47A8007975D9 /* UserDefaults+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extension.swift"; sourceTree = "<group>"; };
@@ -328,6 +340,10 @@
 			isa = PBXGroup;
 			children = (
 				B1ED88722C4BD40600FD8DEB /* CacheManager.swift */,
+				B1EBBDC32CB23818005FB760 /* SQLManager.swift */,
+				B1EBBDC52CB24D65005FB760 /* SQLManager+Repo.swift */,
+				B1EBBDC72CB24D72005FB760 /* SQLManager+Issue.swift */,
+				B1EBBDC92CB24DA9005FB760 /* SQLManager+Comment.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -534,6 +550,7 @@
 				B148A5BB2BC154FA00B7FBA8 /* Color+Extension.swift */,
 				B1FE674F2C46B72400970DA0 /* View+Extension.swift */,
 				B1B55A912C52A0C000820689 /* Data+Extension.swift */,
+				B1EBBDCD2CB2F31A005FB760 /* bool+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -559,6 +576,7 @@
 		B1FE674C2C45766800970DA0 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				B1EBBDCB2CB2E718005FB760 /* WebServerManager.swift */,
 				B1FE674D2C45767600970DA0 /* Common.swift */,
 				B1EBBDA32C9FDB28005FB760 /* ToastManager.swift */,
 				B1EBBD9B2C9EF50F005FB760 /* Email */,
@@ -838,9 +856,11 @@
 				B1B55A8B2C515C9000820689 /* AppModel.swift in Sources */,
 				B1EBBDA02C9F0079005FB760 /* LaunchApp.swift in Sources */,
 				B1EBBDC02CA06C99005FB760 /* NoteCommentsView.swift in Sources */,
+				B1EBBDC82CB24D72005FB760 /* SQLManager+Issue.swift in Sources */,
 				B11FDA8B2BBFE8C500EC7083 /* AppConst.swift in Sources */,
 				B1EBBD942C9E886C005FB760 /* LogManager.swift in Sources */,
 				B1ED886F2C4ACBB900FD8DEB /* RepoModel.swift in Sources */,
+				B1EBBDCC2CB2E718005FB760 /* WebServerManager.swift in Sources */,
 				B1ED88672C4AC60000FD8DEB /* NetworkError.swift in Sources */,
 				B1EBBDBC2CA05FA6005FB760 /* NoteIssuesView.swift in Sources */,
 				B16462722BB0464A00F57548 /* Account.swift in Sources */,
@@ -851,19 +871,23 @@
 				B1ED88632C4ABC4E00FD8DEB /* Networking.swift in Sources */,
 				B1EBBD972C9E93EE005FB760 /* SettingsView.swift in Sources */,
 				B10931012C3D8784006B5DB0 /* NoteTaskView.swift in Sources */,
+				B1EBBDC62CB24D65005FB760 /* SQLManager+Repo.swift in Sources */,
 				B1EC0DE82BBB8DD4007975D9 /* String+Extension.swift in Sources */,
 				B1EBBDA42C9FDB28005FB760 /* ToastManager.swift in Sources */,
 				B1CE86582C57EF77002C8335 /* NoteImageBrowserImagesView.swift in Sources */,
 				B1ED886A2C4ACAFE00FD8DEB /* API.swift in Sources */,
+				B1EBBDCA2CB24DA9005FB760 /* SQLManager+Comment.swift in Sources */,
 				B1ED88712C4ACE0E00FD8DEB /* Modelable.swift in Sources */,
 				B1EBBD9D2C9EF525005FB760 /* EmailManager.swift in Sources */,
 				B1DA105D2C9DB6CA0074DA32 /* MarkdownWebView.swift in Sources */,
+				B1EBBDCE2CB2F31A005FB760 /* bool+Extension.swift in Sources */,
 				B1EBBDC22CA06CA4005FB760 /* NoteCommentsHeaderView.swift in Sources */,
 				B1FE67502C46B72400970DA0 /* View+Extension.swift in Sources */,
 				B1EBBDA22C9F2AA9005FB760 /* CustomURLSchemeHandler.swift in Sources */,
 				B1EC0DF62BBE434F007975D9 /* LoginView.swift in Sources */,
 				B10930FD2C3D85C5006B5DB0 /* NoteSidebarView.swift in Sources */,
 				B1922A4D2BAFF1FB00200828 /* GithubNoteApp.swift in Sources */,
+				B1EBBDC42CB23818005FB760 /* SQLManager.swift in Sources */,
 				B1E55A422BBF96B7000209ED /* IssuesModel.swift in Sources */,
 				B148A5BC2BC154FA00B7FBA8 /* Color+Extension.swift in Sources */,
 				B10930FF2C3D8748006B5DB0 /* NoteTaskListView.swift in Sources */,

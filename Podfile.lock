@@ -5,6 +5,16 @@ PODS:
   - CocoaLumberjack/Core (3.8.5)
   - CocoaLumberjack/Swift (3.8.5):
     - CocoaLumberjack/Core
+  - FMDB (2.7.12):
+    - FMDB/standard (= 2.7.12)
+  - FMDB/Core (2.7.12)
+  - FMDB/standard (2.7.12):
+    - FMDB/Core
+  - GCDWebServer/Core (3.5.4)
+  - GCDWebServer/WebDAV (3.5.4):
+    - GCDWebServer/Core
+  - GCDWebServer/WebUploader (3.5.4):
+    - GCDWebServer/Core
   - Highlightr (2.1.0)
   - Moya (15.0.0):
     - Moya/Core (= 15.0.0)
@@ -14,7 +24,10 @@ PODS:
 DEPENDENCIES:
   - AlertToast (= 1.3.9)
   - Cache (from `https://github.com/hyperoslo/Cache.git`, tag `7.2.0`)
-  - CocoaLumberjack/Swift
+  - CocoaLumberjack/Swift (= 3.8.5)
+  - FMDB (= 2.7.12)
+  - GCDWebServer/WebDAV (~> 3.0)
+  - GCDWebServer/WebUploader (~> 3.0)
   - Highlightr (= 2.1.0)
   - Moya (~> 15.0)
 
@@ -23,6 +36,8 @@ SPEC REPOS:
     - Alamofire
     - AlertToast
     - CocoaLumberjack
+    - FMDB
+    - GCDWebServer
     - Highlightr
     - Moya
 
@@ -41,9 +56,11 @@ SPEC CHECKSUMS:
   AlertToast: e8db15da727beff75500bcf33a78cd617f408fa1
   Cache: 79717afe1491def3c772c242bc1166766d7b9b36
   CocoaLumberjack: 6a459bc897d6d80bd1b8c78482ec7ad05dffc3f0
+  FMDB: 728731dd336af3936ce00f91d9d8495f5718a0e6
+  GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
   Highlightr: 595f3e100737c8de41113385da8bd0b5b65212c6
   Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
 
-PODFILE CHECKSUM: f98e1fcaf9e77ee51e66e0e8b5d8d5bbd5319813
+PODFILE CHECKSUM: d08d4ee33e4497c4ff7df00a8901c161022fe89e
 
 COCOAPODS: 1.14.3

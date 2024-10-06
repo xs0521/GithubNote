@@ -9,9 +9,9 @@ import Foundation
 
 struct Comment: APIModelable, Identifiable, Hashable, Equatable {
     
-    var url, htmlURL, issueURL: String?
-    var id: Int?
-    var nodeID: String?
+    var id: NSInteger?
+    var url, htmlUrl, issueUrl: String?
+    var nodeId: String?
     var createdAt, updatedAt: String?
     var body: String?
     var uuid: String?

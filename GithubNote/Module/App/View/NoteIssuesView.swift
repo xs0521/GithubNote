@@ -26,7 +26,7 @@ struct NoteIssuesView: View {
     
     @FocusState private var focusedField: Field?
     
-    var requestComments: CommonCallBack?
+    var requestComments: CommonTCallBack<Issue?>?
     
     var body: some View {
         VStack {
@@ -101,8 +101,7 @@ struct NoteIssuesView: View {
         }
         .onChange(of: selectionIssue) { oldValue, newValue in
             if oldValue != newValue {
-//                commentsData {}
-                requestComments?()
+                requestComments?(newValue)
             }
             endEdit()
         }

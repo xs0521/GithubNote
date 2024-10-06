@@ -30,6 +30,7 @@ struct Issue: APIModelable, Identifiable, Hashable, Equatable {
     
     let id: Int?
     let url: String?
+    let repositoryUrl: String?
     let number: Int?
     var title: String?
     let body: String?

@@ -47,12 +47,14 @@ class Networking<T> where T: APIModelable {
                                         error: ErrorClosure? = nil) -> Cancellable? {
         
         let provider = provider(type, writeCache: writeCache)
+#if false
         if readCache {
             if let api = type as? API, let cacheData = api.cacheData {
                 self.handleData(type, parseHandler: parseHandler, data: cacheData, isCache: true, completionModelHandler: completionModelHandler)
                 return nil
             }
         }
+#endif
         
         let targetType = type as! API
         
@@ -73,11 +75,6 @@ class Networking<T> where T: APIModelable {
                 logMessage += "\nparams: null"
             }
         }
-        
-        
-        
-        let endTime = Date()
-        let duration = endTime.timeIntervalSince(startTime)
         
         let cancellable = provider.request(type, callbackQueue: DispatchQueue.global(), progress: progress) { response in
             

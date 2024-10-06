@@ -24,9 +24,7 @@ struct RepoModel: APIModelable, Identifiable, Hashable, Equatable {
     }
     
     let id: Int?
-    let name, fullName: String?
+    let name, fullName, url: String?
     let createdAt, updatedAt, pushedAt: String?
-    let repoPrivate: Bool?
+    let `private`: Bool?
 }
-
-

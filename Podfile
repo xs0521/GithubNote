@@ -10,6 +10,10 @@ target 'GithubNote' do
   pod 'Cache', :git => 'https://github.com/hyperoslo/Cache.git', :tag => '7.2.0'
   pod 'AlertToast', '1.3.9'
   pod 'CocoaLumberjack/Swift', '3.8.5'
+  pod 'FMDB', '2.7.12'
+  
+  pod "GCDWebServer/WebDAV", "~> 3.0"
+  pod "GCDWebServer/WebUploader", "~> 3.0"
 
   # Pods for GithubNote
 

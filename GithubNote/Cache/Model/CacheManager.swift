@@ -14,6 +14,17 @@ class CacheManager {
     let diskConfig = DiskConfig(name: Account.repo)
     let memoryConfig = MemoryConfig(expiry: .never)
     
+    var currentRepo: RepoModel? {
+        didSet {
+            "#cache# current repo \(currentRepo?.name ?? "")".logI()
+        }
+    }
+    var currentIssue: Issue? {
+        didSet {
+            "#cache# current issue \(currentIssue?.title ?? "")".logI()
+        }
+    }
+    
     lazy var store: Storage<String, Data?> = {
         let storage = try? Storage<String, Data?>(
           diskConfig: diskConfig,
@@ -65,5 +76,88 @@ class CacheManager {
         let saveData = modelList.compactMap({$0.data()}).compactMap({$0.anyObj()})
         let jsonData = try? JSONSerialization.data(withJSONObject: saveData, options: .prettyPrinted)
         try? CacheManager.shared.store.setObject(jsonData, forKey: path)
+    }
+    
+}
+
+
+extension CacheManager {
+    
+    static func insertRepos(repos: [RepoModel]) -> Void {
+        SQLManager.shared.dbQueue?.inDatabase({ database in
+            SQLManager.shared.insertRepos(repos: repos, database: database)
+        })
+    }
+    
+    static func fetchRepos(_ completion: @escaping CommonTCallBack<[RepoModel]>) -> Void {
+        SQLManager.shared.dbQueue?.inDatabase({ database in
+            let models = SQLManager.shared.fetchRepos(database: database)
+            completion(models)
+        })
+    }
+    
+    static func deleteRepo(_ id: Int, _ completion: @escaping CommonTCallBack<[RepoModel]>) -> Void {
+        SQLManager.shared.dbQueue?.inDatabase({ database in
+            SQLManager.shared.deleteRepo(byId: id, database: database)
+        })
+    }
+}
+
+extension CacheManager {
+    
+    static func insertIssues(issues: [Issue]) -> Void {
+        SQLManager.shared.dbQueue?.inDatabase({ database in
+            SQLManager.shared.createIssueTable()
+            let tableName = SQLManager.shared.issueTableName()
+            SQLManager.shared.insertIssue(issues: issues, into: tableName, database: database)
+        })
+        
+    }
+    
+    static func fetchIssues(_ completion: @escaping CommonTCallBack<[Issue]>) -> Void {
+        let tableName = SQLManager.shared.issueTableName()
+        let url = CacheManager.shared.currentRepo?.url ?? ""
+        assert(!url.isEmpty, "url error")
+        SQLManager.shared.dbQueue?.inDatabase({ database in
+            let models = SQLManager.shared.fetchIssues(from: tableName, where: url, database: database)
+            completion(models)
+        })
+    }
+    
+    static func deleteIssue(_ id: Int, _ completion: @escaping CommonTCallBack<[Issue]>) -> Void {
+        let tableName = SQLManager.shared.issueTableName()
+        SQLManager.shared.dbQueue?.inDatabase({ database in
+            SQLManager.shared.deleteIssue(byId: id, from: tableName, database: database)
+        })
+    }
+}
+
+
+extension CacheManager {
+    
+    static func insertComments(comments: [Comment]) -> Void {
+        SQLManager.shared.dbQueue?.inDatabase({ database in
+            SQLManager.shared.createCommentTable()
+            let tableName = SQLManager.shared.commentTableName()
+            SQLManager.shared.insertComments(comments: comments, into: tableName, database: database)
+        })
+        
+    }
+    
+    static func fetchComments(_ completion: @escaping CommonTCallBack<[Comment]>) -> Void {
+        let tableName = SQLManager.shared.commentTableName()
+        let url = CacheManager.shared.currentIssue?.url ?? ""
+        assert(!url.isEmpty, "url error")
+        SQLManager.shared.dbQueue?.inDatabase({ database in
+            let models = SQLManager.shared.fetchComments(from: tableName, where: url, database: database)
+            completion(models)
+        })
+    }
+    
+    static func deleteComment(_ id: Int, _ completion: @escaping CommonTCallBack<[Comment]>) -> Void {
+        let tableName = SQLManager.shared.issueTableName()
+        SQLManager.shared.dbQueue?.inDatabase({ database in
+            SQLManager.shared.deleteIssue(byId: id, from: tableName, database: database)
+        })
     }
 }
