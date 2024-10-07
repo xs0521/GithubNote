@@ -6,11 +6,14 @@
 //
 
 import Foundation
+#if canImport(GCDWebServer)
 import GCDWebServer
+#endif
 
 class WebServerManager: Setupable {
     static let shared = WebServerManager()
     
+#if canImport(GCDWebServer)
     private var webServer: GCDWebServer?
     
     init() {
@@ -19,6 +22,7 @@ class WebServerManager: Setupable {
         self.webServer = webServer
         print("Visit \(webServer.serverURL?.absoluteString ?? "") in your web browser")
     }
+#endif
     
     static func setup() {
         

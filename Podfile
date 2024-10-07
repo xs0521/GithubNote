@@ -1,6 +1,15 @@
 # Uncomment the next line to define a global platform for your project
 platform :osx, '14.0'
 
+DebugConfigurations = ['Debug']
+
+def DebugSupport(configurations)
+  
+  pod "GCDWebServer/WebDAV", "~> 3.0", :configurations => configurations
+  pod "GCDWebServer/WebUploader", "~> 3.0", :configurations => configurations
+  
+end
+
 target 'GithubNote' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
@@ -12,8 +21,7 @@ target 'GithubNote' do
   pod 'CocoaLumberjack/Swift', '3.8.5'
   pod 'FMDB', '2.7.12'
   
-  pod "GCDWebServer/WebDAV", "~> 3.0"
-  pod "GCDWebServer/WebUploader", "~> 3.0"
+  DebugSupport DebugConfigurations
 
   # Pods for GithubNote
 
@@ -26,4 +34,12 @@ target 'GithubNote' do
     # Pods for testing
   end
 
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings["MACOSX_DEPLOYMENT_TARGET"] = "14.0"
+    end
+  end
 end
