@@ -73,6 +73,7 @@ class SQLManager {
         let sql = """
                 CREATE TABLE IF NOT EXISTS Repo(
                     id INTEGER PRIMARY KEY,
+                    sort INTEGER,
                     name TEXT,
                     fullName TEXT,
                     url TEXT,
@@ -104,6 +105,7 @@ class SQLManager {
         let sql = """
                     CREATE TABLE IF NOT EXISTS \(tableName)(
                         id INTEGER PRIMARY KEY,
+                        sort INTEGER,
                         url TEXT,
                         repositoryUrl TEXT,
                         number INTEGER,
@@ -131,6 +133,7 @@ class SQLManager {
         let sql = """
                 CREATE TABLE IF NOT EXISTS \(tableName)(
                     id INTEGER PRIMARY KEY,
+                    sort INTEGER,
                     url TEXT,
                     htmlURL TEXT,
                     issueURL TEXT,
@@ -142,6 +145,19 @@ class SQLManager {
                 """
         
         createTable(sql, tableName: tableName)
+    }
+    
+    func getMaxIndex(_ tableName: String, from database: FMDatabase) -> Int {
+        var maxIndex: Int = 0
+        let querySQL = "SELECT MAX(sort) as maxIndex FROM \(tableName);"
+        
+        if let resultSet = try? database.executeQuery(querySQL, values: nil) {
+            if resultSet.next() {
+                maxIndex = Int(resultSet.int(forColumn: "maxIndex"))
+            }
+        }
+        
+        return maxIndex
     }
     
     private func createTable(_ sql: String, tableName: String) -> Void {

@@ -17,17 +17,21 @@ extension SQLManager {
             return
         }
         
+        var preIndex = getMaxIndex(tableName, from: database)
+        
         let insertSQL = """
-        INSERT OR REPLACE INTO \(tableName) (id, url, repositoryUrl, number, title, body, state)
-        VALUES (?, ?, ?, ?, ?, ?, ?);
+        INSERT OR REPLACE INTO \(tableName) (id, sort, url, repositoryUrl, number, title, body, state)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?);
         """
         
         if database.open() {
             database.beginTransaction()
             issues.forEach { issue in
                 do {
+                    preIndex += 1
                     try database.executeUpdate(insertSQL, values: [
                         issue.id ?? NSNull(),
+                        preIndex,
                         issue.url ?? NSNull(),
                         issue.repositoryUrl ?? NSNull(),
                         issue.number ?? NSNull(),
@@ -54,7 +58,7 @@ extension SQLManager {
         }
         
         var issues = [Issue]()
-        let selectSQL = "SELECT * FROM \(tableName) WHERE repositoryUrl = ?;"
+        let selectSQL = "SELECT * FROM \(tableName)  WHERE repositoryUrl = ? ORDER BY sort;"
         
         if database.open() {
             do {

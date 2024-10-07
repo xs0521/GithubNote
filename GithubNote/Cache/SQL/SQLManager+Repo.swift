@@ -11,9 +11,12 @@ import FMDB
 extension SQLManager {
     
     func insertRepos(repos: [RepoModel], database: FMDatabase) {
+        
+        var preIndex = getMaxIndex("Repo", from: database)
+        
         let insertOrUpdateSQL = """
-        INSERT OR REPLACE INTO Repo (id, name, fullName, url, createdAt, updatedAt, pushedAt, private)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+        INSERT OR REPLACE INTO Repo (id, sort, name, fullName, url, createdAt, updatedAt, pushedAt, private)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
         """
         
         // 开始事务
@@ -22,8 +25,10 @@ extension SQLManager {
                 database.beginTransaction() // 开始事务
                 
                 for repo in repos {
+                    preIndex += 1
                     try database.executeUpdate(insertOrUpdateSQL, values: [
                         repo.id ?? NSNull(),
+                        preIndex,
                         repo.name ?? NSNull(),
                         repo.fullName ?? NSNull(),
                         repo.url ?? NSNull(),
@@ -78,7 +83,7 @@ extension SQLManager {
     
     func fetchRepos(database: FMDatabase) -> [RepoModel] {
         var repos = [RepoModel]()
-        let selectSQL = "SELECT * FROM Repo ORDER BY createdAt;"
+        let selectSQL = "SELECT * FROM Repo ORDER BY sort;"
         
         do {
             let results = try database.executeQuery(selectSQL, values: nil)
