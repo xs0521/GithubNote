@@ -66,7 +66,7 @@ extension NoteIssuesHeaderView {
         isNewIssueSending = true
         let title = AppConst.issueMarkdown
         let body = AppConst.issueBodyMarkdown
-        Networking<Issue>().request(API.newIssue(title: title, body: body), writeCache: false, readCache: false) { data, cache, _ in
+        Networking<Issue>().request(API.newIssue(title: title, body: body), writeCache: false, readCache: false, parseHandler: ModelGenerator(snakeCase: true)) { data, cache, _ in
             guard let issue = data?.first else {
                 isNewIssueSending = false
                 return

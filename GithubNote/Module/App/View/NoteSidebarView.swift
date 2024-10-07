@@ -39,12 +39,15 @@ struct NoteSidebarView: View {
                         callBack()
                     }
                 } createCallBack: { comment, finishCallBack in
-                    requestAllComment(false) {
-                        let select = commentGroups.first(where: {$0.id == comment.id})
-                        DispatchQueue.main.async(execute: {
-                            selectionComment = select
-                            finishCallBack()
-                        })
+                    CacheManager.insertComments(comments: [comment]) {
+                        CacheManager.fetchComments { localList in
+                            let select = localList.first(where: {$0.id == comment.id})
+                            DispatchQueue.main.async(execute: {
+                                commentGroups = localList
+                                selectionComment = select
+                                finishCallBack()
+                            })
+                        }
                     }
                 }
                 NoteCommentsView(commentGroups: $commentGroups,
@@ -56,10 +59,13 @@ struct NoteSidebarView: View {
                         callBack()
                     }
                 } createIssueCallBack: { issue in
-                    CacheManager.insertIssues(issues: [issue])
-                    issueGroups.insert(issue, at: 0)
-                    selectionIssue = issue
-                    requestAllComment {
+                    CacheManager.insertIssues(issues: [issue]) {
+                        CacheManager.fetchIssues { localList in
+                            DispatchQueue.main.async {
+                                issueGroups = localList
+                                selectionIssue = localList.first(where: {$0.id == issue.id})
+                            }
+                        }
                     }
                 }
                 NoteIssuesView(issueGroups: $issueGroups,
