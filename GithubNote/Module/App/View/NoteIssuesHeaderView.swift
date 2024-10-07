@@ -10,9 +10,11 @@ import SwiftUI
 struct NoteIssuesHeaderView: View {
     
     @State private var isNewIssueSending: Bool = false
+    @Binding var isIssueRefreshing: Bool
     
-    var createIssueCallBack: (_ issue: Issue) -> ()
     var issueSyncCallBack: (_ callBack: @escaping CommonCallBack) -> ()
+    var createIssueCallBack: (_ issue: Issue) -> ()
+    
     
     var body: some View {
         HStack {
@@ -20,13 +22,19 @@ struct NoteIssuesHeaderView: View {
                 .padding(.leading, 16)
             Spacer()
             HStack {
-                Button {
-                    issueSyncCallBack({})
-                } label: {
-                    Image(systemName: "icloud.and.arrow.down")
+                if isIssueRefreshing {
+                    ProgressView()
+                        .controlSize(.mini)
+                        .frame(width: 20, height: 30)
+                } else {
+                    Button {
+                        issueSyncCallBack({})
+                    } label: {
+                        Image(systemName: "icloud.and.arrow.down")
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.trailing, 5)
                 }
-                .buttonStyle(.plain)
-                .padding(.trailing, 5)
                 if isNewIssueSending {
                     ProgressView()
                         .controlSize(.mini)

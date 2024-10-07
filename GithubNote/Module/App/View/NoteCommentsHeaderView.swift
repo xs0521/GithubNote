@@ -10,6 +10,7 @@ import SwiftUI
 struct NoteCommentsHeaderView: View {
     
     @Binding var selectionIssue: Issue?
+    @Binding var isCommentRefreshing: Bool
     
     @State private var isNewCommentSending: Bool = false
     
@@ -23,16 +24,22 @@ struct NoteCommentsHeaderView: View {
                 .padding(.leading, 16)
             Spacer()
             HStack {
-                Button {
-//                    commentsData(false) {}
-                    refreshCallBack?()
-                    
-                } label: {
-                    
-                    Image(systemName: "icloud.and.arrow.down")
+                if isCommentRefreshing {
+                    ProgressView()
+                        .controlSize(.mini)
+                        .frame(width: 20, height: 30)
+                } else {
+                    Button {
+    //                    commentsData(false) {}
+                        refreshCallBack?()
+                        
+                    } label: {
+                        
+                        Image(systemName: "icloud.and.arrow.down")
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.trailing, 5)
                 }
-                .buttonStyle(.plain)
-                .padding(.trailing, 5)
                 if isNewCommentSending {
                     ProgressView()
                         .controlSize(.mini)

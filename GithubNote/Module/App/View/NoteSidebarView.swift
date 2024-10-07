@@ -19,10 +19,12 @@ struct NoteSidebarView: View {
     @State private var issueGroups = [Issue]()
     @State private var issuePage = 1
     @Binding var selectionIssue: Issue?
+    @State private var isIssueRefreshing: Bool = false
     
     @Binding var commentGroups: [Comment]
     @State private var commentPage = 1
     @Binding var selectionComment: Comment?
+    @State private var isCommentRefreshing: Bool = false
     
     @Binding var showImageBrowser: Bool?
     
@@ -34,8 +36,12 @@ struct NoteSidebarView: View {
     var body: some View {
         ZStack {
             VStack {
-                NoteCommentsHeaderView(selectionIssue: $selectionIssue) {
-                    requestAllComment(false) { }
+                NoteCommentsHeaderView(selectionIssue: $selectionIssue,
+                                       isCommentRefreshing: $isCommentRefreshing) {
+                    isCommentRefreshing = true
+                    requestAllComment(false) {
+                        isCommentRefreshing = false
+                    }
                 } createCallBack: { comment, finishCallBack in
                     requestAllComment(false) {
                         let select = commentGroups.first(where: {$0.id == comment.id})
@@ -49,12 +55,16 @@ struct NoteSidebarView: View {
                                  selectionComment: $selectionComment,
                                  selectionIssue: $selectionIssue)
                 Spacer()
-                NoteIssuesHeaderView(createIssueCallBack: { issue in
+                NoteIssuesHeaderView(isIssueRefreshing: $isIssueRefreshing) { callBack in
+                    isIssueRefreshing = true
+                    requestAllIssue(false) {
+                        isIssueRefreshing = false
+                    }
+                } createIssueCallBack: { issue in
                     issueGroups.insert(issue, at: 0)
                     selectionIssue = issue
-                    requestAllComment {}
-                }) { callBack in
-                    requestAllIssue(false) {}
+                    requestAllComment {
+                    }
                 }
                 NoteIssuesView(issueGroups: $issueGroups,
                                selectionIssue: $selectionIssue,
@@ -76,7 +86,6 @@ struct NoteSidebarView: View {
                     requestAllRepo {}
                     isLoaded = true
                 }
-                
             }
             if showReposView {
                 NoteReposView(reposGroups: $reposGroups, selectionRepo: $selectionRepo)
@@ -200,7 +209,7 @@ extension NoteSidebarView {
         }
     }
     
-    private func requestAllIssue(_ readCache: Bool = true, _ completion: CommonCallBack) -> Void {
+    private func requestAllIssue(_ readCache: Bool = true, _ completion: @escaping CommonCallBack) -> Void {
         
         if readCache {
             CacheManager.fetchIssues { list in
@@ -208,16 +217,21 @@ extension NoteSidebarView {
                 issueGroups = list
                 selectionIssue = list.first
                 CacheManager.shared.currentIssue = selectionIssue
+                completion()
             }
             return
         }
         
         issuePage = 1
         let allIssue: [Issue] = []
-        requestIssue(issuePage, allIssue, false, true) { list, success, more in
-            "#request# issue all \(list.count)".logI()
-            issueGroups = list
-            CacheManager.insertIssues(issues: list)
+        requestIssue(issuePage, allIssue, false, true) { loadList, success, more in
+            "#request# issue all \(loadList.count)".logI()
+            CacheManager.insertIssues(issues: loadList) {
+                CacheManager.fetchIssues { list in
+                    issueGroups = list
+                    completion()
+                }
+            }
         }
     }
     
@@ -253,13 +267,14 @@ extension NoteSidebarView {
         }
     }
     
-    private func requestAllComment(_ readCache: Bool = true, _ completion: CommonCallBack) -> Void {
+    private func requestAllComment(_ readCache: Bool = true, _ completion: @escaping CommonCallBack) -> Void {
         
         if readCache {
             CacheManager.fetchComments { list in
                 "#request# comment all cache \(list.count)".logI()
                 commentGroups = list
                 selectionComment = list.first
+                completion()
             }
             return
         }
@@ -270,6 +285,7 @@ extension NoteSidebarView {
             "#request# comment all \(list.count)".logI()
             commentGroups = list
             CacheManager.insertComments(comments: list)
+            completion()
         }
     }
     

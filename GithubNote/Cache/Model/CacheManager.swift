@@ -91,18 +91,21 @@ class CacheManager: Setupable {
 
 extension CacheManager {
     
-    
-    
-    static func insertRepos(repos: [RepoModel]) -> Void {
+    static func insertRepos(repos: [RepoModel], completion: CommonCallBack? = nil) -> Void {
         CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
             CacheManager.shared.manager?.insertRepos(repos: repos, database: database)
+            DispatchQueue.main.async {
+                completion?()
+            }
         })
     }
     
     static func fetchRepos(_ completion: @escaping CommonTCallBack<[RepoModel]>) -> Void {
         CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
             let models = CacheManager.shared.manager?.fetchRepos(database: database)
-            completion(models ?? [])
+            DispatchQueue.main.async {
+                completion(models ?? [])
+            }
         })
     }
     
@@ -115,11 +118,14 @@ extension CacheManager {
 
 extension CacheManager {
     
-    static func insertIssues(issues: [Issue]) -> Void {
+    static func insertIssues(issues: [Issue], completion: CommonCallBack? = nil) -> Void {
         CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
             CacheManager.shared.manager?.createIssueTable()
             let tableName = CacheManager.shared.manager?.issueTableName()
             CacheManager.shared.manager?.insertIssue(issues: issues, into: tableName, database: database)
+            DispatchQueue.main.async {
+                completion?()
+            }
         })
         
     }
@@ -131,7 +137,9 @@ extension CacheManager {
             let url = CacheManager.shared.currentRepo?.url ?? ""
             assert(!url.isEmpty, "url error")
             let models = CacheManager.shared.manager?.fetchIssues(from: tableName, where: url, database: database) ?? []
-            completion(models)
+            DispatchQueue.main.async {
+                completion(models)
+            }
         })
     }
     
@@ -147,11 +155,14 @@ extension CacheManager {
 
 extension CacheManager {
     
-    static func insertComments(comments: [Comment]) -> Void {
+    static func insertComments(comments: [Comment], completion: CommonCallBack? = nil) -> Void {
         CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
             CacheManager.shared.manager?.createCommentTable()
             let tableName = CacheManager.shared.manager?.commentTableName()
             CacheManager.shared.manager?.insertComments(comments: comments, into: tableName, database: database)
+            DispatchQueue.main.async {
+                completion?()
+            }
         })
         
     }
@@ -162,7 +173,9 @@ extension CacheManager {
             let url = CacheManager.shared.currentIssue?.url ?? ""
             assert(!url.isEmpty, "url error")
             let models = CacheManager.shared.manager?.fetchComments(from: tableName, where: url, database: database) ?? []
-            completion(models)
+            DispatchQueue.main.async {
+                completion(models)
+            }
         })
     }
     
