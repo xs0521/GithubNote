@@ -18,7 +18,7 @@ struct NoteReposView: View {
                 Label(title: {
                     Text(selection.name ?? "unknow")
                 }, icon: {
-                    Image(systemName: "square.stack.3d.up.fill")
+                    Image(systemName: "square.stack.3d.up")
                         .foregroundStyle(Color.primary)
                 })
                 .tag(selection)

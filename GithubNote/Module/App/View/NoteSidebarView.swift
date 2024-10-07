@@ -92,7 +92,10 @@ struct NoteSidebarView: View {
             }
         }
         .safeAreaInset(edge: .bottom) {
-            NoteSidebarToolView(showReposView: $showReposView, isSyncRepos: $isSyncRepos, showImageBrowser: $showImageBrowser) { callBack in
+            NoteSidebarToolView(showReposView: $showReposView, 
+                                isSyncRepos: $isSyncRepos,
+                                showImageBrowser: $showImageBrowser,
+                                selectionRepo: $selectionRepo) { callBack in
                 requestAllRepo(false) {
                     callBack()
                 }

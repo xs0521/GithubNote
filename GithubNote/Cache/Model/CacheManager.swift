@@ -193,6 +193,17 @@ extension CacheManager {
         })
     }
     
+    static func updateComments(_ list: [Comment], _ completion: @escaping CommonCallBack) -> Void {
+        
+        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+            let tableName = CacheManager.shared.manager?.commentTableName()
+            CacheManager.shared.manager?.updateComments(comments: list, in: tableName, database: database)
+            DispatchQueue.main.async {
+                completion()
+            }
+        })
+    }
+    
     static func deleteComment(_ id: Int, _ completion: @escaping CommonCallBack) -> Void {
         CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
             let tableName = CacheManager.shared.manager?.commentTableName()

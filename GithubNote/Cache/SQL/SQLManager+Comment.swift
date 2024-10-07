@@ -88,28 +88,36 @@ extension SQLManager {
         return comments
     }
     
-    func updateComment(comment: Comment, in tableName: String, database: FMDatabase) {
+    func updateComments(comments: [Comment], in tableName: String?, database: FMDatabase) {
+        
+        guard let tableName = tableName else {
+            assert(false, "tableName error")
+            return
+        }
+        
         let updateSQL = """
         UPDATE \(tableName) SET url = ?, htmlURL = ?, issueURL = ?, nodeID = ?, createdAt = ?, updatedAt = ?, body = ?
         WHERE id = ?;
         """
         
         if database.open() {
-            do {
-                try database.executeUpdate(updateSQL, values: [
-                    comment.url ?? NSNull(),
-                    comment.htmlUrl ?? NSNull(),
-                    comment.issueUrl ?? NSNull(),
-                    comment.nodeId ?? NSNull(),
-                    comment.createdAt ?? NSNull(),
-                    comment.updatedAt ?? NSNull(),
-                    comment.body ?? NSNull(),
-                    comment.id ?? NSNull()
-                ])
-                "Comment updated successfully".logI()
-            } catch {
-                "Failed to update comment: \(error.localizedDescription)".logE()
+            comments.forEach { comment in
+                do {
+                    try database.executeUpdate(updateSQL, values: [
+                        comment.url ?? NSNull(),
+                        comment.htmlUrl ?? NSNull(),
+                        comment.issueUrl ?? NSNull(),
+                        comment.nodeId ?? NSNull(),
+                        comment.createdAt ?? NSNull(),
+                        comment.updatedAt ?? NSNull(),
+                        comment.body ?? NSNull(),
+                        comment.id ?? NSNull()
+                    ])
+                } catch {
+                    "Failed to update comment: \(error.localizedDescription)".logE()
+                }
             }
+            "Comment updated successfully".logI()
         }
         database.close()
     }

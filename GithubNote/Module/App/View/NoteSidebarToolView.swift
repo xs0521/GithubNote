@@ -12,6 +12,7 @@ struct NoteSidebarToolView: View {
     @Binding var showReposView: Bool
     @Binding var isSyncRepos: Bool
     @Binding var showImageBrowser: Bool?
+    @Binding var selectionRepo: RepoModel?
     
     var requestAllRepoCallBack: CommonTCallBack<CommonCallBack>
     
@@ -20,13 +21,19 @@ struct NoteSidebarToolView: View {
             Button(action: {
                 showReposView = !showReposView
             }, label: {
-                Label("Repos", systemImage: "chevron.right")
-                    .foregroundStyle(Color.primary)
-                    .lineLimit(1)
+                if selectionRepo != nil {
+                    Label((selectionRepo?.name ?? ""), systemImage: "chevron.right")
+                        .foregroundStyle(Color.primary)
+                        .lineLimit(1)
+                } else {
+                    Label("Repos", systemImage: "chevron.right")
+                        .foregroundStyle(Color.primary)
+                        .lineLimit(1)
+                }
             })
             .buttonStyle(.borderless)
             .foregroundColor(.accentColor)
-            .padding()
+            .padding(EdgeInsets(top: 5, leading: 16, bottom: 16, trailing: 5))
             .frame(maxWidth: .infinity, alignment: .leading)
             
             if showReposView {
@@ -45,7 +52,7 @@ struct NoteSidebarToolView: View {
                         Image(systemName: "icloud.and.arrow.down")
                     }
                     .buttonStyle(.plain)
-                    .padding()
+                    .padding(EdgeInsets(top: 5, leading: 5, bottom: 16, trailing: 16))
                 }
             } else {
                 Button(action: {
@@ -54,8 +61,7 @@ struct NoteSidebarToolView: View {
                     Image(systemName: "photo.on.rectangle.angled")
                 })
                 .buttonStyle(.plain)
-                .padding()
-                .frame(maxWidth: .infinity, alignment: .trailing)
+                .padding(EdgeInsets(top: 5, leading: 5, bottom: 16, trailing: 16))
             }
         }
     }

@@ -19,7 +19,7 @@ struct NoteWritePannelView: View {
     @Binding var selectionRepo: RepoModel?
     @Binding var selectionIssue: Issue?
     
-    @Binding var comment: Comment?
+    @Binding var selectionComment: Comment?
     @Binding var issue: Issue?
     @Binding var showImageBrowser: Bool?
     
@@ -57,8 +57,8 @@ struct NoteWritePannelView: View {
             .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
             .toolbar {
                 ToolbarItemGroup {
-                    Text(currentTitle())
-                        .foregroundColor(Color.init(hex: "#444443"))
+                    titleView()
+                    
                     Spacer()
                     
                     if showImageBrowser! {
@@ -121,14 +121,14 @@ struct NoteWritePannelView: View {
                             editIsShown.toggle()
                         } label: {
                             Label("Show inspector", systemImage: editIsShown ? "xmark.circle" : "square.and.pencil")
-//                                .font(.system(size: editIsShown ? 14 : 16))
-//                                .fontWeight(editIsShown ? .regular : .bold)
+                            //                                .font(.system(size: editIsShown ? 14 : 16))
+                            //                                .fontWeight(editIsShown ? .regular : .bold)
                         }
                     }
                 }
-               
+                
             }
-            .onChange(of: comment) { oldValue, newValue in
+            .onChange(of: selectionComment) { oldValue, newValue in
                 if oldValue?.identifier != newValue?.identifier {
                     markdownString = newValue?.body
                 }
@@ -136,57 +136,98 @@ struct NoteWritePannelView: View {
         }
     }
     
-    private func currentTitle() -> String {
+    private func titleView() -> some View {
         
-        if showImageBrowser == true {
-            return ""
+        HStack (spacing: 0) {
+            if showImageBrowser == true {
+                Text("")  // 空文本
+            } else {
+                HStack (spacing: 3) {
+                    Image(systemName: "star")
+                    Text("\(Account.owner)")
+                }
+                
+                if let repoName = selectionRepo?.name {
+                    HStack (spacing: 3) {
+                        Text(">")
+                            .padding(.horizontal, 5)
+                        Image(systemName: "square.stack.3d.up")
+                        Text(repoName)
+                    }
+                }
+                
+                if let issueName = selectionIssue?.title {
+                    HStack (spacing: 3) {
+                        Text(">")
+                            .padding(.horizontal, 5)
+                        Image(systemName: "menucard")
+                        Text(issueName)
+                    }
+                    
+                }
+                
+                if let commentName = selectionComment?.body?.toTitle() {
+                    HStack (spacing: 3) {
+                        Text(">")
+                            .padding(.horizontal, 5)
+                        Image(systemName: "cup.and.saucer")
+                        Text(commentName)
+                            .layoutPriority(1)
+                    }
+                }
+            }
         }
+        .foregroundColor(colorScheme == .dark ? Color(hex: "#DDDDDD") : Color(hex: "#444443"))
         
-        var title = "\(Account.owner)"
-        if let repoName = selectionRepo?.name {
-            title += " > \(repoName)"
-        }
-        if let issueName = selectionIssue?.title {
-            title += " > \(issueName)"
-        }
-        if let commentName = comment?.body?.toTitle() {
-            title += " > \(commentName)"
-        }
-        return title
+        //        .foregroundColor(colorScheme == .dark ? Color.init(hex: "#DDDDDD") : Color.init(hex: "#444443"))
+        
+        //        if showImageBrowser == true {
+        //            return ""
+        //        }
+        //
+        //        var title = "\(Account.owner)"
+        //        if let repoName = selectionRepo?.name {
+        //            title += " > \(repoName)"
+        //        }
+        //        if let issueName = selectionIssue?.title {
+        //            title += " > \(issueName)"
+        //        }
+        //        if let commentName = comment?.body?.toTitle() {
+        //            title += " > \(commentName)"
+        //        }
+        //        return title
     }
     
     private func updateContent() -> Void {
-        guard let body = markdownString, let commentid = comment?.id else { return }
+        guard let body = markdownString, let commentid = selectionComment?.id else { return }
         uploadState = .sending
         
-        Networking<Comment>().request(API.updateComment(commentId: commentid, body: body), writeCache: false, readCache: false) { data, cache, _ in
+        Networking<Comment>().request(API.updateComment(commentId: commentid, body: body), writeCache: false, readCache: false, parseHandler: ModelGenerator(snakeCase: true)) { data, cache, _ in
             
             guard let comment = data?.first else {
                 uploadState = .fail
                 normal()
                 return
             }
-            updateCommentData(comment)
+            updateCommentData(comment) {
+                normal()
+            }
             func normal() -> Void {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                     uploadState = .normal
                 }
             }
-            normal()
         }
     }
     
-    private func updateCommentData(_ comment: Comment) -> Void {
-        guard let index = commentGroups.firstIndex(where: {$0.id == comment.id}) else {
-            return
+    private func updateCommentData(_ comment: Comment, _ completion: @escaping CommonCallBack) -> Void {
+        CacheManager.updateComments([comment]) {
+            CacheManager.fetchComments { localList in
+                commentGroups = localList
+                selectionComment = localList.first(where: {$0.id == comment.id})
+                completion()
+            }
         }
-        var list = commentGroups
-        list[index] = comment
-        commentGroups = list
-        self.comment = comment
-        
-        guard let issueId = issue?.number else { return }
-        CacheManager.shared.updateComments(commentGroups, issueId: issueId)
     }
     
     private func uploadImage(filePath: URL) -> Void {
@@ -197,7 +238,7 @@ struct NoteWritePannelView: View {
             let data = try? Data(contentsOf: filePath)
             guard let data = data, !data.isEmpty else { return }
             let imageBase64 = data.base64EncodedString()
-
+            
             let pathExtension = filePath.pathExtension
             let fileName = fileName() + ".\(pathExtension)"
             
@@ -226,7 +267,7 @@ struct NoteWritePannelView: View {
                 
                 NotificationCenter.default.post(name: NSNotification.Name.syncLocalImagesNotification, object: nil)
             }
-
+            
         })
     }
     
