@@ -65,7 +65,7 @@ extension SQLManager {
                 let resultSet = try database.executeQuery(selectSQL, values: [issueURL])
                 
                 while resultSet.next() {
-                    let comment = Comment(
+                    var comment = Comment(
                         id: Int(resultSet.longLongInt(forColumn: "id")),
                         url: resultSet.string(forColumn: "url"),
                         htmlUrl: resultSet.string(forColumn: "htmlURL"),
@@ -75,6 +75,7 @@ extension SQLManager {
                         updatedAt: resultSet.string(forColumn: "updatedAt"),
                         body: resultSet.string(forColumn: "body")
                     )
+                    comment.defultModel()
                     comments.append(comment)
                 }
                 
@@ -113,12 +114,32 @@ extension SQLManager {
         database.close()
     }
     
-    func deleteComment(byId id: Int, from tableName: String, database: FMDatabase) {
+    func deleteComment(byId id: Int, from tableName: String?, database: FMDatabase) {
+        
+        guard let tableName = tableName else {
+            assert(false, "tableName error")
+            return
+        }
+        
         let deleteSQL = "DELETE FROM \(tableName) WHERE id = ?;"
         
         if database.open() {
             do {
                 try database.executeUpdate(deleteSQL, values: [id])
+                "Comment deleted successfully".logI()
+            } catch {
+                "Failed to delete comment: \(error.localizedDescription)".logE()
+            }
+        }
+        database.close()
+    }
+    
+    func deleteComment(byIssueUrl url: String, from tableName: String, database: FMDatabase) {
+        let deleteSQL = "DELETE FROM \(tableName) WHERE issueURL = ?;"
+        
+        if database.open() {
+            do {
+                try database.executeUpdate(deleteSQL, values: [url])
                 "Comment deleted successfully".logI()
             } catch {
                 "Failed to delete comment: \(error.localizedDescription)".logE()

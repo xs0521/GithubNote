@@ -118,13 +118,17 @@ class SQLManager {
         createTable(sql, tableName: tableName)
     }
     
-    func commentTableName() -> String {
-        guard let issue = CacheManager.shared.currentIssue, let issueID = issue.id else {
-            assert(false, "issueID error")
-            return ""
+    func commentTableName(_ issueID: Int = 0) -> String {
+        var id = issueID
+        if id <= 0 {
+            guard let issue = CacheManager.shared.currentIssue, let issueID = issue.id else {
+                assert(false, "issueID error")
+                return ""
+            }
+            id = issueID
         }
-        assert(issueID > 0, "issueID error")
-        return "Comment_\(issueID%10)"
+        assert(id > 0, "issueID error")
+        return "Comment_\(id%10)"
     }
     
     func createCommentTable() -> Void {

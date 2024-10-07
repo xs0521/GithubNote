@@ -65,7 +65,7 @@ extension SQLManager {
                 let resultSet = try database.executeQuery(selectSQL, values: [repositoryUrl])
                 
                 while resultSet.next() {
-                    let issue = Issue(
+                    var issue = Issue(
                         id: Int(resultSet.longLongInt(forColumn: "id")),
                         url: resultSet.string(forColumn: "url"),
                         repositoryUrl: resultSet.string(forColumn: "repositoryUrl"),
@@ -74,6 +74,7 @@ extension SQLManager {
                         body: resultSet.string(forColumn: "body"),
                         state: IssueState(rawValue: resultSet.string(forColumn: "state") ?? "open")
                     )
+                    issue.defultModel()
                     issues.append(issue)
                 }
                 
@@ -86,27 +87,35 @@ extension SQLManager {
         return issues
     }
     
-    func updateIssue(issue: Issue, in tableName: String, database: FMDatabase) {
+    func updateIssues(issues: [Issue], in tableName: String?, database: FMDatabase) {
+        
+        guard let tableName = tableName else {
+            assert(false, "tableName error")
+            return
+        }
+        
         let updateSQL = """
         UPDATE \(tableName) SET url = ?, repositoryUrl = ?, number = ?, title = ?, body = ?, state = ?
         WHERE id = ?;
         """
         
         if database.open() {
-            do {
-                try database.executeUpdate(updateSQL, values: [
-                    issue.url ?? NSNull(),
-                    issue.repositoryUrl ?? NSNull(),
-                    issue.number ?? NSNull(),
-                    issue.title ?? NSNull(),
-                    issue.body ?? NSNull(),
-                    issue.state?.rawValue ?? NSNull(),
-                    issue.id ?? NSNull()
-                ])
-                "Issue updated successfully".logI()
-            } catch {
-                "Failed to update issue: \(error.localizedDescription)".logE()
+            issues.forEach { issue in
+                do {
+                    try database.executeUpdate(updateSQL, values: [
+                        issue.url ?? NSNull(),
+                        issue.repositoryUrl ?? NSNull(),
+                        issue.number ?? NSNull(),
+                        issue.title ?? NSNull(),
+                        issue.body ?? NSNull(),
+                        issue.state?.rawValue ?? NSNull(),
+                        issue.id ?? NSNull()
+                    ])
+                } catch {
+                    "Failed to update issue: \(error.localizedDescription)".logE()
+                }
             }
+            "Issue updated successfully".logI()
         }
         database.close()
     }

@@ -10,8 +10,6 @@ import AppKit
 
 struct NoteSidebarView: View {
     
-    @Binding var userCreatedGroups: [RepoModel]
-    
     @State private var reposGroups: [RepoModel] = [RepoModel]()
     @State private var repoPage = 1
     @Binding var selectionRepo: RepoModel?

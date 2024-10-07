@@ -13,14 +13,10 @@ struct NoteContentView: View {
     
     @State private var selectionRepo: RepoModel?
     
-    
     @State private var selectionIssue: Issue?
     
     @State private var allComment = [Comment]()
     @State private var selectionComment: Comment?
-    
-    @State private var userCreatedGroups: [RepoModel] = [RepoModel]()
-    @State private var searchTerm: String = ""
     
     @State private var markdownString: String? = ""
     @State private var showImageBrowser: Bool? = false
@@ -37,8 +33,7 @@ struct NoteContentView: View {
     var body: some View {
         ZStack {
             NavigationSplitView {
-                NoteSidebarView(userCreatedGroups: $userCreatedGroups,
-                                selectionRepo: $selectionRepo,
+                NoteSidebarView(selectionRepo: $selectionRepo,
                                 selectionIssue: $selectionIssue,
                                 commentGroups: $allComment,
                                 selectionComment: $selectionComment, 

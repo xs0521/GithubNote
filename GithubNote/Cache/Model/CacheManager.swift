@@ -143,11 +143,25 @@ extension CacheManager {
         })
     }
     
-    static func deleteIssue(_ id: Int, _ completion: @escaping CommonTCallBack<[Issue]>) -> Void {
+    static func updateIssues(_ list: [Issue], _ completion: @escaping CommonCallBack) -> Void {
+        
+        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+            let tableName = CacheManager.shared.manager?.issueTableName()
+            CacheManager.shared.manager?.updateIssues(issues: list, in: tableName, database: database)
+            DispatchQueue.main.async {
+                completion()
+            }
+        })
+    }
+    
+    static func deleteIssue(_ id: Int, _ completion: @escaping CommonCallBack) -> Void {
         CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
             guard let manager = CacheManager.shared.manager else { return }
             let tableName = manager.issueTableName()
             CacheManager.shared.manager?.deleteIssue(byId: id, from: tableName, database: database)
+            DispatchQueue.main.async {
+                completion()
+            }
         })
     }
 }
@@ -179,10 +193,22 @@ extension CacheManager {
         })
     }
     
-    static func deleteComment(_ id: Int, _ completion: @escaping CommonTCallBack<[Comment]>) -> Void {
+    static func deleteComment(_ id: Int, _ completion: @escaping CommonCallBack) -> Void {
         CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
-            let tableName = CacheManager.shared.manager?.issueTableName()
-            CacheManager.shared.manager?.deleteIssue(byId: id, from: tableName, database: database)
+            let tableName = CacheManager.shared.manager?.commentTableName()
+            CacheManager.shared.manager?.deleteComment(byId: id, from: tableName, database: database)
+            DispatchQueue.main.async {
+                completion()
+            }
+        })
+    }
+    
+    static func deleteComment(_ url: String, _ tableName: String, _ completion: @escaping CommonCallBack) -> Void {
+        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+            CacheManager.shared.manager?.deleteComment(byIssueUrl: url, from: tableName, database: database)
+            DispatchQueue.main.async {
+                completion()
+            }
         })
     }
 }

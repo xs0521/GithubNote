@@ -21,6 +21,7 @@ struct NoteIssuesView: View {
     
     @State private var editIssue: Issue?
     @State private var editText: String = ""
+    @State private var deleteIssue: Issue?
     @State private var isEditIssueTitleSending: Bool = false
     
     
@@ -69,13 +70,20 @@ struct NoteIssuesView: View {
                             Label(title: {
                                 Text(selection.title ?? "unknow")
                             }, icon: {
-                                Image(systemName: "menucard")
-                                    .foregroundStyle(Color.primary)
+                                if deleteIssue?.id == selection.id {
+                                    ProgressView()
+                                        .controlSize(.mini)
+                                        .frame(width: 20, height: 20)
+                                } else {
+                                    Image(systemName: "menucard")
+                                        .foregroundStyle(Color.primary)
+                                }
                             })
                             .tag(selection)
                             .contextMenu {
                                 Button("Delete", role: .destructive) {
                                     "delete \(selection.title ?? "")".logI()
+                                    deleteIssue = selection
                                     closeIssue(selection)
                                 }
                                 Button("Edit", role: .destructive) {
@@ -125,32 +133,41 @@ extension NoteIssuesView {
         guard let issue = issue else { return }
         
         isEditIssueTitleSending = true
-        guard let issueId = issue.number, let body = issue.body, let repoName = selectionRepo?.name else { return }
+        guard let issueId = issue.number, let body = issue.body else { return }
         Networking<Issue>().request(API.updateIssue(issueId: issueId, state: .open, title: title, body: body), writeCache: false, readCache: false) { data, cache, _ in
-            isEditIssueTitleSending = false
-            
             if data != nil {
-                guard let index = issueGroups.firstIndex(where: {$0 == issue}) else {
-                    return
-                }
                 var issue = issue
-                issue.defultModel()
                 issue.title = title
-                var list = issueGroups
-                list[index] = issue
-                issueGroups = list
-                CacheManager.shared.updateIssues(issueGroups, repoName: repoName)
+                CacheManager.updateIssues([issue]) {
+                    CacheManager.fetchIssues { localList in
+                        issueGroups = localList
+                        isEditIssueTitleSending = false
+                        endEdit()
+                    }
+                }
+            } else {
+                ToastManager.shared.showFail("fail")
+                isEditIssueTitleSending = false
                 endEdit()
             }
         }
     }
     
     func closeIssue(_ issue: Issue) -> Void {
-        guard let issueId = issue.number, let title = issue.title, let body = issue.body, let repoName = selectionRepo?.name else { return }
-        Networking<Issue>().request(API.updateIssue(issueId: issueId, state: .closed, title: title, body: body), writeCache: false, readCache: false) { data, cache, _ in
+        guard let number = issue.number, let title = issue.title, let body = issue.body else { return }
+        Networking<Issue>().request(API.updateIssue(issueId: number, state: .closed, title: title, body: body), writeCache: false, readCache: false) { data, cache, _ in
             if data != nil {
-                issueGroups.removeAll(where: {$0.number == issueId})
-                CacheManager.shared.updateIssues(issueGroups, repoName: repoName)
+                guard let issueId = issue.id else { return }
+                CacheManager.deleteIssue(issueId) {
+                    guard let tableName = CacheManager.shared.manager?.commentTableName(issueId), let url = issue.url else {
+                        return
+                    }
+                    CacheManager.deleteComment(url, tableName) { }
+                    issueGroups.removeAll(where: {$0.id == issueId})
+                    selectionIssue = issueGroups.first
+                }
+            } else {
+                ToastManager.shared.showFail("fail")
             }
         }
     }

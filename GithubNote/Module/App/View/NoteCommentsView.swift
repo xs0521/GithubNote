@@ -13,6 +13,8 @@ struct NoteCommentsView: View {
     @Binding var selectionComment: Comment?
     @Binding var selectionIssue: Issue?
     
+    @State var deleteComment: Comment?
+    
     var body: some View {
         VStack {
             if commentGroups.isEmpty {
@@ -25,13 +27,20 @@ struct NoteCommentsView: View {
                         Label(title: {
                             Text(selection.body?.toTitle() ?? "")
                         }, icon: {
-                            Image(systemName: "note")
-                                .foregroundStyle(Color.primary)
+                            if deleteComment?.id == selection.id {
+                                ProgressView()
+                                    .controlSize(.mini)
+                                    .frame(width: 20, height: 20)
+                            } else {
+                                Image(systemName: "note")
+                                    .foregroundStyle(Color.primary)
+                            }
                         })
                         .tag(selection)
                         .contextMenu {
                             Button("Delete", role: .destructive) {
                                 "delete \(selection.body?.toTitle() ?? "")".logI()
+                                deleteComment = selection
                                 deleteComment(selection)
                             }
                         }
@@ -45,13 +54,13 @@ struct NoteCommentsView: View {
 extension NoteCommentsView {
     
     private func deleteComment(_ comment: Comment) -> Void {
-        guard let commentId = comment.id, let issueId = selectionIssue?.number else { return }
+        guard let commentId = comment.id else { return }
         Networking<Comment>().request(API.deleteComment(commentId: commentId)) { data, cache, code in
             if MessageCode.finish.rawValue != code {
                 return
             }
             commentGroups.removeAll(where: {$0.id == commentId})
-            CacheManager.shared.updateComments(commentGroups, issueId: issueId)
+            CacheManager.deleteComment(commentId) { }
         }
     }
 }
