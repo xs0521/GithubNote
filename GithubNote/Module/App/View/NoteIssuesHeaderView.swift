@@ -10,7 +10,7 @@ import SwiftUI
 struct NoteIssuesHeaderView: View {
     
     @State private var isNewIssueSending: Bool = false
-    @Binding var isIssueRefreshing: Bool
+    @State private var isIssueRefreshing: Bool = false
     
     var issueSyncCallBack: (_ callBack: @escaping CommonCallBack) -> ()
     var createIssueCallBack: (_ issue: Issue) -> ()
@@ -28,7 +28,10 @@ struct NoteIssuesHeaderView: View {
                         .frame(width: 20, height: 30)
                 } else {
                     Button {
-                        issueSyncCallBack({})
+                        isIssueRefreshing = true
+                        issueSyncCallBack({
+                            isIssueRefreshing = false
+                        })
                     } label: {
                         Image(systemName: "icloud.and.arrow.down")
                     }

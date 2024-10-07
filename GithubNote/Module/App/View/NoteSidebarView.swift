@@ -19,12 +19,10 @@ struct NoteSidebarView: View {
     @State private var issueGroups = [Issue]()
     @State private var issuePage = 1
     @Binding var selectionIssue: Issue?
-    @State private var isIssueRefreshing: Bool = false
     
     @Binding var commentGroups: [Comment]
     @State private var commentPage = 1
     @Binding var selectionComment: Comment?
-    @State private var isCommentRefreshing: Bool = false
     
     @Binding var showImageBrowser: Bool?
     
@@ -36,11 +34,9 @@ struct NoteSidebarView: View {
     var body: some View {
         ZStack {
             VStack {
-                NoteCommentsHeaderView(selectionIssue: $selectionIssue,
-                                       isCommentRefreshing: $isCommentRefreshing) {
-                    isCommentRefreshing = true
+                NoteCommentsHeaderView(selectionIssue: $selectionIssue) { callBack in
                     requestAllComment(false) {
-                        isCommentRefreshing = false
+                        callBack()
                     }
                 } createCallBack: { comment, finishCallBack in
                     requestAllComment(false) {
@@ -55,12 +51,12 @@ struct NoteSidebarView: View {
                                  selectionComment: $selectionComment,
                                  selectionIssue: $selectionIssue)
                 Spacer()
-                NoteIssuesHeaderView(isIssueRefreshing: $isIssueRefreshing) { callBack in
-                    isIssueRefreshing = true
+                NoteIssuesHeaderView() { callBack in
                     requestAllIssue(false) {
-                        isIssueRefreshing = false
+                        callBack()
                     }
                 } createIssueCallBack: { issue in
+                    CacheManager.insertIssues(issues: [issue])
                     issueGroups.insert(issue, at: 0)
                     selectionIssue = issue
                     requestAllComment {
@@ -92,53 +88,14 @@ struct NoteSidebarView: View {
             }
         }
         .safeAreaInset(edge: .bottom) {
-            HStack {
-                Button(action: {
-                    showReposView = !showReposView
-                }, label: {
-                    Label("Repos", systemImage: "chevron.right")
-                        .foregroundStyle(Color.primary)
-                        .lineLimit(1)
-                })
-                .buttonStyle(.borderless)
-                .foregroundColor(.accentColor)
-                .padding()
-                .frame(maxWidth: .infinity, alignment: .leading)
-                
-                if showReposView {
-                    if isSyncRepos {
-                        ProgressView()
-                            .controlSize(.mini)
-                            .padding()
-                            .padding(.trailing, 5)
-                    } else {
-                        Button {
-                            isSyncRepos = true
-                            requestAllRepo(false) {
-                                isSyncRepos = false
-                            }
-                        } label: {
-                            Image(systemName: "icloud.and.arrow.down")
-                        }
-                        .buttonStyle(.plain)
-                        .padding()
-                    }
-                } else {
-                    Button(action: {
-                        showImageBrowser?.toggle()
-                    }, label: {
-                        Image(systemName: "photo.on.rectangle.angled")
-                    })
-                    .buttonStyle(.plain)
-                    .padding()
-                    .frame(maxWidth: .infinity, alignment: .trailing)
+            NoteSidebarToolView(showReposView: $showReposView, isSyncRepos: $isSyncRepos, showImageBrowser: $showImageBrowser) { callBack in
+                requestAllRepo(false) {
+                    callBack()
                 }
             }
         }
     }
 }
-
-
 
 extension NoteSidebarView {
     
@@ -158,11 +115,14 @@ extension NoteSidebarView {
         
         repoPage = 1
         let allRepos: [RepoModel] = []
-        requestRepo(repoPage, allRepos, readCache, true) { list, success, more in
-            "#request# Repo all \(list.count)".logI()
-            reposGroups = list
-            CacheManager.insertRepos(repos: list)
-            completion()
+        requestRepo(repoPage, allRepos, readCache, true) { netList, success, more in
+            "#request# Repo all \(netList.count)".logI()
+            CacheManager.insertRepos(repos: netList) {
+                CacheManager.fetchRepos { list in
+                    reposGroups = list
+                    completion()
+                }
+            }
         }
     }
     
@@ -208,6 +168,10 @@ extension NoteSidebarView {
             }
         }
     }
+}
+
+
+extension NoteSidebarView {
     
     private func requestAllIssue(_ readCache: Bool = true, _ completion: @escaping CommonCallBack) -> Void {
         

@@ -10,11 +10,11 @@ import SwiftUI
 struct NoteCommentsHeaderView: View {
     
     @Binding var selectionIssue: Issue?
-    @Binding var isCommentRefreshing: Bool
     
+    @State var isCommentRefreshing: Bool = false
     @State private var isNewCommentSending: Bool = false
     
-    var refreshCallBack: CommonCallBack?
+    var refreshCallBack: CommonTCallBack<CommonCallBack>?
     var createCallBack: ((_ comment: Comment, _ callBack: @escaping CommonCallBack) ->())?
     
     
@@ -31,7 +31,10 @@ struct NoteCommentsHeaderView: View {
                 } else {
                     Button {
     //                    commentsData(false) {}
-                        refreshCallBack?()
+                        isCommentRefreshing = true
+                        refreshCallBack?({
+                            isCommentRefreshing = false
+                        })
                         
                     } label: {
                         

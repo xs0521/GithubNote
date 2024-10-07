@@ -55,6 +55,7 @@
 		B1EBBDCA2CB24DA9005FB760 /* SQLManager+Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EBBDC92CB24DA9005FB760 /* SQLManager+Comment.swift */; };
 		B1EBBDCC2CB2E718005FB760 /* WebServerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EBBDCB2CB2E718005FB760 /* WebServerManager.swift */; };
 		B1EBBDCE2CB2F31A005FB760 /* bool+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EBBDCD2CB2F31A005FB760 /* bool+Extension.swift */; };
+		B1EBBDD12CB3CD7A005FB760 /* NoteSidebarToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EBBDD02CB3CD7A005FB760 /* NoteSidebarToolView.swift */; };
 		B1EC0DE82BBB8DD4007975D9 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EC0DE72BBB8DD4007975D9 /* String+Extension.swift */; };
 		B1EC0DF62BBE434F007975D9 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EC0DF52BBE434F007975D9 /* LoginView.swift */; };
 		B1EC0DF82BBE47A8007975D9 /* UserDefaults+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EC0DF72BBE47A8007975D9 /* UserDefaults+Extension.swift */; };
@@ -145,6 +146,7 @@
 		B1EBBDC92CB24DA9005FB760 /* SQLManager+Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SQLManager+Comment.swift"; sourceTree = "<group>"; };
 		B1EBBDCB2CB2E718005FB760 /* WebServerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebServerManager.swift; sourceTree = "<group>"; };
 		B1EBBDCD2CB2F31A005FB760 /* bool+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "bool+Extension.swift"; sourceTree = "<group>"; };
+		B1EBBDD02CB3CD7A005FB760 /* NoteSidebarToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteSidebarToolView.swift; sourceTree = "<group>"; };
 		B1EC0DE72BBB8DD4007975D9 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		B1EC0DF52BBE434F007975D9 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		B1EC0DF72BBE47A8007975D9 /* UserDefaults+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extension.swift"; sourceTree = "<group>"; };
@@ -495,6 +497,7 @@
 			children = (
 				B10930FA2C3D848A006B5DB0 /* NoteContentView.swift */,
 				B10930FC2C3D85C5006B5DB0 /* NoteSidebarView.swift */,
+				B1EBBDD02CB3CD7A005FB760 /* NoteSidebarToolView.swift */,
 				B1EBBDBB2CA05FA6005FB760 /* NoteIssuesView.swift */,
 				B1EBBDBD2CA06A63005FB760 /* NoteIssuesHeaderView.swift */,
 				B1EBBDBF2CA06C99005FB760 /* NoteCommentsView.swift */,
@@ -862,6 +865,7 @@
 				B1D7CF542BCA11DE00362C35 /* ImagesModel.swift in Sources */,
 				B1FE674E2C45767600970DA0 /* Common.swift in Sources */,
 				B1B55A8B2C515C9000820689 /* AppModel.swift in Sources */,
+				B1EBBDD12CB3CD7A005FB760 /* NoteSidebarToolView.swift in Sources */,
 				B1EBBDA02C9F0079005FB760 /* LaunchApp.swift in Sources */,
 				B1EBBDC02CA06C99005FB760 /* NoteCommentsView.swift in Sources */,
 				B1EBBDC82CB24D72005FB760 /* SQLManager+Issue.swift in Sources */,
