@@ -147,3 +147,9 @@ extension WKWebView {
         }
     }
 }
+
+struct WKWebViewManager: Setupable {
+    static func setup() {
+        WKWebView.swizzleHandlesURLScheme
+    }
+}

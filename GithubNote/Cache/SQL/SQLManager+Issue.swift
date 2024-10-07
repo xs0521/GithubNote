@@ -10,7 +10,13 @@ import FMDB
 
 extension SQLManager {
     
-    func insertIssue(issues: [Issue], into tableName: String, database: FMDatabase) {
+    func insertIssue(issues: [Issue], into tableName: String?, database: FMDatabase) {
+        
+        guard let tableName = tableName else {
+            assert(false, "tableName error")
+            return
+        }
+        
         let insertSQL = """
         INSERT OR REPLACE INTO \(tableName) (id, url, repositoryUrl, number, title, body, state)
         VALUES (?, ?, ?, ?, ?, ?, ?);
@@ -40,7 +46,13 @@ extension SQLManager {
         database.close()
     }
     
-    func fetchIssues(from tableName: String, where repositoryUrl: String, database: FMDatabase) -> [Issue] {
+    func fetchIssues(from tableName: String?, where repositoryUrl: String, database: FMDatabase) -> [Issue] {
+        
+        guard let tableName = tableName else {
+            assert(false, "tableName error")
+            return []
+        }
+        
         var issues = [Issue]()
         let selectSQL = "SELECT * FROM \(tableName) WHERE repositoryUrl = ?;"
         
@@ -62,7 +74,7 @@ extension SQLManager {
                 }
                 
             } catch {
-                print("Failed to fetch issues: \(error.localizedDescription)")
+                "Failed to fetch issues: \(error.localizedDescription)".logE()
             }
         }
         database.close()
@@ -87,23 +99,29 @@ extension SQLManager {
                     issue.state?.rawValue ?? NSNull(),
                     issue.id ?? NSNull()
                 ])
-                print("Issue updated successfully")
+                "Issue updated successfully".logI()
             } catch {
-                print("Failed to update issue: \(error.localizedDescription)")
+                "Failed to update issue: \(error.localizedDescription)".logE()
             }
         }
         database.close()
     }
     
-    func deleteIssue(byId id: Int, from tableName: String, database: FMDatabase) {
+    func deleteIssue(byId id: Int, from tableName: String?, database: FMDatabase) {
+        
+        guard let tableName = tableName else {
+            assert(false, "tableName error")
+            return
+        }
+        
         let deleteSQL = "DELETE FROM \(tableName) WHERE id = ?;"
         
         if database.open() {
             do {
                 try database.executeUpdate(deleteSQL, values: [id])
-                print("Issue deleted successfully")
+                "Issue deleted successfully".logI()
             } catch {
-                print("Failed to delete issue: \(error.localizedDescription)")
+                "Failed to delete issue: \(error.localizedDescription)".logE()
             }
         }
         database.close()

@@ -8,7 +8,15 @@
 import Foundation
 import Cache
 
-class CacheManager {
+class CacheManager: Setupable {
+    
+    var manager: SQLManager?
+    
+    static func setup() {
+        
+        CacheManager.shared.manager?.clear()
+        CacheManager.shared.manager = SQLManager()
+    }
     
     static let shared = CacheManager()
     let diskConfig = DiskConfig(name: Account.repo)
@@ -83,22 +91,24 @@ class CacheManager {
 
 extension CacheManager {
     
+    
+    
     static func insertRepos(repos: [RepoModel]) -> Void {
-        SQLManager.shared.dbQueue?.inDatabase({ database in
-            SQLManager.shared.insertRepos(repos: repos, database: database)
+        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+            CacheManager.shared.manager?.insertRepos(repos: repos, database: database)
         })
     }
     
     static func fetchRepos(_ completion: @escaping CommonTCallBack<[RepoModel]>) -> Void {
-        SQLManager.shared.dbQueue?.inDatabase({ database in
-            let models = SQLManager.shared.fetchRepos(database: database)
-            completion(models)
+        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+            let models = CacheManager.shared.manager?.fetchRepos(database: database)
+            completion(models ?? [])
         })
     }
     
     static func deleteRepo(_ id: Int, _ completion: @escaping CommonTCallBack<[RepoModel]>) -> Void {
-        SQLManager.shared.dbQueue?.inDatabase({ database in
-            SQLManager.shared.deleteRepo(byId: id, database: database)
+        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+            CacheManager.shared.manager?.deleteRepo(byId: id, database: database)
         })
     }
 }
@@ -106,28 +116,30 @@ extension CacheManager {
 extension CacheManager {
     
     static func insertIssues(issues: [Issue]) -> Void {
-        SQLManager.shared.dbQueue?.inDatabase({ database in
-            SQLManager.shared.createIssueTable()
-            let tableName = SQLManager.shared.issueTableName()
-            SQLManager.shared.insertIssue(issues: issues, into: tableName, database: database)
+        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+            CacheManager.shared.manager?.createIssueTable()
+            let tableName = CacheManager.shared.manager?.issueTableName()
+            CacheManager.shared.manager?.insertIssue(issues: issues, into: tableName, database: database)
         })
         
     }
     
     static func fetchIssues(_ completion: @escaping CommonTCallBack<[Issue]>) -> Void {
-        let tableName = SQLManager.shared.issueTableName()
-        let url = CacheManager.shared.currentRepo?.url ?? ""
-        assert(!url.isEmpty, "url error")
-        SQLManager.shared.dbQueue?.inDatabase({ database in
-            let models = SQLManager.shared.fetchIssues(from: tableName, where: url, database: database)
+        
+        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+            let tableName = CacheManager.shared.manager?.issueTableName()
+            let url = CacheManager.shared.currentRepo?.url ?? ""
+            assert(!url.isEmpty, "url error")
+            let models = CacheManager.shared.manager?.fetchIssues(from: tableName, where: url, database: database) ?? []
             completion(models)
         })
     }
     
     static func deleteIssue(_ id: Int, _ completion: @escaping CommonTCallBack<[Issue]>) -> Void {
-        let tableName = SQLManager.shared.issueTableName()
-        SQLManager.shared.dbQueue?.inDatabase({ database in
-            SQLManager.shared.deleteIssue(byId: id, from: tableName, database: database)
+        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+            guard let manager = CacheManager.shared.manager else { return }
+            let tableName = manager.issueTableName()
+            CacheManager.shared.manager?.deleteIssue(byId: id, from: tableName, database: database)
         })
     }
 }
@@ -136,28 +148,28 @@ extension CacheManager {
 extension CacheManager {
     
     static func insertComments(comments: [Comment]) -> Void {
-        SQLManager.shared.dbQueue?.inDatabase({ database in
-            SQLManager.shared.createCommentTable()
-            let tableName = SQLManager.shared.commentTableName()
-            SQLManager.shared.insertComments(comments: comments, into: tableName, database: database)
+        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+            CacheManager.shared.manager?.createCommentTable()
+            let tableName = CacheManager.shared.manager?.commentTableName()
+            CacheManager.shared.manager?.insertComments(comments: comments, into: tableName, database: database)
         })
         
     }
     
     static func fetchComments(_ completion: @escaping CommonTCallBack<[Comment]>) -> Void {
-        let tableName = SQLManager.shared.commentTableName()
-        let url = CacheManager.shared.currentIssue?.url ?? ""
-        assert(!url.isEmpty, "url error")
-        SQLManager.shared.dbQueue?.inDatabase({ database in
-            let models = SQLManager.shared.fetchComments(from: tableName, where: url, database: database)
+        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+            let tableName = CacheManager.shared.manager?.commentTableName()
+            let url = CacheManager.shared.currentIssue?.url ?? ""
+            assert(!url.isEmpty, "url error")
+            let models = CacheManager.shared.manager?.fetchComments(from: tableName, where: url, database: database) ?? []
             completion(models)
         })
     }
     
     static func deleteComment(_ id: Int, _ completion: @escaping CommonTCallBack<[Comment]>) -> Void {
-        let tableName = SQLManager.shared.issueTableName()
-        SQLManager.shared.dbQueue?.inDatabase({ database in
-            SQLManager.shared.deleteIssue(byId: id, from: tableName, database: database)
+        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+            let tableName = CacheManager.shared.manager?.issueTableName()
+            CacheManager.shared.manager?.deleteIssue(byId: id, from: tableName, database: database)
         })
     }
 }

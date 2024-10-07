@@ -6,11 +6,18 @@
 //
 
 import Foundation
+import SDWebImage
 
 class ImagesModel {
     static let shared = ImagesModel()
 }
 
+struct SDWebImageDownloaderSetup: Setupable {
+    static func setup() {
+        "#image# accessToken length \(Account.accessToken.count)".logI()
+        SDWebImageDownloader.shared.setValue("Bearer \(Account.accessToken)", forHTTPHeaderField: "Authorization")
+    }
+}
 
 struct GithubImage: APIModelable, Identifiable, Hashable, Equatable {
     

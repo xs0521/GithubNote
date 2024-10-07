@@ -78,7 +78,7 @@ class CustomFileLogFormatter: DDDispatchQueueLogFormatter {
     }
 }
 
-struct LogManager {
+struct LogManager: Setupable {
     
     static func setup() {
         

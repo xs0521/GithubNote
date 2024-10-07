@@ -39,10 +39,6 @@ struct GithubNoteApp: App {
                 .onReceive(NotificationCenter.default.publisher(for: Notification.Name.logoutNotification), perform: { _ in
                     willLoginOut = true
                 })
-                .onAppear {
-                    let _ = SQLManager.shared
-                    let _ = WebServerManager.shared
-                }
             } else {
                 LoginView {
                     logined = Account.enble

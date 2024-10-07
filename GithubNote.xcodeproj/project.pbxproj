@@ -256,7 +256,6 @@
 			children = (
 				B1922A4C2BAFF1FB00200828 /* GithubNoteApp.swift */,
 				B1EBBD9E2C9F0056005FB760 /* LaunchApp */,
-				B1EBBD952C9E93E3005FB760 /* Settings */,
 				B1EBBD922C9E885F005FB760 /* Log */,
 				B1ED88682C4ACAE500FD8DEB /* API */,
 				B1ED886B2C4ACB5900FD8DEB /* Cache */,
@@ -299,6 +298,7 @@
 		B1AE88382C51564E00BB8047 /* Module */ = {
 			isa = PBXGroup;
 			children = (
+				B1EBBD952C9E93E3005FB760 /* Settings */,
 				B1DA10592C9DB6A20074DA32 /* Markdown */,
 				B1EC0DEB2BBE428F007975D9 /* App */,
 				B1B55A8D2C515D8100820689 /* Repo */,
@@ -340,10 +340,6 @@
 			isa = PBXGroup;
 			children = (
 				B1ED88722C4BD40600FD8DEB /* CacheManager.swift */,
-				B1EBBDC32CB23818005FB760 /* SQLManager.swift */,
-				B1EBBDC52CB24D65005FB760 /* SQLManager+Repo.swift */,
-				B1EBBDC72CB24D72005FB760 /* SQLManager+Issue.swift */,
-				B1EBBDC92CB24DA9005FB760 /* SQLManager+Comment.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -454,6 +450,17 @@
 				B1EBBD9F2C9F0079005FB760 /* LaunchApp.swift */,
 			);
 			path = LaunchApp;
+			sourceTree = "<group>";
+		};
+		B1EBBDCF2CB30D33005FB760 /* SQL */ = {
+			isa = PBXGroup;
+			children = (
+				B1EBBDC32CB23818005FB760 /* SQLManager.swift */,
+				B1EBBDC52CB24D65005FB760 /* SQLManager+Repo.swift */,
+				B1EBBDC72CB24D72005FB760 /* SQLManager+Issue.swift */,
+				B1EBBDC92CB24DA9005FB760 /* SQLManager+Comment.swift */,
+			);
+			path = SQL;
 			sourceTree = "<group>";
 		};
 		B1EC0DEB2BBE428F007975D9 /* App */ = {
@@ -568,6 +575,7 @@
 		B1ED886B2C4ACB5900FD8DEB /* Cache */ = {
 			isa = PBXGroup;
 			children = (
+				B1EBBDCF2CB30D33005FB760 /* SQL */,
 				B1B55A8F2C515DB600820689 /* Model */,
 			);
 			path = Cache;

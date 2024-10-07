@@ -8,7 +8,7 @@
 import Foundation
 import GCDWebServer
 
-class WebServerManager {
+class WebServerManager: Setupable {
     static let shared = WebServerManager()
     
     private var webServer: GCDWebServer?
@@ -18,5 +18,10 @@ class WebServerManager {
         webServer.start()
         self.webServer = webServer
         print("Visit \(webServer.serverURL?.absoluteString ?? "") in your web browser")
+    }
+    
+    static func setup() {
+        
+        let _ = WebServerManager.shared
     }
 }

@@ -51,10 +51,19 @@ struct LoginView: View {
                 if !enbleStart() {
                     return
                 }
-                UserDefaults.save(value: ownerName, key: AccountType.owner.key)
-                UserDefaults.save(value: repoName, key: AccountType.repo.key)
-                UserDefaults.save(value: token, key: AccountType.token.key)
-                completion?()
+                
+                requestUser(ownerName) { user in
+                    guard let userId = user?.id, userId > 0 else { 
+                        assert(false, "login error")
+                        return
+                    }
+                    UserDefaults.save(value: user?.id, key: AccountType.userID.key)
+                    UserDefaults.save(value: ownerName, key: AccountType.owner.key)
+                    UserDefaults.save(value: repoName, key: AccountType.repo.key)
+                    UserDefaults.save(value: token, key: AccountType.token.key)
+                    LaunchApp.shared.loginSetup()
+                    completion?()
+                }
                 
             }, label: {
                 Text("start")
@@ -72,6 +81,18 @@ struct LoginView: View {
     
     func enbleStart() -> Bool {
         return !repoName.isEmpty && !ownerName.isEmpty
+    }
+    
+    func requestUser(_ userName: String, _ completion: @escaping CommonTCallBack<UserModel?>) -> Void {
+        
+        Networking<UserModel>().request(API.user(userName), readCache: false,
+                                    parseHandler: ModelGenerator(snakeCase: true, filter: false)) { (data, _, _) in
+            guard let list = data else {
+                completion(nil)
+                return
+            }
+            completion(list.first)
+        }
     }
 }
 

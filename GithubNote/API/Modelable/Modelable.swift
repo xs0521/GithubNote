@@ -83,4 +83,6 @@ struct ModelGenerator<T: APIModelable>: Modelable {
     
 }
 
-
+protocol Setupable {
+    static func setup() -> Void
+}

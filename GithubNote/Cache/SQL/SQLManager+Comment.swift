@@ -10,7 +10,13 @@ import FMDB
 
 extension SQLManager {
     
-    func insertComments(comments: [Comment], into tableName: String, database: FMDatabase) {
+    func insertComments(comments: [Comment], into tableName: String?, database: FMDatabase) {
+        
+        guard let tableName = tableName else {
+            assert(false, "tableName error")
+            return
+        }
+        
         let insertSQL = """
         INSERT OR REPLACE INTO \(tableName) (id, url, htmlURL, issueURL, nodeID, createdAt, updatedAt, body)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?);
@@ -40,7 +46,13 @@ extension SQLManager {
         database.close()
     }
     
-    func fetchComments(from tableName: String, where issueURL: String, database: FMDatabase) -> [Comment] {
+    func fetchComments(from tableName: String?, where issueURL: String, database: FMDatabase) -> [Comment] {
+        
+        guard let tableName = tableName else {
+            assert(false, "tableName error")
+            return []
+        }
+        
         var comments = [Comment]()
         let selectSQL = "SELECT * FROM \(tableName) WHERE issueURL = ?;"
         
@@ -63,7 +75,7 @@ extension SQLManager {
                 }
                 
             } catch {
-                print("Failed to fetch comments: \(error.localizedDescription)")
+                "Failed to fetch comments: \(error.localizedDescription)".logE()
             }
         }
         database.close()
@@ -89,9 +101,9 @@ extension SQLManager {
                     comment.body ?? NSNull(),
                     comment.id ?? NSNull()
                 ])
-                print("Comment updated successfully")
+                "Comment updated successfully".logI()
             } catch {
-                print("Failed to update comment: \(error.localizedDescription)")
+                "Failed to update comment: \(error.localizedDescription)".logE()
             }
         }
         database.close()
@@ -103,9 +115,9 @@ extension SQLManager {
         if database.open() {
             do {
                 try database.executeUpdate(deleteSQL, values: [id])
-                print("Comment deleted successfully")
+                "Comment deleted successfully".logI()
             } catch {
-                print("Failed to delete comment: \(error.localizedDescription)")
+                "Failed to delete comment: \(error.localizedDescription)".logE()
             }
         }
         database.close()

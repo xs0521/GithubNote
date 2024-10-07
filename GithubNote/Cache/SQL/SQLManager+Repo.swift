@@ -70,9 +70,9 @@ extension SQLManager {
                 repo.private ?? NSNull(),
                 repo.id ?? NSNull()  // 使用 id 作为查询条件
             ])
-            print("Update successful")
+            "Update successful".logI()
         } catch {
-            print("Failed to update repo: \(error.localizedDescription)")
+            "Failed to update repo: \(error.localizedDescription)".logE()
         }
     }
     
@@ -98,7 +98,7 @@ extension SQLManager {
             }
             
         } catch {
-            print("Failed to fetch repos: \(error.localizedDescription)")
+            "Failed to fetch repos: \(error.localizedDescription)".logE()
         }
         
         return repos
@@ -109,9 +109,9 @@ extension SQLManager {
         
         do {
             try database.executeUpdate(deleteSQL, values: [id])
-            print("Deleted successfully")
+            "Deleted successfully".logI()
         } catch {
-            print("Failed to delete: \(error.localizedDescription)")
+            "Failed to delete: \(error.localizedDescription)".logE()
         }
     }
 }

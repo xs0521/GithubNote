@@ -6,16 +6,24 @@
 //
 
 import Foundation
-import WebKit
-import SDWebImage
+
+private let SETUPLIST: [Setupable.Type] = [LogManager.self,
+                                           WebServerManager.self,
+                                           WKWebViewManager.self]
+
+private let SETUPLISTLOGIN: [Setupable.Type] = [SDWebImageDownloaderSetup.self,
+                                                CacheManager.self]
 
 class LaunchApp {
     static let shared = LaunchApp()
     init() {
-        LogManager.setup()
-        WKWebView.swizzleHandlesURLScheme
-        if !Account.accessToken.isEmpty {
-            SDWebImageDownloader.shared.setValue("Bearer \(Account.accessToken)", forHTTPHeaderField: "Authorization")
+        SETUPLIST.forEach({$0.setup()})
+        if Account.enble {
+            loginSetup()
         }
+    }
+    
+    func loginSetup() -> Void {
+        SETUPLISTLOGIN.forEach({$0.setup()})
     }
 }

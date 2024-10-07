@@ -12,6 +12,7 @@ private let kMaxPage = 100
 
 enum API {
     
+    case user(_ userName: String)
     case repos(page: Int)
     case repoIssues(repoName: String, page: Int)
     case comments(issueId: Int, page: Int)
@@ -58,6 +59,8 @@ extension API: TargetType {
     
     var path: String {
         switch self {
+        case .user(let userName):
+            return "users/\(userName)"
         case .repos:
             return accessToken.isEmpty ? "/users/\(owner)/repos" : "/user/repos"
         case .repoIssues(let repoName, _):

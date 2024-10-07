@@ -12,16 +12,18 @@ private let dbName = "note.db"
 
 class SQLManager {
     
-    static let shared = SQLManager()
-    
     private lazy var dbURL: URL = {
+        
+        let bundleID = Bundle.main.bundleIdentifier ?? "github.note"
+        var userId = Account.userId
+        assert(userId > 0, "userId error")
+        
         let fileManager = FileManager.default
-        let dirPaths =
-        NSSearchPathForDirectoriesInDomains(.documentDirectory,
+        let dirPaths = NSSearchPathForDirectoriesInDomains(.documentDirectory,
                                             .userDomainMask, true)
         
         let docsDir = dirPaths[0] as String
-        var dirPath = (docsDir as NSString).appendingPathComponent("github.note")
+        var dirPath = (docsDir as NSString).appendingPathComponent(bundleID)
         
         do {
             try fileManager.createDirectory(atPath: dirPath, withIntermediateDirectories: true, attributes: nil)
@@ -30,9 +32,7 @@ class SQLManager {
             "#db# Error creating directory: \(error.localizedDescription)".logE()
         }
         
-        ///TODO
-        let id = "10003"
-        dirPath = (dirPath as NSString).appendingPathComponent(id)
+        dirPath = (dirPath as NSString).appendingPathComponent("\(userId)")
         
         do {
             try fileManager.createDirectory(atPath: dirPath, withIntermediateDirectories: true, attributes: nil)
@@ -60,6 +60,12 @@ class SQLManager {
     
     init() {
         createRepoTable()
+    }
+    
+    func clear() -> Void {
+        if self.db.open() {
+            self.db.close()
+        }
     }
     
     private func createRepoTable() {
