@@ -121,22 +121,13 @@ struct NoteWritePannelView: View {
                             editIsShown.toggle()
                         } label: {
                             Label("Show inspector", systemImage: editIsShown ? "xmark.circle" : "square.and.pencil")
-                                .font(.system(size: editIsShown ? 14 : 16))
-                                .fontWeight(editIsShown ? .regular : .bold)
+//                                .font(.system(size: editIsShown ? 14 : 16))
+//                                .fontWeight(editIsShown ? .regular : .bold)
                         }
                     }
                 }
                
             }
-//            .inspector(isPresented: $editIsShown) {
-//                Group {
-//                    TextEditor(text: $markdownString.toUnwrapped(defaultValue: ""))
-//                        .transparentScrolling()
-//                        .font(.system(size: 14))
-//                        .inspectorColumnWidth(min: 100, ideal: 500, max: 800)
-//                }
-//                .background(Color.background)
-//            }
             .onChange(of: comment) { oldValue, newValue in
                 if oldValue?.identifier != newValue?.identifier {
                     markdownString = newValue?.body
@@ -146,6 +137,10 @@ struct NoteWritePannelView: View {
     }
     
     private func currentTitle() -> String {
+        
+        if showImageBrowser == true {
+            return ""
+        }
         
         var title = "\(Account.owner)"
         if let repoName = selectionRepo?.name {

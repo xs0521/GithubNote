@@ -60,7 +60,7 @@ struct NoteImageBrowserImagesView: View {
                             .buttonStyle(.plain)
                             .contextMenu {
                                 Button("copy", role: .destructive) {
-                                    copyAction(url)
+                                    copyAction(item.imageUrl())
                                 }
                                 Button("delete", role: .destructive) {
                                     deleteFile(item)
