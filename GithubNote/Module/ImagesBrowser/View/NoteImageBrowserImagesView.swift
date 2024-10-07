@@ -23,6 +23,7 @@ struct NoteImageBrowserImagesView: View {
     @State var showPreview: Bool = false
     @State var url: String = ""
     
+    @Environment(\.colorScheme) var colorScheme
     
     let adaptiveColumn = [
         GridItem(.adaptive(minimum: NoteImageBrowserImagesView.size.width, maximum: NoteImageBrowserImagesView.size.width))
@@ -78,7 +79,7 @@ struct NoteImageBrowserImagesView: View {
             if showPreview {
                 ZStack {
                     VStack {
-                        Color.init(hex: "#EDEDEC")
+                        colorScheme == .dark ? Color.init(hex: "#292929") : Color.init(hex: "#ECECEB")
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .onTapGesture {
