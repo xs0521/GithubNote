@@ -1,105 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Markdown Viewer</title>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <!-- Highlight.js (CSS and JS) -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css"
-    />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
-    <script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
-    <style>
-      body::-webkit-scrollbar {
-        display: none; /* 隐藏滚动条 */
-      }
-      body {
-        background-color: #ffffff; /* 设置背景色为浅灰色 */
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 10px;
-      }
-      pre {
-        padding: 2px;
-        background: #ffffff;
-        border-radius: 4px;
-        overflow-x: auto;
-        box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
-      }
-      /* 夜间模式样式 */
-      @media (prefers-color-scheme: dark) {
-        body {
-          background-color: #292c33; /* 背景色 */
-          color: #e0e0e0; /* 文字颜色 */
-        }
-
-        #content {
-          background-color: #292c33; /* 内容区域背景色 */
-          box-shadow: none; /* 去掉阴影 */
-        }
-
-        pre {
-          background: #22252b; /* 代码块背景色 */
-          color: #e0e0e0; /* 代码块文本颜色 */
-          box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.2);
-        }
-
-        .hljs {
-          background: #22252b; /* 代码块背景色 */
-          color: #abb2bf; /* 代码文本颜色 */
-        }
-
-        .hljs-keyword {
-          color: #c678dd; /* 关键字颜色 */
-        }
-
-        .hljs-string {
-          color: #98c379; /* 字符串颜色 */
-        }
-
-        .hljs-comment {
-          color: #5c6370; /* 注释颜色 */
-        }
-
-        .hljs-function {
-          color: #61afef; /* 函数颜色 */
-        }
-
-        .hljs-variable {
-          color: #d19a66; /* 变量颜色 */
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="content"></div>
-
-    <script>
-      // Configure Marked.js to use highlight.js for code blocks
-      marked.setOptions({
-        highlight: function (code, lang) {
-          if (hljs.getLanguage(lang)) {
-            return hljs.highlight(code, { language: lang }).value;
-          } else {
-            return hljs.highlightAuto(code).value;
-          }
-        },
-      });
-
-      function renderMarkdown(markdown) {
-        document.getElementById("content").innerHTML = marked.parse(markdown);
-        // After rendering, apply syntax highlighting
-        document.querySelectorAll("pre code").forEach((block) => {
-          hljs.highlightElement(block);
-        });
-      }
-
-      function debugExecute() {
-        var vConsole = new window.VConsole();
-      }
-    </script>
-  </body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Markdown Viewer</title>
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        <!-- Highlight.js (CSS and JS) -->
+        <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css"
+        />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
+        <style>
+            body::-webkit-scrollbar {
+                display: none; /* 隐藏滚动条 */
+            }
+            body {
+                background-color: #ffffff; /* 设置背景色为浅灰色 */
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 10px;
+            }
+            pre {
+                padding: 2px;
+                background: #ffffff;
+                border-radius: 4px;
+                overflow-x: auto;
+                box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+            }
+            /* 夜间模式样式 */
+            @media (prefers-color-scheme: dark) {
+                body {
+                    background-color: #292c33; /* 背景色 */
+                    color: #e0e0e0; /* 文字颜色 */
+                }
+                
+                #content {
+                    background-color: #292c33; /* 内容区域背景色 */
+                    box-shadow: none; /* 去掉阴影 */
+                }
+                
+                pre {
+                    background: #22252b; /* 代码块背景色 */
+                    color: #e0e0e0; /* 代码块文本颜色 */
+                    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.2);
+                }
+                
+                .hljs {
+                    background: #22252b; /* 代码块背景色 */
+                    color: #abb2bf; /* 代码文本颜色 */
+                }
+                
+                .hljs-keyword {
+                    color: #c678dd; /* 关键字颜色 */
+                }
+                
+                .hljs-string {
+                    color: #98c379; /* 字符串颜色 */
+                }
+                
+                .hljs-comment {
+                    color: #5c6370; /* 注释颜色 */
+                }
+                
+                .hljs-function {
+                    color: #61afef; /* 函数颜色 */
+                }
+                
+                .hljs-variable {
+                    color: #d19a66; /* 变量颜色 */
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div id="content"></div>
+        
+        <script>
+            // Configure Marked.js to use highlight.js for code blocks
+            marked.setOptions({
+                highlight: function (code, lang) {
+                    if (hljs.getLanguage(lang)) {
+                        return hljs.highlight(code, { language: lang }).value;
+                    } else {
+                        return hljs.highlightAuto(code).value;
+                    }
+                },
+            });
+            
+            function renderMarkdown(data) {
+                markdown = data.content
+                document.getElementById("content").innerHTML = marked.parse(markdown);
+                // After rendering, apply syntax highlighting
+                document.querySelectorAll("pre code").forEach((block) => {
+                    hljs.highlightElement(block);
+                });
+            }
+            
+            function debugExecute() {
+                var vConsole = new window.VConsole();
+            }
+            
+            function base64ToUtf8(base64String) {
+                // 使用 atob 解码 Base64 字符串
+                const binaryString = atob(base64String);
+                
+                // 将 binaryString 转换为 Uint8Array
+                const binaryLen = binaryString.length;
+                const bytes = new Uint8Array(binaryLen);
+                
+                for (let i = 0; i < binaryLen; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                
+                // 使用 TextDecoder 将 Uint8Array 转换为 UTF-8 字符串
+                const decoder = new TextDecoder('utf-8');
+                return decoder.decode(bytes);
+            }
+            
+        </script>
+    </body>
 </html>
