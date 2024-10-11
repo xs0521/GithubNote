@@ -120,7 +120,7 @@ extension SQLManager {
         database.close()
     }
     
-    func deleteIssue(byId id: Int, from tableName: String?, database: FMDatabase) {
+    func deleteIssue(byId ids: [Int], from tableName: String?, database: FMDatabase) {
         
         guard let tableName = tableName else {
             assert(false, "tableName error")
@@ -130,12 +130,14 @@ extension SQLManager {
         let deleteSQL = "DELETE FROM \(tableName) WHERE id = ?;"
         
         if database.open() {
-            do {
-                try database.executeUpdate(deleteSQL, values: [id])
-                "Issue deleted successfully".logI()
-            } catch {
-                "Failed to delete issue: \(error.localizedDescription)".logE()
+            ids.forEach { id in
+                do {
+                    try database.executeUpdate(deleteSQL, values: [id])
+                } catch {
+                    "Failed to delete issue: \(error.localizedDescription)".logE()
+                }
             }
+            "Issue deleted successfully".logI()
         }
         database.close()
     }

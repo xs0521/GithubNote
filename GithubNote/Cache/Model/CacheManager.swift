@@ -118,16 +118,33 @@ extension CacheManager {
 
 extension CacheManager {
     
-    static func insertIssues(issues: [Issue], completion: CommonCallBack? = nil) -> Void {
-        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
-            CacheManager.shared.manager?.createIssueTable()
-            let tableName = CacheManager.shared.manager?.issueTableName()
-            CacheManager.shared.manager?.insertIssue(issues: issues, into: tableName, database: database)
-            DispatchQueue.main.async {
-                completion?()
-            }
-        })
+    static func insertIssues(issues: [Issue], deleteNoFound: Bool = false, completion: CommonCallBack? = nil) -> Void {
         
+        if deleteNoFound {
+            fetchIssues { localList in
+                let deleteList = localList.filter { item in
+                    !issues.contains(where: {$0.id == item.id})
+                }.compactMap({$0.id})
+                "#insertIssues# delete \(deleteList.map({String($0)}).joined(separator: ","))".logI()
+                deleteIssue(deleteList) {
+                    insertAction()
+                }
+            }
+            return
+        } else {
+            insertAction()
+        }
+        
+        func insertAction() -> Void {
+            CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+                CacheManager.shared.manager?.createIssueTable()
+                let tableName = CacheManager.shared.manager?.issueTableName()
+                CacheManager.shared.manager?.insertIssue(issues: issues, into: tableName, database: database)
+                DispatchQueue.main.async {
+                    completion?()
+                }
+            })
+        }
     }
     
     static func fetchIssues(_ completion: @escaping CommonTCallBack<[Issue]>) -> Void {
@@ -154,11 +171,11 @@ extension CacheManager {
         })
     }
     
-    static func deleteIssue(_ id: Int, _ completion: @escaping CommonCallBack) -> Void {
+    static func deleteIssue(_ ids: [Int], _ completion: @escaping CommonCallBack) -> Void {
         CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
             guard let manager = CacheManager.shared.manager else { return }
             let tableName = manager.issueTableName()
-            CacheManager.shared.manager?.deleteIssue(byId: id, from: tableName, database: database)
+            CacheManager.shared.manager?.deleteIssue(byId: ids, from: tableName, database: database)
             DispatchQueue.main.async {
                 completion()
             }
@@ -169,15 +186,33 @@ extension CacheManager {
 
 extension CacheManager {
     
-    static func insertComments(comments: [Comment], completion: CommonCallBack? = nil) -> Void {
-        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
-            CacheManager.shared.manager?.createCommentTable()
-            let tableName = CacheManager.shared.manager?.commentTableName()
-            CacheManager.shared.manager?.insertComments(comments: comments, into: tableName, database: database)
-            DispatchQueue.main.async {
-                completion?()
+    static func insertComments(comments: [Comment], deleteNoFound: Bool = false, completion: CommonCallBack? = nil) -> Void {
+        
+        if deleteNoFound {
+            fetchComments { localList in
+                let deleteList = localList.filter { item in
+                    !comments.contains(where: {$0.id == item.id})
+                }.compactMap({$0.id})
+                "#insertComments# delete \(deleteList.map({String($0)}).joined(separator: ","))".logI()
+                deleteComment(deleteList) {
+                    insertAction()
+                }
             }
-        })
+        } else {
+            insertAction()
+        }
+        
+        func insertAction() -> Void {
+            
+            CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+                CacheManager.shared.manager?.createCommentTable()
+                let tableName = CacheManager.shared.manager?.commentTableName()
+                CacheManager.shared.manager?.insertComments(comments: comments, into: tableName, database: database)
+                DispatchQueue.main.async {
+                    completion?()
+                }
+            })
+        }
         
     }
     
@@ -204,10 +239,10 @@ extension CacheManager {
         })
     }
     
-    static func deleteComment(_ id: Int, _ completion: @escaping CommonCallBack) -> Void {
+    static func deleteComment(_ ids: [Int], _ completion: @escaping CommonCallBack) -> Void {
         CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
             let tableName = CacheManager.shared.manager?.commentTableName()
-            CacheManager.shared.manager?.deleteComment(byId: id, from: tableName, database: database)
+            CacheManager.shared.manager?.deleteComment(byId: ids, from: tableName, database: database)
             DispatchQueue.main.async {
                 completion()
             }

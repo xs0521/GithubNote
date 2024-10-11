@@ -60,7 +60,7 @@ extension NoteCommentsView {
                 return
             }
             commentGroups.removeAll(where: {$0.id == commentId})
-            CacheManager.deleteComment(commentId) { }
+            CacheManager.deleteComment([commentId]) { }
         }
     }
 }

@@ -197,7 +197,7 @@ extension NoteSidebarView {
         let allIssue: [Issue] = []
         requestIssue(issuePage, allIssue, false, true) { loadList, success, more in
             "#request# issue all \(loadList.count)".logI()
-            CacheManager.insertIssues(issues: loadList) {
+            CacheManager.insertIssues(issues: loadList, deleteNoFound: true) {
                 CacheManager.fetchIssues { list in
                     issueGroups = list
                     completion()
@@ -255,7 +255,7 @@ extension NoteSidebarView {
         commentsData(commentPage, allComment, readCache, true) { list, success, more in
             "#request# comment all \(list.count)".logI()
             commentGroups = list
-            CacheManager.insertComments(comments: list)
+            CacheManager.insertComments(comments: list, deleteNoFound: true)
             completion()
         }
     }

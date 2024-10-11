@@ -163,7 +163,7 @@ extension NoteIssuesView {
         Networking<Issue>().request(API.updateIssue(issueId: number, state: .closed, title: title, body: body), writeCache: false, readCache: false) { data, cache, _ in
             if data != nil {
                 guard let issueId = issue.id else { return }
-                CacheManager.deleteIssue(issueId) {
+                CacheManager.deleteIssue([issueId]) {
                     guard let tableName = CacheManager.shared.manager?.commentTableName(issueId), let url = issue.url else {
                         return
                     }

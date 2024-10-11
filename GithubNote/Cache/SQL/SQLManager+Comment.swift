@@ -122,7 +122,7 @@ extension SQLManager {
         database.close()
     }
     
-    func deleteComment(byId id: Int, from tableName: String?, database: FMDatabase) {
+    func deleteComment(byId ids: [Int], from tableName: String?, database: FMDatabase) {
         
         guard let tableName = tableName else {
             assert(false, "tableName error")
@@ -132,12 +132,14 @@ extension SQLManager {
         let deleteSQL = "DELETE FROM \(tableName) WHERE id = ?;"
         
         if database.open() {
-            do {
-                try database.executeUpdate(deleteSQL, values: [id])
-                "Comment deleted successfully".logI()
-            } catch {
-                "Failed to delete comment: \(error.localizedDescription)".logE()
+            ids.forEach { id in
+                do {
+                    try database.executeUpdate(deleteSQL, values: [id])
+                } catch {
+                    "Failed to delete comment: \(error.localizedDescription)".logE()
+                }
             }
+            "Comment deleted successfully".logI()
         }
         database.close()
     }
