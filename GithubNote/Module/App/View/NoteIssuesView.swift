@@ -132,10 +132,14 @@ extension NoteIssuesView {
         
         guard let issue = issue else { return }
         
+        "#issue# update title \(title)".logI()
+        
         isEditIssueTitleSending = true
-        guard let issueId = issue.number, let body = issue.body else { return }
+        let body = issue.body ?? ""
+        guard let issueId = issue.number else { return }
         Networking<Issue>().request(API.updateIssue(issueId: issueId, state: .open, title: title, body: body), writeCache: false, readCache: false) { data, cache, _ in
             if data != nil {
+                "#issue# update success".logI()
                 var issue = issue
                 issue.title = title
                 CacheManager.updateIssues([issue]) {
@@ -146,6 +150,7 @@ extension NoteIssuesView {
                     }
                 }
             } else {
+                "#issue# update fail".logI()
                 ToastManager.shared.showFail("fail")
                 isEditIssueTitleSending = false
                 endEdit()
