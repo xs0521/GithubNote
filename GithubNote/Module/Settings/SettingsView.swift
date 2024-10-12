@@ -98,6 +98,8 @@ struct RootSettingView: View {
 
 struct SettingsView: View {
     
+    @Binding var isLogined: Bool
+    
     @State var showToast: Bool = false
     @State private var toastMessage: String = ""
     
@@ -155,6 +157,7 @@ struct SettingsView: View {
                             .frame(height: 44)
                             .background(Color.init(hex: "EBEBEA"))
                             .buttonStyle(.plain)
+                            .disabled(setting == .logout ? (isLogined ? false : true) : false)
                         }
                         
                     })
@@ -178,9 +181,9 @@ struct SettingsView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsView()
-    }
-}
+//struct ContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        SettingsView()
+//    }
+//}
 

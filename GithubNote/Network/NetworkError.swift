@@ -13,9 +13,10 @@ public enum NetworkError: Error  {
     case exception(message: String)
 }
 
-public enum MessageCode: Int  {
+public enum MessageCode: Int, Error  {
     case success = 200
     case createSuccess = 201
     case finish = 204
+    case credentialsError = 401
     case notFound = 404
 }

@@ -21,6 +21,12 @@ struct GithubNoteApp: App {
         let _ = LaunchApp.shared
     }
     
+    private func loginOutAction() -> Void {
+        Account.reset()
+        logined = Account.enble
+        willLoginOut = false
+    }
+    
     var body: some Scene {
         WindowGroup {
             if logined {
@@ -30,22 +36,23 @@ struct GithubNoteApp: App {
                         LoginOutView(cancelCallBack: {
                             willLoginOut = false
                         }, loginOutCallBack: {
-                            Account.reset()
-                            logined = Account.enble
-                            willLoginOut = false
+                            loginOutAction()
                         })
                     }
                 }
                 .onReceive(NotificationCenter.default.publisher(for: Notification.Name.logoutNotification), perform: { _ in
                     willLoginOut = true
                 })
+                .onReceive(NotificationCenter.default.publisher(for: Notification.Name.logoutForceNotification), perform: { _ in
+                    loginOutAction()
+                })
                 .onAppear {
                     NSWindow.allowsAutomaticWindowTabbing = false
                 }
             } else {
-                LoginView {
+                GitHubLoginView(loginCallBack: {
                     logined = Account.enble
-                }
+                })
                 .onAppear {
                     NSWindow.allowsAutomaticWindowTabbing = false
                 }
@@ -69,7 +76,7 @@ struct GithubNoteApp: App {
         WindowGroup(AppConst.settingWindowName,
                     id: AppConst.settingWindowName,
                     for: String.self) { $value in
-            SettingsView()
+            SettingsView(isLogined: $logined)
         }
                     .windowResizability(.contentSize)
                     .windowStyle(HiddenTitleBarWindowStyle())

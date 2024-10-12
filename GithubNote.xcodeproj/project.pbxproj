@@ -16,6 +16,7 @@
 		B11FDA8B2BBFE8C500EC7083 /* AppConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11FDA8A2BBFE8C500EC7083 /* AppConst.swift */; };
 		B148A5BA2BC1506000B7FBA8 /* LoginOutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B148A5B92BC1506000B7FBA8 /* LoginOutView.swift */; };
 		B148A5BC2BC154FA00B7FBA8 /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B148A5BB2BC154FA00B7FBA8 /* Color+Extension.swift */; };
+		B14983BD2CBAD5BE00CDAB6F /* GitHubLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14983BC2CBAD5BE00CDAB6F /* GitHubLoginView.swift */; };
 		B16462722BB0464A00F57548 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16462712BB0464A00F57548 /* Account.swift */; };
 		B16C4AD42BB3164800F417D3 /* Binding+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16C4AD32BB3164800F417D3 /* Binding+Extension.swift */; };
 		B1922A4D2BAFF1FB00200828 /* GithubNoteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1922A4C2BAFF1FB00200828 /* GithubNoteApp.swift */; };
@@ -57,7 +58,6 @@
 		B1EBBDCE2CB2F31A005FB760 /* bool+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EBBDCD2CB2F31A005FB760 /* bool+Extension.swift */; };
 		B1EBBDD12CB3CD7A005FB760 /* NoteSidebarToolView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EBBDD02CB3CD7A005FB760 /* NoteSidebarToolView.swift */; };
 		B1EC0DE82BBB8DD4007975D9 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EC0DE72BBB8DD4007975D9 /* String+Extension.swift */; };
-		B1EC0DF62BBE434F007975D9 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EC0DF52BBE434F007975D9 /* LoginView.swift */; };
 		B1EC0DF82BBE47A8007975D9 /* UserDefaults+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EC0DF72BBE47A8007975D9 /* UserDefaults+Extension.swift */; };
 		B1ED88632C4ABC4E00FD8DEB /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1ED88622C4ABC4E00FD8DEB /* Networking.swift */; };
 		B1ED88672C4AC60000FD8DEB /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1ED88662C4AC60000FD8DEB /* NetworkError.swift */; };
@@ -104,6 +104,8 @@
 		B11FDA8A2BBFE8C500EC7083 /* AppConst.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConst.swift; sourceTree = "<group>"; };
 		B148A5B92BC1506000B7FBA8 /* LoginOutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginOutView.swift; sourceTree = "<group>"; };
 		B148A5BB2BC154FA00B7FBA8 /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
+		B14983BB2CBAD3C400CDAB6F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		B14983BC2CBAD5BE00CDAB6F /* GitHubLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubLoginView.swift; sourceTree = "<group>"; };
 		B16462712BB0464A00F57548 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		B16C4AD32BB3164800F417D3 /* Binding+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Binding+Extension.swift"; sourceTree = "<group>"; };
 		B1922A492BAFF1FB00200828 /* GithubNote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GithubNote.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -148,7 +150,6 @@
 		B1EBBDCD2CB2F31A005FB760 /* bool+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "bool+Extension.swift"; sourceTree = "<group>"; };
 		B1EBBDD02CB3CD7A005FB760 /* NoteSidebarToolView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteSidebarToolView.swift; sourceTree = "<group>"; };
 		B1EC0DE72BBB8DD4007975D9 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
-		B1EC0DF52BBE434F007975D9 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		B1EC0DF72BBE47A8007975D9 /* UserDefaults+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extension.swift"; sourceTree = "<group>"; };
 		B1ED88622C4ABC4E00FD8DEB /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
 		B1ED88662C4AC60000FD8DEB /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
@@ -256,6 +257,7 @@
 		B1922A4B2BAFF1FB00200828 /* GithubNote */ = {
 			isa = PBXGroup;
 			children = (
+				B14983BB2CBAD3C400CDAB6F /* Info.plist */,
 				B1922A4C2BAFF1FB00200828 /* GithubNoteApp.swift */,
 				B1EBBD9E2C9F0056005FB760 /* LaunchApp */,
 				B1EBBD922C9E885F005FB760 /* Log */,
@@ -537,8 +539,8 @@
 		B1EC0DF22BBE4309007975D9 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				B1EC0DF52BBE434F007975D9 /* LoginView.swift */,
 				B148A5B92BC1506000B7FBA8 /* LoginOutView.swift */,
+				B14983BC2CBAD5BE00CDAB6F /* GitHubLoginView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -889,6 +891,7 @@
 				B1CE86582C57EF77002C8335 /* NoteImageBrowserImagesView.swift in Sources */,
 				B1ED886A2C4ACAFE00FD8DEB /* API.swift in Sources */,
 				B1EBBDCA2CB24DA9005FB760 /* SQLManager+Comment.swift in Sources */,
+				B14983BD2CBAD5BE00CDAB6F /* GitHubLoginView.swift in Sources */,
 				B1ED88712C4ACE0E00FD8DEB /* Modelable.swift in Sources */,
 				B1EBBD9D2C9EF525005FB760 /* EmailManager.swift in Sources */,
 				B1DA105D2C9DB6CA0074DA32 /* MarkdownWebView.swift in Sources */,
@@ -896,7 +899,6 @@
 				B1EBBDC22CA06CA4005FB760 /* NoteCommentsHeaderView.swift in Sources */,
 				B1FE67502C46B72400970DA0 /* View+Extension.swift in Sources */,
 				B1EBBDA22C9F2AA9005FB760 /* CustomURLSchemeHandler.swift in Sources */,
-				B1EC0DF62BBE434F007975D9 /* LoginView.swift in Sources */,
 				B10930FD2C3D85C5006B5DB0 /* NoteSidebarView.swift in Sources */,
 				B1922A4D2BAFF1FB00200828 /* GithubNoteApp.swift in Sources */,
 				B1EBBDC42CB23818005FB760 /* SQLManager.swift in Sources */,
@@ -1072,6 +1074,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GithubNote/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -1114,6 +1117,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GithubNote/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;

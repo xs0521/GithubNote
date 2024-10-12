@@ -86,7 +86,14 @@ class Networking<T> where T: APIModelable {
             
             switch response {
             case .success(let resp):
-                self.handleData(type, 
+                if resp.statusCode == MessageCode.credentialsError.rawValue {
+                    "#request# code \(MessageCode.credentialsError.rawValue)".logE()
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: NSNotification.Name.logoutForceNotification, object: nil)
+                    }
+                    return
+                }
+                self.handleData(type,
                                 parseHandler: parseHandler,
                                 respone: resp,
                                 data: resp.data,
