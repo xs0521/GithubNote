@@ -38,3 +38,8 @@ extension AppConst {
     static let defaultWidth: CGFloat = 1200
     static let defaultHeight: CGFloat = 800
 }
+
+extension AppConst {
+    
+    static let settingWindowName = "app.window.group.setting"
+}

@@ -75,6 +75,7 @@ struct NoteSidebarView: View {
                     requestAllComment {}
                 }
             }
+            .frame(minWidth: 200)
             .onChange(of: selectionRepo) { oldValue, newValue in
                 if oldValue != newValue {
                     CacheManager.shared.currentRepo = selectionRepo

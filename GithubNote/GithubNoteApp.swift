@@ -39,9 +39,15 @@ struct GithubNoteApp: App {
                 .onReceive(NotificationCenter.default.publisher(for: Notification.Name.logoutNotification), perform: { _ in
                     willLoginOut = true
                 })
+                .onAppear {
+                    NSWindow.allowsAutomaticWindowTabbing = false
+                }
             } else {
                 LoginView {
                     logined = Account.enble
+                }
+                .onAppear {
+                    NSWindow.allowsAutomaticWindowTabbing = false
                 }
             }
         }
@@ -52,18 +58,21 @@ struct GithubNoteApp: App {
             CommandGroup(replacing: .appSettings) {
                 Button("Settings") {
                     // 打开设置窗口
-                    openWindow(id: "WindowGroup1")
+                    openWindow(id: AppConst.settingWindowName)
                 }
                 .keyboardShortcut(",", modifiers: [.command]) // 添加快捷键
             }
+            CommandGroup(replacing: CommandGroupPlacement.newItem) {}
         }
         
         
-        WindowGroup("WindowGroup1", id: "WindowGroup1", for: String.self) { $value in
+        WindowGroup(AppConst.settingWindowName,
+                    id: AppConst.settingWindowName,
+                    for: String.self) { $value in
             SettingsView()
         }
-        .windowResizability(.contentSize)
-        .windowStyle(HiddenTitleBarWindowStyle())
+                    .windowResizability(.contentSize)
+                    .windowStyle(HiddenTitleBarWindowStyle())
     }
 }
 
