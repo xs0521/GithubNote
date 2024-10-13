@@ -6,7 +6,11 @@
 //
 
 import SwiftUI
+#if MOBILE
+import UIKit
+#else
 import AppKit
+#endif
 import AlertToast
 
 enum SettingType {
@@ -117,24 +121,32 @@ struct SettingsView: View {
                             Button(action: {
                                 "#Setting# tap \(setting.title)".logI()
                                 if setting == .logout {
+                                    #if !MOBILE
                                     NSApplication.shared.keyWindow?.close()
+                                    #endif
                                     NotificationCenter.default.post(name: NSNotification.Name.logoutNotification, object: nil)
                                 }
                                 if setting == .feedback {
                                     if let url = URL(string: "https://github.com/xs0521/GithubNote-MacOS/issues") {
+#if !MOBILE
                                         NSWorkspace.shared.open(url)
+#endif
                                     }
                                 }
                                 if setting == .help {
                                     if let url = URL(string: "https://github.com/xs0521/GithubNote-MacOS") {
+#if !MOBILE
                                         NSWorkspace.shared.open(url)
+#endif
                                     }
                                 }
                                 if setting == .log {
+#if !MOBILE
                                     LogManager.exportLogs { success in
                                         toastMessage = "success"
                                         showToast = true
                                     }
+#endif
                                 }
                             }, label: {
                                 ZStack {

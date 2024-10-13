@@ -260,7 +260,7 @@ struct NoteWritePannelView: View {
                 do {
                     let data = try encoder.encode(content)
                     let githubImage = try decoder.decode(GithubImage.self, from: data)
-                    CacheManager.shared.appendImage(githubImage, repoName: Account.repo)
+//                    CacheManager.shared.appendImage(githubImage, repoName: Account.repo)
                 } catch let err {
                     print(err)
                 }

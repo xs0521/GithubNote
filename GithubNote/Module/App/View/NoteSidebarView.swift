@@ -6,9 +6,15 @@
 //
 
 import SwiftUI
+#if MOBILE
+import UIKit
+#else
 import AppKit
+#endif
 
 struct NoteSidebarView: View {
+    
+    @Environment(\.colorScheme) private var colorScheme
     
     @State private var reposGroups: [RepoModel] = [RepoModel]()
     @State private var repoPage = 1
@@ -31,7 +37,7 @@ struct NoteSidebarView: View {
     
     var body: some View {
         ZStack {
-            VStack {
+            VStack (spacing: 0) {
                 NoteCommentsHeaderView(selectionIssue: $selectionIssue) { callBack in
                     requestAllComment(false) {
                         callBack()
@@ -75,7 +81,9 @@ struct NoteSidebarView: View {
                     requestAllComment {}
                 }
             }
+#if !MOBILE
             .frame(minWidth: 200)
+#endif
             .onChange(of: selectionRepo) { oldValue, newValue in
                 if oldValue != newValue {
                     CacheManager.shared.currentRepo = selectionRepo
@@ -92,6 +100,9 @@ struct NoteSidebarView: View {
                 NoteReposView(reposGroups: $reposGroups, selectionRepo: $selectionRepo)
             }
         }
+#if MOBILE
+        .background(colorScheme == .dark ? Color.init(hex: "#1C1C1E") : Color.init(hex: "#F2F2F7"))
+#endif
         .safeAreaInset(edge: .bottom) {
             NoteSidebarToolView(showReposView: $showReposView, 
                                 isSyncRepos: $isSyncRepos,

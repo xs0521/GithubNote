@@ -95,6 +95,8 @@ struct LogManager: Setupable {
         DDLogInfo("#log# CocoaLumberjack has been set up.")
     }
     
+#if !MOBILE
+
     static func exportLogs(_ completion: @escaping CommonTCallBack<Bool>) {
         
         guard let fileLogger = DDLog.allLoggers.first(where: { $0 is DDFileLogger }) as? DDFileLogger else {
@@ -151,4 +153,5 @@ struct LogManager: Setupable {
             
         }
     }
+#endif
 }

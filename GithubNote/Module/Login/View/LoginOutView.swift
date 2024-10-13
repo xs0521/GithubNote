@@ -7,7 +7,11 @@
 
 import Foundation
 import SwiftUI
+#if MOBILE
+import UIKit
+#else
 import AppKit
+#endif
 
 typealias CancelCallBack = () -> ()
 typealias LoginOutCallBack = () -> ()
@@ -53,9 +57,13 @@ struct LoginOutView: View {
                             .font(.system(size: 18))
                             .textFieldStyle(.plain)
                         Button(action: {
+                            #if MOBILE
+                            let pasteboard = UIPasteboard.general
+                            #else
                             let pasteboard = NSPasteboard.general
                             pasteboard.clearContents()
                             pasteboard.setString(token, forType: .string)
+                            #endif
                         }, label: {
                             Image(systemName: "doc.on.doc")
                                 .symbolRenderingMode(.hierarchical)

@@ -7,40 +7,45 @@
 
 import SwiftUI
 import WebKit
+#if MOBILE
+import UIKit
+#else
 import AppKit
+#endif
 import ObjectiveC.runtime
+
+#if MOBILE
+typealias AppViewRepresentable = UIViewRepresentable
+#else
+typealias AppViewRepresentable = NSViewRepresentable
+#endif
 
 // WKWebView Wrapper for SwiftUI
 
-struct MarkdownWebView: NSViewRepresentable {
-    
+struct MarkdownWebView: AppViewRepresentable {
+#if MOBILE
+    typealias UIViewType = WKWebView
+#endif
     @Binding var markdownText: String
-    
-    class Coordinator: NSObject, WKNavigationDelegate {
-        
-        var isLoaded = false
-        var isDidFinish = false
-        var isLaunched = false
-        
-        var currentText = ""
-        
-        var parent: MarkdownWebView
-        
-        init(_ parent: MarkdownWebView) {
-            self.parent = parent
-        }
-        
-        // Called when the WKWebView finishes loading content
-        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            isDidFinish = true
-        }
+#if MOBILE
+    func makeUIView(context: Context) -> WKWebView {
+        return makeView(context: context)
     }
     
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
+    func updateUIView(_ webView: WKWebView, context: Context) {
+        updateView(webView, context: context)
     }
-    
+#else
     func makeNSView(context: Context) -> WKWebView {
+        return makeView(context: context)
+    }
+    
+    func updateNSView(_ webView: WKWebView, context: Context) {
+        updateView(webView, context: context)
+    }
+#endif
+    
+    private func makeView(context: Context) -> WKWebView {
         
         let schemeHandler = CustomURLSchemeHandler()
         let configuration = WKWebViewConfiguration()
@@ -54,7 +59,7 @@ struct MarkdownWebView: NSViewRepresentable {
         return webView
     }
     
-    func updateNSView(_ webView: WKWebView, context: Context) {
+    private func updateView(_ webView: WKWebView, context: Context) {
         
         if !context.coordinator.isLoaded {
             "#MD# isLoaded \(context.coordinator.isLoaded)".logI()
@@ -107,6 +112,30 @@ struct MarkdownWebView: NSViewRepresentable {
                 }
             }
         }
+    }
+    
+    class Coordinator: NSObject, WKNavigationDelegate {
+        
+        var isLoaded = false
+        var isDidFinish = false
+        var isLaunched = false
+        
+        var currentText = ""
+        
+        var parent: MarkdownWebView
+        
+        init(_ parent: MarkdownWebView) {
+            self.parent = parent
+        }
+        
+        // Called when the WKWebView finishes loading content
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            isDidFinish = true
+        }
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
     }
 }
 

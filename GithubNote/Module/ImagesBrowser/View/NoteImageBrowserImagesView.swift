@@ -106,9 +106,12 @@ struct NoteImageBrowserImagesView: View {
     
     private func copyAction(_ url: String) -> Void {
         let content = "![](\(url))"
+        #if MOBILE
+        #else
         let pasteBoard = NSPasteboard.general
         pasteBoard.clearContents()
         pasteBoard.setString(content, forType: .string)
+        #endif
         toastMessage = "done"
         showToast = false
         showToast.toggle()
@@ -122,7 +125,7 @@ struct NoteImageBrowserImagesView: View {
             }
             if code == MessageCode.success.rawValue {
                 data = data.filter({$0.identifier != item.identifier})
-                CacheManager.shared.updateImages(data, repoName: Account.repo)
+//                CacheManager.shared.updateImages(data, repoName: Account.repo)
             }
         }
     }

@@ -47,20 +47,27 @@ struct GithubNoteApp: App {
                     loginOutAction()
                 })
                 .onAppear {
+#if !MOBILE
                     NSWindow.allowsAutomaticWindowTabbing = false
+#endif
+                    
                 }
             } else {
                 GitHubLoginView(loginCallBack: {
                     logined = Account.enble
                 })
                 .onAppear {
+#if !MOBILE
                     NSWindow.allowsAutomaticWindowTabbing = false
+#endif
                 }
             }
         }
         .defaultSize(width: AppConst.defaultWidth, height: AppConst.defaultHeight)
         .windowResizability(.contentSize)
+#if !MOBILE
         .windowStyle(HiddenTitleBarWindowStyle())
+#endif
         .commands {
             CommandGroup(replacing: .appSettings) {
                 Button("Settings") {
@@ -79,7 +86,9 @@ struct GithubNoteApp: App {
             SettingsView(isLogined: $logined)
         }
                     .windowResizability(.contentSize)
+#if !MOBILE
                     .windowStyle(HiddenTitleBarWindowStyle())
+#endif
     }
 }
 

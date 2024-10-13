@@ -37,16 +37,16 @@ enum API {
     }
     
     var cacheData: Data? {
-        guard let cachePath = cachePath else { return nil }
-        do {
-            let exit = try CacheManager.shared.store.existsObject(forKey: cachePath)
-            if exit {
-                let value = try CacheManager.shared.store.object(forKey: cachePath)
-                return value
-            }
-        } catch (let error) {
-            print(error)
-        }
+//        guard let cachePath = cachePath else { return nil }
+//        do {
+//            let exit = try CacheManager.shared.store.existsObject(forKey: cachePath)
+//            if exit {
+//                let value = try CacheManager.shared.store.object(forKey: cachePath)
+//                return value
+//            }
+//        } catch (let error) {
+//            print(error)
+//        }
         return nil
     }
 }

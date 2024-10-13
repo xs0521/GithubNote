@@ -6,7 +6,11 @@
 //
 
 import Foundation
+#if MOBILE
+import UIKit
+#else
 import AppKit
+#endif
 
 struct EmailManager {
     

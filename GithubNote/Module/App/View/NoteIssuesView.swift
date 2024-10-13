@@ -6,7 +6,12 @@
 //
 
 import SwiftUI
+#if MOBILE
+import UIKit
+#else
 import AppKit
+#endif
+
 
 struct NoteIssuesView: View {
     

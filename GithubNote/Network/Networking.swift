@@ -6,8 +6,13 @@
 //
 
 import Foundation
+#if MOBILE
+import UIKit
+#else
 import AppKit
+#endif
 import Moya
+
 
 private let line = "\n########################################"
 

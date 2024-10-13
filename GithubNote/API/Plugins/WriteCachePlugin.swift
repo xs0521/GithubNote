@@ -21,16 +21,16 @@ protocol WriteCachePluginGettableType {
 final class WriteCachePlugin: PluginType {
     
     func didReceive(_ result: Result<Moya.Response, MoyaError>, target: TargetType) -> Void {
-        guard let dataCachePlugin = target as? WriteCachePluginGettableType, let path = dataCachePlugin.writePath else {
-            return
-        }
-        if case let .success(respond) = result {
-            do {
-                try CacheManager.shared.store.setObject(respond.data, forKey: path)
-            }
-            catch (let error) {
-                print(error)
-            }
-        }
+//        guard let dataCachePlugin = target as? WriteCachePluginGettableType, let path = dataCachePlugin.writePath else {
+//            return
+//        }
+//        if case let .success(respond) = result {
+//            do {
+//                try CacheManager.shared.store.setObject(respond.data, forKey: path)
+//            }
+//            catch (let error) {
+//                print(error)
+//            }
+//        }
     }
 }

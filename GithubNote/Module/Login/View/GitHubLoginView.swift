@@ -137,7 +137,11 @@ class GitHubLoginManager {
 
 class GitHubLoginViewController: NSObject, ASWebAuthenticationPresentationContextProviding {
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+        #if MOBILE
+        return UIApplication.shared.windows.first ?? UIWindow()
+        #else
         return NSApplication.shared.windows.first ?? NSWindow()
+        #endif
     }
 }
 

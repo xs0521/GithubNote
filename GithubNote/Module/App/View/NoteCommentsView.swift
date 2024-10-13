@@ -45,6 +45,7 @@ struct NoteCommentsView: View {
                             }
                         }
                     }
+                    .frame(height: 30)
                 }
             }
         }

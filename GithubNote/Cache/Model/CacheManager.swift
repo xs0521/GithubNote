@@ -6,22 +6,11 @@
 //
 
 import Foundation
-import Cache
+//import Cache
 
 class CacheManager: Setupable {
     
     var manager: SQLManager?
-    
-    static func setup() {
-        
-        CacheManager.shared.manager?.clear()
-        CacheManager.shared.manager = SQLManager()
-    }
-    
-    static let shared = CacheManager()
-    let diskConfig = DiskConfig(name: Account.repo)
-    let memoryConfig = MemoryConfig(expiry: .never)
-    
     var currentRepo: RepoModel? {
         didSet {
             "#cache# current repo \(currentRepo?.name ?? "")".logI()
@@ -33,58 +22,81 @@ class CacheManager: Setupable {
         }
     }
     
-    lazy var store: Storage<String, Data?> = {
-        let storage = try? Storage<String, Data?>(
-          diskConfig: diskConfig,
-          memoryConfig: memoryConfig,
-          transformer: TransformerFactory.forCodable(ofType: Data?.self)
-        )
-        return storage!
-    }()
+    static let shared = CacheManager()
     
-    func updateComments(_ list: [Comment], issueId: Int) -> Void {
-        let data = list.compactMap({$0.data()}).compactMap({$0.anyObj()})
-        let jsonData = try? JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
-        guard let path = API.comments(issueId: issueId, page: 1).cachePath else { return }
-        try? CacheManager.shared.store.setObject(jsonData, forKey: path)
+    static func setup() {
+        
+        CacheManager.shared.manager?.clear()
+        CacheManager.shared.manager = SQLManager()
     }
     
-    func updateIssues(_ list: [Issue], repoName: String) -> Void {
-        let data = list.compactMap({$0.data()}).compactMap({$0.anyObj()})
-        let jsonData = try? JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
-        guard let path = API.repoIssues(repoName: repoName, page: 1).cachePath else { return }
-        try? CacheManager.shared.store.setObject(jsonData, forKey: path)
-    }
-    
-    func updateImages(_ list: [GithubImage], repoName: String) -> Void {
-        let data = list.compactMap({$0.data()}).compactMap({$0.anyObj()})
-        let jsonData = try? JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
-        guard let path = API.repoImages(page: 1).cachePath else { return }
-        try? CacheManager.shared.store.setObject(jsonData, forKey: path)
-    }
-    
-    func appendImage(_ image: GithubImage, repoName: String) -> Void {
-        
-        guard let path = API.repoImages(page: 1).cachePath else { return }
-        let data = try? CacheManager.shared.store.object(forKey: path)
-        
-        var modelList = [GithubImage]()
-        
-        if let data = data {
-            let json = try? JSONSerialization.jsonObject(with: data, options: [])
-            if let list = json as? [[String: Any]] {
-                let generator = ModelGenerator<GithubImage>()
-                let values = list.compactMap({generator.handle($0)})
-                modelList.append(contentsOf: values)
-            }
-        }
-        
-        modelList.append(image)
-        
-        let saveData = modelList.compactMap({$0.data()}).compactMap({$0.anyObj()})
-        let jsonData = try? JSONSerialization.data(withJSONObject: saveData, options: .prettyPrinted)
-        try? CacheManager.shared.store.setObject(jsonData, forKey: path)
-    }
+//    static let shared = CacheManager()
+//    let diskConfig = DiskConfig(name: Account.repo)
+//    let memoryConfig = MemoryConfig(expiry: .never)
+//    
+//    var currentRepo: RepoModel? {
+//        didSet {
+//            "#cache# current repo \(currentRepo?.name ?? "")".logI()
+//        }
+//    }
+//    var currentIssue: Issue? {
+//        didSet {
+//            "#cache# current issue \(currentIssue?.title ?? "")".logI()
+//        }
+//    }
+//    
+//    lazy var store: Storage<String, Data?> = {
+//        let storage = try? Storage<String, Data?>(
+//          diskConfig: diskConfig,
+//          memoryConfig: memoryConfig,
+//          transformer: TransformerFactory.forCodable(ofType: Data?.self)
+//        )
+//        return storage!
+//    }()
+//    
+//    func updateComments(_ list: [Comment], issueId: Int) -> Void {
+//        let data = list.compactMap({$0.data()}).compactMap({$0.anyObj()})
+//        let jsonData = try? JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
+//        guard let path = API.comments(issueId: issueId, page: 1).cachePath else { return }
+//        try? CacheManager.shared.store.setObject(jsonData, forKey: path)
+//    }
+//    
+//    func updateIssues(_ list: [Issue], repoName: String) -> Void {
+//        let data = list.compactMap({$0.data()}).compactMap({$0.anyObj()})
+//        let jsonData = try? JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
+//        guard let path = API.repoIssues(repoName: repoName, page: 1).cachePath else { return }
+//        try? CacheManager.shared.store.setObject(jsonData, forKey: path)
+//    }
+//    
+//    func updateImages(_ list: [GithubImage], repoName: String) -> Void {
+//        let data = list.compactMap({$0.data()}).compactMap({$0.anyObj()})
+//        let jsonData = try? JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
+//        guard let path = API.repoImages(page: 1).cachePath else { return }
+//        try? CacheManager.shared.store.setObject(jsonData, forKey: path)
+//    }
+//    
+//    func appendImage(_ image: GithubImage, repoName: String) -> Void {
+//        
+//        guard let path = API.repoImages(page: 1).cachePath else { return }
+//        let data = try? CacheManager.shared.store.object(forKey: path)
+//        
+//        var modelList = [GithubImage]()
+//        
+//        if let data = data {
+//            let json = try? JSONSerialization.jsonObject(with: data, options: [])
+//            if let list = json as? [[String: Any]] {
+//                let generator = ModelGenerator<GithubImage>()
+//                let values = list.compactMap({generator.handle($0)})
+//                modelList.append(contentsOf: values)
+//            }
+//        }
+//        
+//        modelList.append(image)
+//        
+//        let saveData = modelList.compactMap({$0.data()}).compactMap({$0.anyObj()})
+//        let jsonData = try? JSONSerialization.data(withJSONObject: saveData, options: .prettyPrinted)
+//        try? CacheManager.shared.store.setObject(jsonData, forKey: path)
+//    }
     
 }
 
