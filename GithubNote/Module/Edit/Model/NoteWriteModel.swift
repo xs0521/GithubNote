@@ -17,13 +17,13 @@ enum UploadType {
     var imageName: String {
         switch self {
         case .normal:
-            return "icloud.and.arrow.up"
+            return "arrow.up.square.fill"
         case .sending:
-            return "icloud.and.arrow.up"
+            return "arrow.up.square.fill"
         case .success:
-            return "checkmark.icloud"
+            return "checkmark.square.fill"
         case .fail:
-            return "xmark.icloud"
+            return "xmark.square.fill"
         }
     }
     

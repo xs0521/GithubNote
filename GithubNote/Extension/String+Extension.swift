@@ -12,14 +12,17 @@ import CocoaLumberjack
 extension String {
     
     func toTitle() -> String {
-        var value = trimmingCharacters(in: CharacterSet(charactersIn: "#"))
-        value = value.trimmingCharacters(in: .whitespaces)
         
-        value = String(value.prefix(200))
-        let values = value.components(separatedBy: "\n")
-        if values.count > 0 {
-            value = values.first ?? value
+        var value = ""
+        let items = self.components(separatedBy: "\n")
+        if items.count > 0 {
+            value = items.first ?? value
+        } else {
+            value = self
         }
+        value = value.trimmingCharacters(in: CharacterSet(charactersIn: "#"))
+        value = value.trimmingCharacters(in: CharacterSet(charactersIn: "\r"))
+        value = String(value.prefix(50))
         return value
     }
     

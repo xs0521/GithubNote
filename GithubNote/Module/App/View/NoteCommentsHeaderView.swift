@@ -38,7 +38,7 @@ struct NoteCommentsHeaderView: View {
                         
                     } label: {
                         
-                        Image(systemName: "icloud.and.arrow.down")
+                        Image(systemName: AppConst.downloadIcon)
                     }
                     .buttonStyle(.plain)
                     .padding(.trailing, 5)
@@ -51,7 +51,7 @@ struct NoteCommentsHeaderView: View {
                     Button {
                         createComment(selectionIssue)
                     } label: {
-                        Image(systemName: "plus")
+                        Image(systemName: AppConst.plusIcon)
                     }
                     .buttonStyle(.plain)
                     .frame(width: 20, height: 30)
@@ -76,14 +76,6 @@ extension NoteCommentsHeaderView {
             createCallBack?(comment, {
                 isNewCommentSending = false
             })
-            
-//            commentsData(false) {
-//                let select = commentGroups.first(where: {$0.id == comment.id})
-//                DispatchQueue.main.async(execute: {
-//                    selectionComment = select
-//                    isNewCommentSending = false
-//                })
-//            }
         }
     }
 }

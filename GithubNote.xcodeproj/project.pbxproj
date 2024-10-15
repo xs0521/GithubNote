@@ -15,6 +15,7 @@
 		B10930FD2C3D85C5006B5DB0 /* NoteSidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10930FC2C3D85C5006B5DB0 /* NoteSidebarView.swift */; };
 		B10930FF2C3D8748006B5DB0 /* NoteTaskListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10930FE2C3D8748006B5DB0 /* NoteTaskListView.swift */; };
 		B10931012C3D8784006B5DB0 /* NoteTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10931002C3D8784006B5DB0 /* NoteTaskView.swift */; };
+		B119F6A72CBEAC110015ADA0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1922A502BAFF1FC00200828 /* Assets.xcassets */; };
 		B11FDA8B2BBFE8C500EC7083 /* AppConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11FDA8A2BBFE8C500EC7083 /* AppConst.swift */; };
 		B148A5BA2BC1506000B7FBA8 /* LoginOutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B148A5B92BC1506000B7FBA8 /* LoginOutView.swift */; };
 		B148A5BC2BC154FA00B7FBA8 /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B148A5BB2BC154FA00B7FBA8 /* Color+Extension.swift */; };
@@ -76,7 +77,6 @@
 		B14983FB2CBB632E00CDAB6F /* index in Resources */ = {isa = PBXBuildFile; fileRef = B1DA105A2C9DB6C30074DA32 /* index */; };
 		B14983FC2CBB632E00CDAB6F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1922A542BAFF1FC00200828 /* Preview Assets.xcassets */; };
 		B14984052CBB646000CDAB6F /* Info-mobile.plist in Resources */ = {isa = PBXBuildFile; fileRef = B14984042CBB646000CDAB6F /* Info-mobile.plist */; };
-		B14984072CBB731300CDAB6F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1922A502BAFF1FC00200828 /* Assets.xcassets */; };
 		B16462722BB0464A00F57548 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16462712BB0464A00F57548 /* Account.swift */; };
 		B16C4AD42BB3164800F417D3 /* Binding+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16C4AD32BB3164800F417D3 /* Binding+Extension.swift */; };
 		B1922A4D2BAFF1FB00200828 /* GithubNoteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1922A4C2BAFF1FB00200828 /* GithubNoteApp.swift */; };
@@ -828,7 +828,6 @@
 			files = (
 				B14984052CBB646000CDAB6F /* Info-mobile.plist in Resources */,
 				B14983FB2CBB632E00CDAB6F /* index in Resources */,
-				B14984072CBB731300CDAB6F /* Assets.xcassets in Resources */,
 				B14983FC2CBB632E00CDAB6F /* Preview Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -838,6 +837,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B1DA105B2C9DB6C30074DA32 /* index in Resources */,
+				B119F6A72CBEAC110015ADA0 /* Assets.xcassets in Resources */,
 				B1922A552BAFF1FC00200828 /* Preview Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

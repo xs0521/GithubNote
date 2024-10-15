@@ -45,7 +45,7 @@ struct NoteCommentsView: View {
                             }
                         }
                     }
-                    .frame(height: 30)
+                    .frame(height: AppConst.sideItemHeight)
                 }
             }
         }

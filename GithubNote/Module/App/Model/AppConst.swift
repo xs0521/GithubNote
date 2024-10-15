@@ -37,9 +37,17 @@ extension AppConst {
     
     static let defaultWidth: CGFloat = 1200
     static let defaultHeight: CGFloat = 800
+    static let sideItemHeight: CGFloat = 20
 }
 
 extension AppConst {
     
     static let settingWindowName = "app.window.group.setting"
+    static let downloadIcon = "arrow.down.square.fill"
+    static let plusIcon = "plus.circle.fill"
+    static let photoIcon = "photo.fill"
+    static let closeIcon = "xmark.circle.fill"
+    static let pencilIcon = "square.and.pencil.circle.fill"
+    
+    
 }

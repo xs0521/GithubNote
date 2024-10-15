@@ -76,7 +76,10 @@ struct NoteSidebarView: View {
                                selectionIssue: $selectionIssue,
                                selectionRepo: $selectionRepo,
                                showReposView: $showReposView) { issue in
-                    guard let issue = issue else { return }
+                    guard let issue = issue else {
+                        commentGroups.removeAll()
+                        return
+                    }
                     CacheManager.shared.currentIssue = issue
                     requestAllComment {}
                 }
@@ -87,7 +90,9 @@ struct NoteSidebarView: View {
             .onChange(of: selectionRepo) { oldValue, newValue in
                 if oldValue != newValue {
                     CacheManager.shared.currentRepo = selectionRepo
-                    requestAllIssue(true) { }
+                    requestAllIssue(true) {
+                        selectionComment = nil
+                    }
                 }
             }
             .onAppear {

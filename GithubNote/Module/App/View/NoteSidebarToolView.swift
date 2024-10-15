@@ -14,27 +14,36 @@ struct NoteSidebarToolView: View {
     @Binding var showImageBrowser: Bool?
     @Binding var selectionRepo: RepoModel?
     
+    @State private var repoTitle: String = ""
+    
+    @State private var degreesValue: Double = 0
+    
     var requestAllRepoCallBack: CommonTCallBack<CommonCallBack>
     
     var body: some View {
         HStack {
             Button(action: {
-                showReposView = !showReposView
+                showReposView.toggle()
             }, label: {
-                if selectionRepo != nil {
-                    Label((selectionRepo?.name ?? ""), systemImage: "chevron.right")
-                        .foregroundStyle(Color.primary)
+                Label {
+                    Text(repoTitle)
                         .lineLimit(1)
-                } else {
-                    Label("Repos", systemImage: "chevron.right")
-                        .foregroundStyle(Color.primary)
-                        .lineLimit(1)
+                } icon: {
+                    Image(systemName: "arrowtriangle.right.fill")
+                        .rotationEffect(.degrees(-degreesValue))
                 }
+                .foregroundStyle(Color.primary)
             })
             .buttonStyle(.borderless)
             .foregroundColor(.accentColor)
             .padding(EdgeInsets(top: 5, leading: 16, bottom: 16, trailing: 5))
             .frame(maxWidth: .infinity, alignment: .leading)
+            .onChange(of: selectionRepo) { oldValue, newValue in
+                repoTitle = selectionRepo?.name ?? "Select Repo"
+            }
+            .onChange(of: showReposView) { oldValue, newValue in
+                degreesValue = newValue ? 90 : 0
+            }
             
             if showReposView {
                 if isSyncRepos {
@@ -49,7 +58,7 @@ struct NoteSidebarToolView: View {
                             isSyncRepos = false
                         })
                     } label: {
-                        Image(systemName: "icloud.and.arrow.down")
+                        Image(systemName: AppConst.downloadIcon)
                     }
                     .buttonStyle(.plain)
                     .padding(EdgeInsets(top: 5, leading: 5, bottom: 16, trailing: 16))
@@ -58,7 +67,7 @@ struct NoteSidebarToolView: View {
                 Button(action: {
                     showImageBrowser?.toggle()
                 }, label: {
-                    Image(systemName: "photo.on.rectangle.angled")
+                    Image(systemName: AppConst.photoIcon)
                 })
                 .buttonStyle(.plain)
                 .padding(EdgeInsets(top: 5, leading: 5, bottom: 16, trailing: 16))

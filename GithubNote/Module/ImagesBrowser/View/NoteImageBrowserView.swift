@@ -35,12 +35,12 @@ struct NoteImageBrowserView: View {
                                        toastMessage: $toastMessage,
                                        showLoading: $showLoading)
             .background(colorScheme == .dark ? Color.init(hex: "#292929") : Color.init(hex: "#ECECEB"))
-                .opacity(animated ? 1.0 : 0.0)
+//                .opacity(animated ? 1.0 : 0.0)
                 .onAppear(perform: {
-                    let baseAnimation = Animation.easeInOut(duration: 0.6)
-                    withAnimation(baseAnimation) {
-                        animated = true
-                    }
+//                    let baseAnimation = Animation.easeInOut(duration: 0.6)
+//                    withAnimation(baseAnimation) {
+//                        animated = true
+//                    }
                     requestImagesData()
                 })
                 .onTapGesture {

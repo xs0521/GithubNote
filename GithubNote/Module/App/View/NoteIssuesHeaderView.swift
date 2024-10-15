@@ -33,7 +33,7 @@ struct NoteIssuesHeaderView: View {
                             isIssueRefreshing = false
                         })
                     } label: {
-                        Image(systemName: "icloud.and.arrow.down")
+                        Image(systemName: AppConst.downloadIcon)
                     }
                     .buttonStyle(.plain)
                     .padding(.trailing, 5)
@@ -46,7 +46,7 @@ struct NoteIssuesHeaderView: View {
                     Button {
                         createIssue()
                     } label: {
-                        Image(systemName: "plus")
+                        Image(systemName: AppConst.plusIcon)
                     }
                     .buttonStyle(.plain)
                     .frame(width: 20, height: 30)

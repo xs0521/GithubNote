@@ -71,6 +71,7 @@ struct NoteIssuesView: View {
                                     .frame(width: 20, height: 20)
                                 }
                             }
+                            .frame(height: AppConst.sideItemHeight)
                         } else {
                             Label(title: {
                                 Text(selection.title ?? "unknow")
@@ -98,6 +99,7 @@ struct NoteIssuesView: View {
                                     focusedField = .title
                                 }
                             }
+                            .frame(height: AppConst.sideItemHeight)
                         }
                     }
                 }

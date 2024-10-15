@@ -35,22 +35,32 @@ struct NoteWritePannelView: View {
     
     var body: some View {
         VStack {
-            ZStack {
-                MarkdownWebView(markdownText: $markdownString.toUnwrapped(defaultValue: ""))
-                    .padding(EdgeInsets(top: 0, leading: 10, bottom: 20, trailing: 10))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                if editIsShown {
-                    TextEditor(text: $markdownString.toUnwrapped(defaultValue: ""))
-                        .transparentScrolling()
-                        .font(.system(size: 14))
+            VStack (spacing: 0) {
+                ZStack {
+                    MarkdownWebView(markdownText: $markdownString.toUnwrapped(defaultValue: ""))
+    //                    .padding(EdgeInsets(top: 0, leading: 10, bottom: 20, trailing: 10))
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
-                        .padding(.leading, 16)
-                    
+                    if editIsShown {
+                        TextEditor(text: $markdownString.toUnwrapped(defaultValue: ""))
+                            .transparentScrolling()
+                            .font(.system(size: 14))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
+                            
+                        
+                    }
+                    //                VStack {
+                    //                    CustomDivider()
+                    //                        .frame(maxWidth: .infinity)
+                    //                    Spacer()
+                    //                }
                 }
-                VStack {
-                    CustomDivider()
-                        .frame(maxWidth: .infinity)
+                .padding(EdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10))
+                HStack {
+                    Text("2024年10月15日23:44:23")
+                        .font(.system(size: 10))
+                        .foregroundColor(colorScheme == .dark ? Color(hex: "#DDDDDD") : Color(hex: "#444443"))
+                        .padding(EdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10))
                     Spacer()
                 }
             }
@@ -66,7 +76,7 @@ struct NoteWritePannelView: View {
                             Button(action: {
                                 isPresented = true
                             }, label: {
-                                Image(systemName: "plus")
+                                Image(systemName: AppConst.plusIcon)
                             })
                             .fileImporter(
                                 isPresented: $isPresented,
@@ -83,12 +93,12 @@ struct NoteWritePannelView: View {
                             Button {
                                 NotificationCenter.default.post(name: NSNotification.Name.syncNetImagesNotification, object: nil)
                             } label: {
-                                Image(systemName: "arrow.triangle.2.circlepath")
+                                Image(systemName: AppConst.downloadIcon)
                             }
                             Button {
                                 showImageBrowser = false
                             } label: {
-                                Image(systemName: "xmark.circle")
+                                Image(systemName: AppConst.closeIcon)
                             }
                         }
                     }
@@ -96,7 +106,7 @@ struct NoteWritePannelView: View {
                         Button(action: {
                             showImageBrowser?.toggle()
                         }, label: {
-                            Image(systemName: "photo.on.rectangle.angled")
+                            Image(systemName: AppConst.photoIcon)
                         })
                         ZStack {
                             if uploadState == .sending {
@@ -120,10 +130,12 @@ struct NoteWritePannelView: View {
                         Button {
                             editIsShown.toggle()
                         } label: {
-                            Label("Show inspector", systemImage: editIsShown ? "xmark.circle" : "square.and.pencil")
-                            //                                .font(.system(size: editIsShown ? 14 : 16))
-                            //                                .fontWeight(editIsShown ? .regular : .bold)
+                            Label("Show inspector", systemImage: editIsShown ? AppConst.closeIcon : AppConst.pencilIcon)
+                                .if(!editIsShown) { view in
+                                    view.font(.system(size: 18))
+                                }
                         }
+                        
                     }
                 }
                 
@@ -143,24 +155,24 @@ struct NoteWritePannelView: View {
                 Text("")  // 空文本
             } else {
                 HStack (spacing: 3) {
-                    Image(systemName: "star")
+                    Image(systemName: "star.fill")
                     Text("\(Account.owner)")
                 }
                 
                 if let repoName = selectionRepo?.name {
                     HStack (spacing: 3) {
-                        Text(">")
+                        Text("/")
                             .padding(.horizontal, 5)
-                        Image(systemName: "square.stack.3d.up")
+                        Image(systemName: "square.stack.3d.up.fill")
                         Text(repoName)
                     }
                 }
                 
                 if let issueName = selectionIssue?.title {
                     HStack (spacing: 3) {
-                        Text(">")
+                        Text("/")
                             .padding(.horizontal, 5)
-                        Image(systemName: "menucard")
+                        Image(systemName: "menucard.fill")
                         Text(issueName)
                     }
                     
@@ -168,9 +180,9 @@ struct NoteWritePannelView: View {
                 
                 if let commentName = selectionComment?.body?.toTitle() {
                     HStack (spacing: 3) {
-                        Text(">")
+                        Text("/")
                             .padding(.horizontal, 5)
-                        Image(systemName: "cup.and.saucer")
+                        Image(systemName: "cup.and.saucer.fill")
                         Text(commentName)
                             .layoutPriority(1)
                     }
@@ -260,7 +272,7 @@ struct NoteWritePannelView: View {
                 do {
                     let data = try encoder.encode(content)
                     let githubImage = try decoder.decode(GithubImage.self, from: data)
-//                    CacheManager.shared.appendImage(githubImage, repoName: Account.repo)
+                    //                    CacheManager.shared.appendImage(githubImage, repoName: Account.repo)
                 } catch let err {
                     print(err)
                 }
