@@ -7,11 +7,15 @@
 
 import WebKit
 import SDWebImage
+import UniformTypeIdentifiers
 
 class CustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
     func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
         
-        guard let url = urlSchemeTask.request.url?.absoluteString else { return }
+        guard var url = urlSchemeTask.request.url?.absoluteString else { return }
+        
+        url = CustomURLSchemeHandler.handleImageText(url, true)
+        
         guard let Url = URL(string: url) else {
             "#web# url error ".logE()
             return
@@ -20,10 +24,10 @@ class CustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
         func callBack(_ data: Data) -> Void {
             // 创建 HTTP 响应
             let backResponse = HTTPURLResponse(url: Url,
-                                           statusCode: 200,
-                                           httpVersion: "HTTP/1.1",
+                                               statusCode: 200,
+                                               httpVersion: "HTTP/1.1",
                                                headerFields: self.getResponseHeaders(url))!
-
+            
             
             
             // 将响应和数据返回给 WebView
@@ -56,10 +60,10 @@ class CustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
                 "#web# file fail \(error.localizedDescription)".logE()
             }
         }
-
+        
         task.resume()
     }
-
+    
     func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
         // 停止任务的逻辑 (如果需要)
     }
@@ -72,22 +76,30 @@ class CustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
             "Content-Type": fileMIMETypeWithCAPI(at: url)
         ]
     }
+    
+    static func handleImageText(_ text: String, _  recover: Bool = false) -> String {
+        let github = "https://raw.githubusercontent.com"
+        let replace = "\(AppConst.scheme)://raw.githubusercontent.com"
+        if recover {
+            return text.replacingOccurrences(of: replace, with: github)
+        }
+        return text.replacingOccurrences(of: github, with: replace)
+    }
 }
 
 func fileMIMETypeWithCAPI(at filePath: String) -> String {
     // 获取文件的扩展名
-    let fileExtension = (filePath as NSString).pathExtension as CFString
+    let fileExtension = (filePath as NSString).pathExtension
     
-    #if !MOBILE
+#if !MOBILE
     // 根据扩展名获取 UTI
-    if let UTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension, nil)?.takeRetainedValue() {
-        
+    if let utType = UTType(filenameExtension: fileExtension) {
         // 根据 UTI 获取 MIME 类型
-        if let MIMEType = UTTypeCopyPreferredTagWithClass(UTI, kUTTagClassMIMEType)?.takeRetainedValue() {
-            return MIMEType as String
+        if let mimeType = utType.preferredMIMEType {
+            return mimeType
         }
     }
-    #endif
+#endif
     
     // 默认返回值
     return "application/octet-stream"

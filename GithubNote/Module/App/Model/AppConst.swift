@@ -43,11 +43,19 @@ extension AppConst {
 extension AppConst {
     
     static let settingWindowName = "app.window.group.setting"
+}
+
+extension AppConst {
+    
     static let downloadIcon = "arrow.down.square.fill"
     static let plusIcon = "plus.circle.fill"
     static let photoIcon = "photo.fill"
     static let closeIcon = "xmark.circle.fill"
     static let pencilIcon = "square.and.pencil.circle.fill"
+}
+
+
+extension AppConst {
     
-    
+    static let scheme = "githubnote"
 }

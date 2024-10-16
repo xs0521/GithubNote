@@ -12,7 +12,6 @@ import UIKit
 #else
 import AppKit
 #endif
-import ObjectiveC.runtime
 
 #if MOBILE
 typealias AppViewRepresentable = UIViewRepresentable
@@ -49,8 +48,7 @@ struct MarkdownWebView: AppViewRepresentable {
         
         let schemeHandler = CustomURLSchemeHandler()
         let configuration = WKWebViewConfiguration()
-        configuration.setURLSchemeHandler(schemeHandler, forURLScheme: "http")
-        configuration.setURLSchemeHandler(schemeHandler, forURLScheme: "https")
+        configuration.setURLSchemeHandler(schemeHandler, forURLScheme: AppConst.scheme)
         let webView = WKWebView(frame: .zero, configuration: configuration)
 #if DEBUG
         webView.isInspectable = true
@@ -98,8 +96,10 @@ struct MarkdownWebView: AppViewRepresentable {
             }
             context.coordinator.currentText = markdownText
             "#MD# title \(markdownText.prefix(20))".logI()
+            
+            let handleImageMarkdownText = CustomURLSchemeHandler.handleImageText(markdownText)
     
-            let dictionary: [String: Any] = ["content": markdownText]
+            let dictionary: [String: Any] = ["content": handleImageMarkdownText]
             guard let jsonData = try? JSONSerialization.data(withJSONObject: dictionary, options: []) else { return }
             guard let sendContent = String(data: jsonData, encoding: .utf8) else { return }
             
@@ -158,29 +158,3 @@ struct MarkdownWebView: AppViewRepresentable {
 //        MarkdownWebViewContentView()
 //    }
 //}
-
-extension WKWebView {
-    static let swizzleHandlesURLScheme: Void = {
-        let originalSelector = #selector(handlesURLScheme(_:))
-        let swizzledSelector = #selector(swizzledHandlesURLScheme(_:))
-
-        if let originalMethod = class_getClassMethod(WKWebView.self, originalSelector),
-           let swizzledMethod = class_getClassMethod(WKWebView.self, swizzledSelector) {
-            method_exchangeImplementations(originalMethod, swizzledMethod)
-        }
-    }()
-
-    @objc class func swizzledHandlesURLScheme(_ urlScheme: String) -> Bool {
-        if urlScheme == "http" || urlScheme == "https" {
-            return false  // 这里返回 NO，避免系统处理，使用自定义 handler 处理
-        } else {
-            return swizzledHandlesURLScheme(urlScheme)  // 调用原始实现
-        }
-    }
-}
-
-struct WKWebViewManager: Setupable {
-    static func setup() {
-        WKWebView.swizzleHandlesURLScheme
-    }
-}

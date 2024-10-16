@@ -8,8 +8,7 @@
 import Foundation
 
 private let SETUPLIST: [Setupable.Type] = [LogManager.self,
-                                           WebServerManager.self,
-                                           WKWebViewManager.self]
+                                           WebServerManager.self]
 
 private let SETUPLISTLOGIN: [Setupable.Type] = [SDWebImageDownloaderSetup.self,
                                                 CacheManager.self]
