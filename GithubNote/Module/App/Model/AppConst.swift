@@ -52,6 +52,7 @@ extension AppConst {
     static let photoIcon = "photo.fill"
     static let closeIcon = "xmark.circle.fill"
     static let pencilIcon = "square.and.pencil.circle.fill"
+    static let cacheIcon = "arrow.up.bin.fill"
 }
 
 

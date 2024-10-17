@@ -144,7 +144,9 @@ class SQLManager {
                     nodeID TEXT,
                     createdAt TEXT,
                     updatedAt TEXT,
-                    body TEXT
+                    body TEXT,
+                    cache TEXT,
+                    cacheUpdate INTEGER
                 );
                 """
         

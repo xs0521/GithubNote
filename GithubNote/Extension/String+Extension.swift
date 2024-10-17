@@ -75,3 +75,16 @@ extension String {
         return ["jpeg","jpg", "png", "tiff", "gif", "webp", "heic", "avif"].contains(suffix)
     }
 }
+
+
+extension String {
+    
+    func localTime() -> String {
+        guard let date = TimeManager.shared.isoFormatter.date(from: self) else {
+            return self
+        }
+        let localFormatter = TimeManager.shared.formatter
+        let localDateString = localFormatter.string(from: date)
+        return localDateString
+    }
+}

@@ -30,74 +30,6 @@ class CacheManager: Setupable {
         CacheManager.shared.manager = SQLManager()
     }
     
-//    static let shared = CacheManager()
-//    let diskConfig = DiskConfig(name: Account.repo)
-//    let memoryConfig = MemoryConfig(expiry: .never)
-//    
-//    var currentRepo: RepoModel? {
-//        didSet {
-//            "#cache# current repo \(currentRepo?.name ?? "")".logI()
-//        }
-//    }
-//    var currentIssue: Issue? {
-//        didSet {
-//            "#cache# current issue \(currentIssue?.title ?? "")".logI()
-//        }
-//    }
-//    
-//    lazy var store: Storage<String, Data?> = {
-//        let storage = try? Storage<String, Data?>(
-//          diskConfig: diskConfig,
-//          memoryConfig: memoryConfig,
-//          transformer: TransformerFactory.forCodable(ofType: Data?.self)
-//        )
-//        return storage!
-//    }()
-//    
-//    func updateComments(_ list: [Comment], issueId: Int) -> Void {
-//        let data = list.compactMap({$0.data()}).compactMap({$0.anyObj()})
-//        let jsonData = try? JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
-//        guard let path = API.comments(issueId: issueId, page: 1).cachePath else { return }
-//        try? CacheManager.shared.store.setObject(jsonData, forKey: path)
-//    }
-//    
-//    func updateIssues(_ list: [Issue], repoName: String) -> Void {
-//        let data = list.compactMap({$0.data()}).compactMap({$0.anyObj()})
-//        let jsonData = try? JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
-//        guard let path = API.repoIssues(repoName: repoName, page: 1).cachePath else { return }
-//        try? CacheManager.shared.store.setObject(jsonData, forKey: path)
-//    }
-//    
-//    func updateImages(_ list: [GithubImage], repoName: String) -> Void {
-//        let data = list.compactMap({$0.data()}).compactMap({$0.anyObj()})
-//        let jsonData = try? JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
-//        guard let path = API.repoImages(page: 1).cachePath else { return }
-//        try? CacheManager.shared.store.setObject(jsonData, forKey: path)
-//    }
-//    
-//    func appendImage(_ image: GithubImage, repoName: String) -> Void {
-//        
-//        guard let path = API.repoImages(page: 1).cachePath else { return }
-//        let data = try? CacheManager.shared.store.object(forKey: path)
-//        
-//        var modelList = [GithubImage]()
-//        
-//        if let data = data {
-//            let json = try? JSONSerialization.jsonObject(with: data, options: [])
-//            if let list = json as? [[String: Any]] {
-//                let generator = ModelGenerator<GithubImage>()
-//                let values = list.compactMap({generator.handle($0)})
-//                modelList.append(contentsOf: values)
-//            }
-//        }
-//        
-//        modelList.append(image)
-//        
-//        let saveData = modelList.compactMap({$0.data()}).compactMap({$0.anyObj()})
-//        let jsonData = try? JSONSerialization.data(withJSONObject: saveData, options: .prettyPrinted)
-//        try? CacheManager.shared.store.setObject(jsonData, forKey: path)
-//    }
-    
 }
 
 
@@ -228,6 +160,16 @@ extension CacheManager {
         
     }
     
+    static func fetchComment(_ id: NSInteger,  _ completion: @escaping CommonTCallBack<Comment?>) -> Void {
+        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+            let tableName = CacheManager.shared.manager?.commentTableName()
+            let model = CacheManager.shared.manager?.fetchComment(from: tableName, where: id, database: database)
+            DispatchQueue.main.async {
+                completion(model)
+            }
+        })
+    }
+    
     static func fetchComments(_ completion: @escaping CommonTCallBack<[Comment]>) -> Void {
         CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
             let tableName = CacheManager.shared.manager?.commentTableName()
@@ -245,6 +187,19 @@ extension CacheManager {
         CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
             let tableName = CacheManager.shared.manager?.commentTableName()
             CacheManager.shared.manager?.updateComments(comments: list, in: tableName, database: database)
+            DispatchQueue.main.async {
+                completion()
+            }
+        })
+    }
+    
+    static func updateCommentCache(_ comment: Comment, _ completion: @escaping CommonCallBack) -> Void {
+        
+        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+            var comment = comment
+            comment.cacheUpdate = Int(Date().timeIntervalSince1970)
+            let tableName = CacheManager.shared.manager?.commentTableName()
+            CacheManager.shared.manager?.updateCommentCache(comment: comment, in: tableName, database: database)
             DispatchQueue.main.async {
                 completion()
             }

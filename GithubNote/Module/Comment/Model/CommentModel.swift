@@ -15,6 +15,9 @@ struct Comment: APIModelable, Identifiable, Hashable, Equatable {
     var createdAt, updatedAt: String?
     var body: String?
     var uuid: String?
+    ///only local
+    var cache: String?
+    var cacheUpdate: Int?
     
     public var identifier: String {
         return "\(id ?? 0)-\(uuid ?? "")"

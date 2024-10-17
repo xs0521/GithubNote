@@ -10,8 +10,6 @@ import SwiftUI
 
 struct NoteWritePannelView: View {
     
-    private let formatter = DateFormatter()
-    
     @Environment(\.colorScheme) private var colorScheme
     
     @Binding var commentGroups: [Comment]
@@ -32,13 +30,16 @@ struct NoteWritePannelView: View {
     
     @Binding var showLoading: Bool
     
+    @State private var workItem: DispatchWorkItem?
+    @State private var cache: String = ""
+    @State private var cacheUpdate: Int = 0
+    
     
     var body: some View {
         VStack {
             VStack (spacing: 0) {
                 ZStack {
                     MarkdownWebView(markdownText: $markdownString.toUnwrapped(defaultValue: ""))
-    //                    .padding(EdgeInsets(top: 0, leading: 10, bottom: 20, trailing: 10))
                         .frame(maxWidth: .infinity, alignment: .leading)
                     if editIsShown {
                         TextEditor(text: $markdownString.toUnwrapped(defaultValue: ""))
@@ -46,21 +47,45 @@ struct NoteWritePannelView: View {
                             .font(.system(size: 14))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
-                            
-                        
                     }
-                    //                VStack {
-                    //                    CustomDivider()
-                    //                        .frame(maxWidth: .infinity)
-                    //                    Spacer()
-                    //                }
+                    if !cache.isEmpty && editIsShown {
+                        VStack {
+                            HStack {
+                                Spacer()
+                                Button {
+                                    markdownString = cache
+                                    cache = ""
+                                } label: {
+                                    Image(systemName: "timer")
+                                    Text(cacheUpdate.localTime())
+                                }
+                                .font(.system(size: 8))
+                                .foregroundColor(Color.white)
+                                .buttonStyle(.plain)
+                                .padding(EdgeInsets(top: 5, leading: 8, bottom: 5, trailing: 8))
+                                .background {
+                                    Capsule()
+                                        .foregroundColor(colorScheme == .dark ? Color.init(hex: "#41403F") : Color.init(hex: "#737373"))
+                                }
+                            }
+                            Spacer()
+                        }
+
+                    }
                 }
                 .padding(EdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10))
                 HStack {
-                    Text("2024年10月15日23:44:23")
-                        .font(.system(size: 10))
-                        .foregroundColor(colorScheme == .dark ? Color(hex: "#DDDDDD") : Color(hex: "#444443"))
-                        .padding(EdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10))
+                    HStack {
+                        HStack (spacing: 0) {
+                            Image(systemName: "network")
+                                .font(.system(size: 10))
+                                .padding(.trailing, 5)
+                            Text(selectionComment?.updatedAt?.localTime() ?? "")
+                                .font(.system(size: 10))
+                                .foregroundColor(colorScheme == .dark ? Color(hex: "#DDDDDD") : Color(hex: "#444443"))
+                        }
+                    }
+                    .padding(EdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10))
                     Spacer()
                 }
             }
@@ -103,11 +128,6 @@ struct NoteWritePannelView: View {
                         }
                     }
                     if editIsShown && !showImageBrowser! {
-                        Button(action: {
-                            showImageBrowser?.toggle()
-                        }, label: {
-                            Image(systemName: AppConst.photoIcon)
-                        })
                         ZStack {
                             if uploadState == .sending {
                                 ProgressView()
@@ -142,9 +162,43 @@ struct NoteWritePannelView: View {
             }
             .onChange(of: selectionComment) { oldValue, newValue in
                 if oldValue?.identifier != newValue?.identifier {
+                    editIsShown = false
+                    cache = ""
                     markdownString = newValue?.body
+                    checkCacheData()
                 }
             }
+            .onChange(of: markdownString) { oldValue, newValue in
+                if oldValue != newValue && editIsShown {
+                    cache = ""
+                    debounceUpdateCacheText()
+                }
+            }
+        }
+    }
+    
+    func debounceUpdateCacheText() {
+        workItem?.cancel()
+        workItem = DispatchWorkItem {
+            updateCacheText()
+        }
+        if let workItem = workItem {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: workItem)
+        }
+    }
+    
+    func updateCacheText() {
+        guard var comment = selectionComment else { return }
+        comment.cache = markdownString
+        selectionComment = comment
+        CacheManager.updateCommentCache(comment) {}
+    }
+    
+    func checkCacheData() -> Void {
+        guard let commentId = selectionComment?.id else { return }
+        CacheManager.fetchComment(commentId) { comment in
+            cache = comment?.cache ?? ""
+            cacheUpdate = comment?.cacheUpdate ?? 0
         }
     }
     
@@ -284,8 +338,6 @@ struct NoteWritePannelView: View {
     }
     
     func fileName() -> String {
-        let now = Date()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        return formatter.string(from: now)
+        return TimeManager.shared.titleFormatter.string(from: Date())
     }
 }

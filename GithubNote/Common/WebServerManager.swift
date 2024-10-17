@@ -20,7 +20,7 @@ class WebServerManager: Setupable {
         let webServer = GCDWebUploader(uploadDirectory: NSHomeDirectory())
         webServer.start()
         self.webServer = webServer
-        print("Visit \(webServer.serverURL?.absoluteString ?? "") in your web browser")
+        "webServer \(webServer.serverURL?.absoluteString ?? "") in your web browser".logI()
     }
 #endif
     

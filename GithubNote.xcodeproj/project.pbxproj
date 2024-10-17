@@ -85,6 +85,10 @@
 		B1922A692BAFF1FC00200828 /* GithubNoteUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1922A682BAFF1FC00200828 /* GithubNoteUITests.swift */; };
 		B1922A6B2BAFF1FC00200828 /* GithubNoteUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1922A6A2BAFF1FC00200828 /* GithubNoteUITestsLaunchTests.swift */; };
 		B19DC5A02BBFD51B009C7DBE /* CommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19DC59F2BBFD51B009C7DBE /* CommentModel.swift */; };
+		B1A3FBC02CC008E900C8ADF7 /* TimeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A3FBBF2CC008E900C8ADF7 /* TimeManager.swift */; };
+		B1A3FBC12CC008E900C8ADF7 /* TimeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A3FBBF2CC008E900C8ADF7 /* TimeManager.swift */; };
+		B1A3FBC32CC0180A00C8ADF7 /* Int+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A3FBC22CC0180A00C8ADF7 /* Int+Extension.swift */; };
+		B1A3FBC42CC0180A00C8ADF7 /* Int+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A3FBC22CC0180A00C8ADF7 /* Int+Extension.swift */; };
 		B1AE88372C4FFDAC00BB8047 /* WriteCachePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1AE88362C4FFDAC00BB8047 /* WriteCachePlugin.swift */; };
 		B1B55A892C515C3300820689 /* NoteWriteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B55A882C515C3300820689 /* NoteWriteModel.swift */; };
 		B1B55A8B2C515C9000820689 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B55A8A2C515C9000820689 /* AppModel.swift */; };
@@ -182,6 +186,8 @@
 		B1922A682BAFF1FC00200828 /* GithubNoteUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubNoteUITests.swift; sourceTree = "<group>"; };
 		B1922A6A2BAFF1FC00200828 /* GithubNoteUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubNoteUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		B19DC59F2BBFD51B009C7DBE /* CommentModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentModel.swift; sourceTree = "<group>"; };
+		B1A3FBBF2CC008E900C8ADF7 /* TimeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeManager.swift; sourceTree = "<group>"; };
+		B1A3FBC22CC0180A00C8ADF7 /* Int+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Extension.swift"; sourceTree = "<group>"; };
 		B1AE88362C4FFDAC00BB8047 /* WriteCachePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteCachePlugin.swift; sourceTree = "<group>"; };
 		B1B55A882C515C3300820689 /* NoteWriteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteWriteModel.swift; sourceTree = "<group>"; };
 		B1B55A8A2C515C9000820689 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
@@ -641,6 +647,7 @@
 				B1FE674F2C46B72400970DA0 /* View+Extension.swift */,
 				B1B55A912C52A0C000820689 /* Data+Extension.swift */,
 				B1EBBDCD2CB2F31A005FB760 /* bool+Extension.swift */,
+				B1A3FBC22CC0180A00C8ADF7 /* Int+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -667,6 +674,7 @@
 		B1FE674C2C45766800970DA0 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				B1A3FBBF2CC008E900C8ADF7 /* TimeManager.swift */,
 				B1EBBDCB2CB2E718005FB760 /* WebServerManager.swift */,
 				B1FE674D2C45767600970DA0 /* Common.swift */,
 				B1EBBDA32C9FDB28005FB760 /* ToastManager.swift */,
@@ -1010,6 +1018,7 @@
 				B14983C42CBB632E00CDAB6F /* NoteWriteModel.swift in Sources */,
 				B14983C52CBB632E00CDAB6F /* NoteContentView.swift in Sources */,
 				B14983C62CBB632E00CDAB6F /* CustomDivider.swift in Sources */,
+				B1A3FBC42CC0180A00C8ADF7 /* Int+Extension.swift in Sources */,
 				B14983C72CBB632E00CDAB6F /* NoteWritePannelView.swift in Sources */,
 				B14983C82CBB632E00CDAB6F /* NoteImageBrowserView.swift in Sources */,
 				B14983C92CBB632E00CDAB6F /* Data+Extension.swift in Sources */,
@@ -1019,6 +1028,7 @@
 				B14983CD2CBB632E00CDAB6F /* Common.swift in Sources */,
 				B14983CE2CBB632E00CDAB6F /* AppModel.swift in Sources */,
 				B14983CF2CBB632E00CDAB6F /* NoteSidebarToolView.swift in Sources */,
+				B1A3FBC12CC008E900C8ADF7 /* TimeManager.swift in Sources */,
 				B14983D02CBB632E00CDAB6F /* LaunchApp.swift in Sources */,
 				B14983D12CBB632E00CDAB6F /* NoteCommentsView.swift in Sources */,
 				B14983D22CBB632E00CDAB6F /* SQLManager+Issue.swift in Sources */,
@@ -1070,6 +1080,7 @@
 				B1B55A892C515C3300820689 /* NoteWriteModel.swift in Sources */,
 				B10930FB2C3D848B006B5DB0 /* NoteContentView.swift in Sources */,
 				B1EBBD9A2C9ED695005FB760 /* CustomDivider.swift in Sources */,
+				B1A3FBC32CC0180A00C8ADF7 /* Int+Extension.swift in Sources */,
 				B1E538622C43816F00A4B3C4 /* NoteWritePannelView.swift in Sources */,
 				B1FE67542C480B0200970DA0 /* NoteImageBrowserView.swift in Sources */,
 				B1B55A922C52A0C000820689 /* Data+Extension.swift in Sources */,
@@ -1079,6 +1090,7 @@
 				B1FE674E2C45767600970DA0 /* Common.swift in Sources */,
 				B1B55A8B2C515C9000820689 /* AppModel.swift in Sources */,
 				B1EBBDD12CB3CD7A005FB760 /* NoteSidebarToolView.swift in Sources */,
+				B1A3FBC02CC008E900C8ADF7 /* TimeManager.swift in Sources */,
 				B1EBBDA02C9F0079005FB760 /* LaunchApp.swift in Sources */,
 				B1EBBDC02CA06C99005FB760 /* NoteCommentsView.swift in Sources */,
 				B1EBBDC82CB24D72005FB760 /* SQLManager+Issue.swift in Sources */,
