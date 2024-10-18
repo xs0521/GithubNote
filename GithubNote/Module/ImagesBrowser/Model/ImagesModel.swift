@@ -21,6 +21,7 @@ struct SDWebImageDownloaderSetup: Setupable {
 
 struct GithubImage: APIModelable, Identifiable, Hashable, Equatable {
     
+    var index: Int?
     var id: String?
     var uuid: String?
     

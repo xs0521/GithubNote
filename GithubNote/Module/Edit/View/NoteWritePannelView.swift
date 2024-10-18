@@ -70,7 +70,7 @@ struct NoteWritePannelView: View {
                             }
                             Spacer()
                         }
-
+                        
                     }
                 }
                 .padding(EdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10))
@@ -105,12 +105,15 @@ struct NoteWritePannelView: View {
                             })
                             .fileImporter(
                                 isPresented: $isPresented,
-                                allowedContentTypes: [.image]
+                                allowedContentTypes: [.image],
+                                allowsMultipleSelection: true
                             ) { result in
                                 switch result {
-                                case .success(let url):
-                                    _ = url.startAccessingSecurityScopedResource()
-                                    uploadImage(filePath: url)
+                                case .success(let urls):
+                                    showLoading = true
+                                    ImageUploader.shared.uploadImages(urls: urls, completion: { _ in
+                                        showLoading = false
+                                    })
                                 case .failure(let error):
                                     print(error.localizedDescription)
                                 }
@@ -294,50 +297,5 @@ struct NoteWritePannelView: View {
                 completion()
             }
         }
-    }
-    
-    private func uploadImage(filePath: URL) -> Void {
-        
-        showLoading = true
-        
-        DispatchQueue.global().async(execute: {
-            let data = try? Data(contentsOf: filePath)
-            guard let data = data, !data.isEmpty else { return }
-            let imageBase64 = data.base64EncodedString()
-            
-            let pathExtension = filePath.pathExtension
-            let fileName = fileName() + ".\(pathExtension)"
-            
-            Networking<PushCommitModel>().uploadImage(API.updateImage(imageBase64: imageBase64, fileName: fileName)) { _ in
-            } completionModelHandler: { data, cache, code in
-                
-                showLoading = false
-                
-                if code != MessageCode.createSuccess.rawValue {
-                    return
-                }
-                
-                guard let item = data?.first else { return }
-                
-                let content = item.content
-                let encoder = JSONEncoder()
-                let decoder = JSONDecoder()
-                
-                do {
-                    let data = try encoder.encode(content)
-                    let githubImage = try decoder.decode(GithubImage.self, from: data)
-                    //                    CacheManager.shared.appendImage(githubImage, repoName: Account.repo)
-                } catch let err {
-                    print(err)
-                }
-                
-                NotificationCenter.default.post(name: NSNotification.Name.syncLocalImagesNotification, object: nil)
-            }
-            
-        })
-    }
-    
-    func fileName() -> String {
-        return TimeManager.shared.titleFormatter.string(from: Date())
     }
 }

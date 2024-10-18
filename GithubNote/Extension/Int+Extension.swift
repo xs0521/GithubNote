@@ -2,7 +2,7 @@
 //  Int+Extension.swift
 //  GithubNote
 //
-//  Created by luoshuai on 2024/10/16.
+//  Created by xs0521 on 2024/10/16.
 //
 
 import Foundation

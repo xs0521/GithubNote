@@ -142,7 +142,7 @@ class Networking<T> where T: APIModelable {
         cachePolicyPlugin()
 //        networkLoggerPlugin()
         if writeCache {
-            writeCachePlugin()
+//            writeCachePlugin()
         }
         
         let provider = MoyaProvider<R>(plugins: plugins)

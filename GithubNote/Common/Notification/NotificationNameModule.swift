@@ -8,7 +8,7 @@
 import Foundation
 
 extension Notification.Name {
-    static let syncLocalImagesNotification = Notification.Name(rawValue: "sync.local.images")
+    static let appendImagesNotification = Notification.Name(rawValue: "sync.append.image")
     static let syncNetImagesNotification = Notification.Name(rawValue: "sync.net.images")
     static let logoutNotification = Notification.Name(rawValue: "app.github.logout")
     static let logoutForceNotification = Notification.Name(rawValue: "app.github.logout.force")

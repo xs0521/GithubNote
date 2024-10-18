@@ -93,6 +93,10 @@
 		B1B55A892C515C3300820689 /* NoteWriteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B55A882C515C3300820689 /* NoteWriteModel.swift */; };
 		B1B55A8B2C515C9000820689 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B55A8A2C515C9000820689 /* AppModel.swift */; };
 		B1B55A922C52A0C000820689 /* Data+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B55A912C52A0C000820689 /* Data+Extension.swift */; };
+		B1B5AAE72CC2AB71003F4E71 /* ImageUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B5AAE62CC2AB71003F4E71 /* ImageUploader.swift */; };
+		B1B5AAE82CC2AB71003F4E71 /* ImageUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B5AAE62CC2AB71003F4E71 /* ImageUploader.swift */; };
+		B1B5AAEA2CC2B451003F4E71 /* SQLManager+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B5AAE92CC2B451003F4E71 /* SQLManager+Image.swift */; };
+		B1B5AAEB2CC2B451003F4E71 /* SQLManager+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B5AAE92CC2B451003F4E71 /* SQLManager+Image.swift */; };
 		B1C01ACA2BCA16BB009E9C20 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = B1C01AC92BCA16BB009E9C20 /* SDWebImageSwiftUI */; };
 		B1CE86582C57EF77002C8335 /* NoteImageBrowserImagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1CE86572C57EF77002C8335 /* NoteImageBrowserImagesView.swift */; };
 		B1CE865B2C5926B8002C8335 /* NotificationNameModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1CE865A2C5926B8002C8335 /* NotificationNameModule.swift */; };
@@ -192,6 +196,8 @@
 		B1B55A882C515C3300820689 /* NoteWriteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteWriteModel.swift; sourceTree = "<group>"; };
 		B1B55A8A2C515C9000820689 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		B1B55A912C52A0C000820689 /* Data+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extension.swift"; sourceTree = "<group>"; };
+		B1B5AAE62CC2AB71003F4E71 /* ImageUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploader.swift; sourceTree = "<group>"; };
+		B1B5AAE92CC2B451003F4E71 /* SQLManager+Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SQLManager+Image.swift"; sourceTree = "<group>"; };
 		B1CE86572C57EF77002C8335 /* NoteImageBrowserImagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteImageBrowserImagesView.swift; sourceTree = "<group>"; };
 		B1CE865A2C5926B8002C8335 /* NotificationNameModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNameModule.swift; sourceTree = "<group>"; };
 		B1D7CF532BCA11DE00362C35 /* ImagesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesModel.swift; sourceTree = "<group>"; };
@@ -461,6 +467,7 @@
 			isa = PBXGroup;
 			children = (
 				B1D7CF532BCA11DE00362C35 /* ImagesModel.swift */,
+				B1B5AAE62CC2AB71003F4E71 /* ImageUploader.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -547,6 +554,7 @@
 				B1EBBDC52CB24D65005FB760 /* SQLManager+Repo.swift */,
 				B1EBBDC72CB24D72005FB760 /* SQLManager+Issue.swift */,
 				B1EBBDC92CB24DA9005FB760 /* SQLManager+Comment.swift */,
+				B1B5AAE92CC2B451003F4E71 /* SQLManager+Image.swift */,
 			);
 			path = SQL;
 			sourceTree = "<group>";
@@ -1034,6 +1042,7 @@
 				B14983D22CBB632E00CDAB6F /* SQLManager+Issue.swift in Sources */,
 				B14983D32CBB632E00CDAB6F /* AppConst.swift in Sources */,
 				B14983D42CBB632E00CDAB6F /* LogManager.swift in Sources */,
+				B1B5AAE82CC2AB71003F4E71 /* ImageUploader.swift in Sources */,
 				B14983D52CBB632E00CDAB6F /* RepoModel.swift in Sources */,
 				B14983D62CBB632E00CDAB6F /* WebServerManager.swift in Sources */,
 				B14983D72CBB632E00CDAB6F /* NetworkError.swift in Sources */,
@@ -1059,6 +1068,7 @@
 				B14983EB2CBB632E00CDAB6F /* bool+Extension.swift in Sources */,
 				B14983EC2CBB632E00CDAB6F /* NoteCommentsHeaderView.swift in Sources */,
 				B14983ED2CBB632E00CDAB6F /* View+Extension.swift in Sources */,
+				B1B5AAEB2CC2B451003F4E71 /* SQLManager+Image.swift in Sources */,
 				B14983EE2CBB632E00CDAB6F /* CustomURLSchemeHandler.swift in Sources */,
 				B14983EF2CBB632E00CDAB6F /* NoteSidebarView.swift in Sources */,
 				B14983F02CBB632E00CDAB6F /* GithubNoteApp.swift in Sources */,
@@ -1096,6 +1106,7 @@
 				B1EBBDC82CB24D72005FB760 /* SQLManager+Issue.swift in Sources */,
 				B11FDA8B2BBFE8C500EC7083 /* AppConst.swift in Sources */,
 				B1EBBD942C9E886C005FB760 /* LogManager.swift in Sources */,
+				B1B5AAE72CC2AB71003F4E71 /* ImageUploader.swift in Sources */,
 				B1ED886F2C4ACBB900FD8DEB /* RepoModel.swift in Sources */,
 				B1EBBDCC2CB2E718005FB760 /* WebServerManager.swift in Sources */,
 				B1ED88672C4AC60000FD8DEB /* NetworkError.swift in Sources */,
@@ -1121,6 +1132,7 @@
 				B1EBBDCE2CB2F31A005FB760 /* bool+Extension.swift in Sources */,
 				B1EBBDC22CA06CA4005FB760 /* NoteCommentsHeaderView.swift in Sources */,
 				B1FE67502C46B72400970DA0 /* View+Extension.swift in Sources */,
+				B1B5AAEA2CC2B451003F4E71 /* SQLManager+Image.swift in Sources */,
 				B1EBBDA22C9F2AA9005FB760 /* CustomURLSchemeHandler.swift in Sources */,
 				B10930FD2C3D85C5006B5DB0 /* NoteSidebarView.swift in Sources */,
 				B1922A4D2BAFF1FB00200828 /* GithubNoteApp.swift in Sources */,

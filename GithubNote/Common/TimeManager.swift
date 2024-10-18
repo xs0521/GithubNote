@@ -2,7 +2,7 @@
 //  TimeManager.swift
 //  GithubNote
 //
-//  Created by luoshuai on 2024/10/16.
+//  Created by xs0521 on 2024/10/16.
 //
 
 import Foundation
@@ -11,7 +11,7 @@ class TimeManager {
     
     lazy var titleFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS"
         formatter.timeZone = .current
         return formatter
     }()

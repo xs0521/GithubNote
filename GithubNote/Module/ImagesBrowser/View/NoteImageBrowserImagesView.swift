@@ -14,7 +14,6 @@ struct NoteImageBrowserImagesView: View {
     static let size = CGSizeMake(100, 100)
     
     @Binding var showImageBrowser: Bool?
-    @Binding var data: [GithubImage]
     
     @Binding var showToast: Bool
     @Binding var toastMessage: String
@@ -22,6 +21,8 @@ struct NoteImageBrowserImagesView: View {
     
     @State var showPreview: Bool = false
     @State var url: String = ""
+    
+    @State private var data: [GithubImage] = []
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -52,7 +53,7 @@ struct NoteImageBrowserImagesView: View {
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
                                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                        
+                                    
                                 }
                                 .frame(width: NoteImageBrowserImagesView.size.width, height: NoteImageBrowserImagesView.size.height)
                                 .cornerRadius(10)
@@ -66,6 +67,9 @@ struct NoteImageBrowserImagesView: View {
                                 Button("delete", role: .destructive) {
                                     deleteFile(item)
                                 }
+                            }
+                            .onAppear {
+                                
                             }
                             
                         }
@@ -101,32 +105,104 @@ struct NoteImageBrowserImagesView: View {
                 })
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name.syncNetImagesNotification), perform: { _ in
+            showLoading = true
+            requestImagesData(false, completion: { 
+                showLoading = false
+            })
+        })
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name.appendImagesNotification), perform: { notification in
+            if let item = notification.object as? GithubImage {
+                data.append(item)
+            }
+        })
+        .onAppear(perform: {
+            showLoading = true
+            requestImagesData {
+                showLoading = false
+            }
+        })
+        
+    }
+}
+
+extension NoteImageBrowserImagesView {
+    
+    fileprivate func requestImagesData(_ readCache: Bool = true, completion: @escaping CommonCallBack) -> Void {
+        
+        if readCache {
+            CacheManager.fetchGithubImages { images in
+                self.data = images
+                showLoading = false
+                completion()
+            }
+            return
+        }
+        
+        Networking<GithubImage>().request(API.repoImages) { data, cache, code in
+            if code == MessageCode.notFound.rawValue {
+                self.data.removeAll()
+                requestCreateImageDir(completion: {
+                    completion()
+                })
+                return
+            }
+            
+            if let list = data, !list.isEmpty {
+                let images = list.filter({$0.path.isImage()})
+                CacheManager.insertGithubImages(images: images, deleteNoFound: true) {
+                    CacheManager.fetchGithubImages { localImages in
+                        self.data = localImages
+                        completion()
+                    }
+                }
+            } else {
+                self.data.removeAll()
+                completion()
+            }
+            
+        }
+    }
+    
+    fileprivate func requestCreateImageDir(completion: @escaping CommonCallBack) -> Void {
+        
+        Networking<PushCommitModel>().request(API.createImagesDirectory, writeCache: false, readCache: false) { data, cache, code in
+            completion()
+            if code != MessageCode.createSuccess.rawValue {
+                return
+            }
+            "ImageDir success".logI()
+        }
         
     }
     
-    private func copyAction(_ url: String) -> Void {
-        let content = "![](\(url))"
-        #if MOBILE
-        #else
+    fileprivate func deleteFile(_ item: GithubImage) -> Void {
+        self.showLoading = true
+        Networking<PushCommitModel>().request(API.deleteImage(filePath: item.path, sha: item.sha), writeCache: false, readCache: false) { _, cache, code in
+            if code == MessageCode.success.rawValue {
+                data = data.filter({$0.identifier != item.identifier})
+                CacheManager.deleteGithubImage(item.url) {
+                    self.showLoading = false
+                }
+            } else {
+                self.showLoading = false
+            }
+        }
+    }
+    
+    fileprivate func copyAction(_ url: String) -> Void {
+        let content = """
+        <img src="\(url)" alt="alt text" width="300" height="200">
+        """
+        
+#if MOBILE
+#else
         let pasteBoard = NSPasteboard.general
         pasteBoard.clearContents()
         pasteBoard.setString(content, forType: .string)
-        #endif
+#endif
         toastMessage = "done"
         showToast = false
         showToast.toggle()
-    }
-    
-    private func deleteFile(_ item: GithubImage) -> Void {
-        self.showLoading = true
-        Networking<PushCommitModel>().request(API.deleteImage(filePath: item.path, sha: item.sha), writeCache: false, readCache: false) { _, cache, code in
-            if showLoading {
-                self.showLoading = false
-            }
-            if code == MessageCode.success.rawValue {
-                data = data.filter({$0.identifier != item.identifier})
-//                CacheManager.shared.updateImages(data, repoName: Account.repo)
-            }
-        }
     }
 }

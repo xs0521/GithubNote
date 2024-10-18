@@ -153,6 +153,35 @@ class SQLManager {
         createTable(sql, tableName: tableName)
     }
     
+    func imagesTableName() -> String {
+        let id = CacheManager.shared.currentRepo?.id ?? 0
+        let name = CacheManager.shared.currentRepo?.name ?? ""
+        assert(id > 0, "id error")
+        return "images_\(name)_\(id)"
+    }
+    
+    func createImagesTable() -> Void {
+        
+        let tableName = imagesTableName()
+        let sql = """
+                CREATE TABLE IF NOT EXISTS \(tableName)(
+                    idx INTEGER PRIMARY KEY AUTOINCREMENT,
+                    url TEXT,
+                    uuid TEXT,
+                    name TEXT,
+                    path TEXT,
+                    sha TEXT,
+                    size INTEGER,
+                    htmlURL TEXT,
+                    gitURL TEXT,
+                    downloadURL TEXT,
+                    type TEXT
+                );
+                """
+        
+        createTable(sql, tableName: tableName)
+    }
+    
     func getMaxIndex(_ tableName: String, from database: FMDatabase) -> Int {
         var maxIndex: Int = 0
         let querySQL = "SELECT MAX(sort) as maxIndex FROM \(tableName);"

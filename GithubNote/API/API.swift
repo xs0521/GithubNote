@@ -22,7 +22,7 @@ enum API {
     case newIssue(title: String, body: String)
     case updateIssue(issueId: Int, state: IssueState, title: String, body: String)
     case createImagesDirectory
-    case repoImages(page: Int)
+    case repoImages
     case updateImage(imageBase64: String, fileName: String)
     case deleteImage(filePath: String, sha: String)
     
@@ -76,11 +76,11 @@ extension API: TargetType {
         case .updateIssue(let issueId, _, _, _):
             return "/repos/\(owner)/\(selectRepo)/issues/\(issueId)"
         case .createImagesDirectory:
-            return "repos/\(owner)/\(selectRepo)/contents/images/images.txt"
+            return "repos/\(owner)/\(selectRepo)/contents/githubnote/images.txt"
         case .repoImages:
-            return "/repos/\(owner)/\(selectRepo)/contents/images"
+            return "/repos/\(owner)/\(selectRepo)/contents/githubnote"
         case .updateImage(_, let fileName):
-            return "repos/\(owner)/\(selectRepo)/contents/images/\(fileName)"
+            return "repos/\(owner)/\(selectRepo)/contents/githubnote/\(fileName)"
         case .deleteImage(let filePath, _):
             return "repos/\(owner)/\(selectRepo)/contents/\(filePath)"
         }
@@ -119,8 +119,7 @@ extension API: TargetType {
         switch self {
         case .repos(let page),
              .repoIssues(_, let page),
-             .comments(_, let page),
-             .repoImages(let page):
+             .comments(_, let page):
             parameters["per_page"] = kMaxPage
             parameters["page"] = page
         case .newComment(_, let body):

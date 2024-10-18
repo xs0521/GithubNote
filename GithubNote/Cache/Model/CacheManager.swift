@@ -157,7 +157,6 @@ extension CacheManager {
                 }
             })
         }
-        
     }
     
     static func fetchComment(_ id: NSInteger,  _ completion: @escaping CommonTCallBack<Comment?>) -> Void {
@@ -219,6 +218,103 @@ extension CacheManager {
     static func deleteComment(_ url: String, _ tableName: String, _ completion: @escaping CommonCallBack) -> Void {
         CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
             CacheManager.shared.manager?.deleteComment(byIssueUrl: url, from: tableName, database: database)
+            DispatchQueue.main.async {
+                completion()
+            }
+        })
+    }
+}
+
+extension CacheManager {
+    
+    // 插入 GithubImage
+    static func insertGithubImages(images: [GithubImage], deleteNoFound: Bool = false, completion: CommonCallBack? = nil) -> Void {
+        
+        if !deleteNoFound {
+            insertAction {
+                completion?()
+            }
+            return
+        }
+        
+        deleteAllGithubImage {
+            insertAction {
+                completion?()
+            }
+        }
+        
+        func insertAction(completion: CommonCallBack? = nil) -> Void {
+            CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+                CacheManager.shared.manager?.createImagesTable()
+                let tableName = CacheManager.shared.manager?.imagesTableName()
+                CacheManager.shared.manager?.insertGithubImages(images: images, into: tableName, database: database)
+                DispatchQueue.main.async {
+                    completion?()
+                }
+            })
+        }
+    }
+    
+    // 查询单个 GithubImage
+    static func fetchGithubImage(_ id: String, _ completion: @escaping CommonTCallBack<GithubImage?>) -> Void {
+        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+            let tableName = CacheManager.shared.manager?.imagesTableName()
+            let model = CacheManager.shared.manager?.fetchGithubImage(from: tableName, where: id, database: database)
+            DispatchQueue.main.async {
+                completion(model)
+            }
+        })
+    }
+    
+    // 查询多个 GithubImages
+    static func fetchGithubImages(_ completion: @escaping CommonTCallBack<[GithubImage]>) -> Void {
+        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+            let tableName = CacheManager.shared.manager?.imagesTableName()
+            let models = CacheManager.shared.manager?.fetchGithubImages(from: tableName, database: database) ?? []
+            DispatchQueue.main.async {
+                completion(models)
+            }
+        })
+    }
+    
+    // 删除指定 ID 的 GithubImages
+    static func deleteGithubImages(_ indexs: [Int], _ completion: @escaping CommonCallBack) -> Void {
+        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+            let tableName = CacheManager.shared.manager?.imagesTableName()
+            CacheManager.shared.manager?.deleteGithubImage(byIndex: indexs, from: tableName, database: database)
+            DispatchQueue.main.async {
+                completion()
+            }
+        })
+    }
+    
+    // 删除指定 ID 的 GithubImages
+    static func deleteGithubImages(_ urls: [String], _ completion: @escaping CommonCallBack) -> Void {
+        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+            let tableName = CacheManager.shared.manager?.imagesTableName()
+            CacheManager.shared.manager?.deleteGithubImage(byUrls: urls, from: tableName, database: database)
+            DispatchQueue.main.async {
+                completion()
+            }
+        })
+    }
+    
+    // 删除指定 URL 的 GithubImages
+    static func deleteGithubImage(_ url: String, _ completion: @escaping CommonCallBack) -> Void {
+        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+            let tableName = CacheManager.shared.manager?.imagesTableName()
+            CacheManager.shared.manager?.deleteGithubImage(byUrls: [url], from: tableName, database: database)
+            DispatchQueue.main.async {
+                completion()
+            }
+        })
+    }
+    
+    // 删除指定 URL 的 GithubImages
+    static func deleteAllGithubImage(_ completion: @escaping CommonCallBack) -> Void {
+        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+            let tableName = CacheManager.shared.manager?.imagesTableName()
+            CacheManager.shared.manager?.deleteAllGithubImage(from: tableName, database: database)
             DispatchQueue.main.async {
                 completion()
             }
