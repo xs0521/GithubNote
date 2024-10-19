@@ -199,6 +199,12 @@ extension NoteSidebarView {
     
     private func requestAllIssue(_ readCache: Bool = true, _ completion: @escaping CommonCallBack) -> Void {
         
+        if selectionRepo == nil {
+            ToastManager.shared.showFail("Please select a code repository")
+            completion()
+            return
+        }
+        
         if readCache {
             CacheManager.fetchIssues { list in
                 "#request# issue all cache \(list.count)".logI()
@@ -256,6 +262,12 @@ extension NoteSidebarView {
     }
     
     private func requestAllComment(_ readCache: Bool = true, _ completion: @escaping CommonCallBack) -> Void {
+        
+        if selectionIssue == nil {
+            ToastManager.shared.showFail("Please select a NoteBook")
+            completion()
+            return
+        }
         
         if readCache {
             CacheManager.fetchComments { list in

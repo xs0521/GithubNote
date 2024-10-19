@@ -14,7 +14,7 @@ struct NoteSidebarToolView: View {
     @Binding var showImageBrowser: Bool?
     @Binding var selectionRepo: RepoModel?
     
-    @State private var repoTitle: String = ""
+    @State private var repoTitle: String = "Select Repo"
     
     @State private var degreesValue: Double = 0
     
@@ -51,6 +51,7 @@ struct NoteSidebarToolView: View {
                         .controlSize(.mini)
                         .padding()
                         .padding(.trailing, 5)
+                        .frame(width: 20, height: 20)
                 } else {
                     Button {
                         isSyncRepos = true
