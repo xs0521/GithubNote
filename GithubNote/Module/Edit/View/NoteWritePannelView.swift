@@ -34,6 +34,10 @@ struct NoteWritePannelView: View {
     @State private var cache: String = ""
     @State private var cacheUpdate: Int = 0
     
+    private var undoManager: UndoManager? {
+        NSApplication.shared.windows.first?.undoManager
+    }
+    
     
     var body: some View {
         VStack {
@@ -73,6 +77,12 @@ struct NoteWritePannelView: View {
                         
                     }
                 }
+                .onChange(of: editIsShown, { _, newValue in
+                    if !newValue {
+                        ///When editing again, attempting to undo causes a crash.
+                        undoManager?.removeAllActions()
+                    }
+                })
                 .padding(EdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10))
                 HStack {
                     HStack {
@@ -241,30 +251,12 @@ struct NoteWritePannelView: View {
                             .padding(.horizontal, 5)
                         Image(systemName: "cup.and.saucer.fill")
                         Text(commentName)
-                            .layoutPriority(1)
                     }
                 }
             }
         }
+        .font(.system(size: 12))
         .foregroundColor(colorScheme == .dark ? Color(hex: "#DDDDDD") : Color(hex: "#444443"))
-        
-        //        .foregroundColor(colorScheme == .dark ? Color.init(hex: "#DDDDDD") : Color.init(hex: "#444443"))
-        
-        //        if showImageBrowser == true {
-        //            return ""
-        //        }
-        //
-        //        var title = "\(Account.owner)"
-        //        if let repoName = selectionRepo?.name {
-        //            title += " > \(repoName)"
-        //        }
-        //        if let issueName = selectionIssue?.title {
-        //            title += " > \(issueName)"
-        //        }
-        //        if let commentName = comment?.body?.toTitle() {
-        //            title += " > \(commentName)"
-        //        }
-        //        return title
     }
     
     private func updateContent() -> Void {
