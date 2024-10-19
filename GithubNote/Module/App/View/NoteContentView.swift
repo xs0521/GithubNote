@@ -21,8 +21,6 @@ struct NoteContentView: View {
     @State private var markdownString: String? = ""
     @State private var showImageBrowser: Bool? = false
     
-    @State private var progressValue: Double = 0.0
-    
     @State private var showLoading: Bool = false
     
     @State private var showToast: Bool = false
@@ -63,8 +61,7 @@ struct NoteContentView: View {
                 AlertToast(type: .loading, title: nil, subTitle: nil)
             }
             if showImageBrowser! {
-                NoteImageBrowserView(showImageBrowser: $showImageBrowser, 
-                                     progressValue: $progressValue,
+                NoteImageBrowserView(showImageBrowser: $showImageBrowser,
                                      showToast: $showToast,
                                      toastMessage: $toastMessage,
                                      showLoading: $showLoading)

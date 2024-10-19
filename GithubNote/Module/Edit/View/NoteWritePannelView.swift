@@ -38,7 +38,6 @@ struct NoteWritePannelView: View {
         NSApplication.shared.windows.first?.undoManager
     }
     
-    
     var body: some View {
         VStack {
             VStack (spacing: 0) {
@@ -53,28 +52,7 @@ struct NoteWritePannelView: View {
                             .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
                     }
                     if !cache.isEmpty && editIsShown {
-                        VStack {
-                            HStack {
-                                Spacer()
-                                Button {
-                                    markdownString = cache
-                                    cache = ""
-                                } label: {
-                                    Image(systemName: "timer")
-                                    Text(cacheUpdate.localTime())
-                                }
-                                .font(.system(size: 8))
-                                .foregroundColor(Color.white)
-                                .buttonStyle(.plain)
-                                .padding(EdgeInsets(top: 5, leading: 8, bottom: 5, trailing: 8))
-                                .background {
-                                    Capsule()
-                                        .foregroundColor(colorScheme == .dark ? Color.init(hex: "#41403F") : Color.init(hex: "#737373"))
-                                }
-                            }
-                            Spacer()
-                        }
-                        
+                        cacheItemView()
                     }
                 }
                 .onChange(of: editIsShown, { _, newValue in
@@ -84,92 +62,18 @@ struct NoteWritePannelView: View {
                     }
                 })
                 .padding(EdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10))
-                HStack {
-                    HStack {
-                        HStack (spacing: 0) {
-                            Image(systemName: "network")
-                                .font(.system(size: 10))
-                                .padding(.trailing, 5)
-                            Text(selectionComment?.updatedAt?.localTime() ?? "")
-                                .font(.system(size: 10))
-                                .foregroundColor(colorScheme == .dark ? Color(hex: "#DDDDDD") : Color(hex: "#444443"))
-                        }
-                    }
-                    .padding(EdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10))
-                    Spacer()
-                }
+                bottomTimeView()
             }
             .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
             .toolbar {
                 ToolbarItemGroup {
-                    titleView()
+                    NoteWritePannelTitleView(showImageBrowser: $showImageBrowser,
+                                             selectionRepo: $selectionRepo,
+                                             selectionIssue: $selectionIssue,
+                                             selectionComment: $selectionComment)
                     
                     Spacer()
-                    
-                    if showImageBrowser! {
-                        HStack {
-                            Button(action: {
-                                isPresented = true
-                            }, label: {
-                                Image(systemName: AppConst.plusIcon)
-                            })
-                            .fileImporter(
-                                isPresented: $isPresented,
-                                allowedContentTypes: [.image],
-                                allowsMultipleSelection: true
-                            ) { result in
-                                switch result {
-                                case .success(let urls):
-                                    showLoading = true
-                                    ImageUploader.shared.uploadImages(urls: urls, completion: { _ in
-                                        showLoading = false
-                                    })
-                                case .failure(let error):
-                                    print(error.localizedDescription)
-                                }
-                            }
-                            Button {
-                                NotificationCenter.default.post(name: NSNotification.Name.syncNetImagesNotification, object: nil)
-                            } label: {
-                                Image(systemName: AppConst.downloadIcon)
-                            }
-                            Button {
-                                showImageBrowser = false
-                            } label: {
-                                Image(systemName: AppConst.closeIcon)
-                            }
-                        }
-                    }
-                    if editIsShown && !showImageBrowser! {
-                        ZStack {
-                            if uploadState == .sending {
-                                ProgressView()
-                                    .controlSize(.mini)
-                            } else {
-                                Button {
-                                    if uploadState != .normal {
-                                        return
-                                    }
-                                    updateContent()
-                                } label: {
-                                    Label("Show inspector", systemImage: uploadState.imageName)
-                                }
-                                .disabled(!editIsShown)
-                            }
-                        }
-                        .frame(width: 30, height: 40)
-                    }
-                    if !(showImageBrowser ?? false) {
-                        Button {
-                            editIsShown.toggle()
-                        } label: {
-                            Label("Show inspector", systemImage: editIsShown ? AppConst.closeIcon : AppConst.pencilIcon)
-                                .if(!editIsShown) { view in
-                                    view.font(.system(size: 18))
-                                }
-                        }
-                        
-                    }
+                    operationViews()
                 }
                 
             }
@@ -190,76 +94,135 @@ struct NoteWritePannelView: View {
         }
     }
     
-    func debounceUpdateCacheText() {
-        workItem?.cancel()
-        workItem = DispatchWorkItem {
-            updateCacheText()
-        }
-        if let workItem = workItem {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: workItem)
-        }
-    }
     
-    func updateCacheText() {
-        guard var comment = selectionComment else { return }
-        comment.cache = markdownString
-        selectionComment = comment
-        CacheManager.updateCommentCache(comment) {}
-    }
+}
+
+extension NoteWritePannelView {
     
-    func checkCacheData() -> Void {
-        guard let commentId = selectionComment?.id else { return }
-        CacheManager.fetchComment(commentId) { comment in
-            cache = comment?.cache ?? ""
-            cacheUpdate = comment?.cacheUpdate ?? 0
-        }
-    }
-    
-    private func titleView() -> some View {
+    fileprivate func bottomTimeView() -> some View {
         
-        HStack (spacing: 0) {
-            if showImageBrowser == true {
-                Text("")  // 空文本
-            } else {
-                HStack (spacing: 3) {
-                    Image(systemName: "star.fill")
-                    Text("\(Account.owner)")
+        HStack {
+            HStack {
+                HStack (spacing: 0) {
+                    Image(systemName: "network")
+                        .font(.system(size: 10))
+                        .padding(.trailing, 5)
+                    Text(selectionComment?.updatedAt?.localTime() ?? "")
+                        .font(.system(size: 10))
+                        .foregroundColor(colorScheme == .dark ? Color(hex: "#DDDDDD") : Color(hex: "#444443"))
                 }
-                
-                if let repoName = selectionRepo?.name {
-                    HStack (spacing: 3) {
-                        Text("/")
-                            .padding(.horizontal, 5)
-                        Image(systemName: "square.stack.3d.up.fill")
-                        Text(repoName)
+            }
+            .padding(EdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10))
+            Spacer()
+        }
+    }
+    
+}
+
+extension NoteWritePannelView {
+    
+    fileprivate func cacheItemView() -> some View {
+        
+        VStack {
+            HStack {
+                Spacer()
+                Button {
+                    markdownString = cache
+                    cache = ""
+                } label: {
+                    Image(systemName: "timer")
+                    Text(cacheUpdate.localTime())
+                }
+                .font(.system(size: 8))
+                .foregroundColor(Color.white)
+                .buttonStyle(.plain)
+                .padding(EdgeInsets(top: 5, leading: 8, bottom: 5, trailing: 8))
+                .background {
+                    Capsule()
+                        .foregroundColor(colorScheme == .dark ? Color.init(hex: "#41403F") : Color.init(hex: "#737373"))
+                }
+            }
+            Spacer()
+        }
+    }
+}
+
+extension NoteWritePannelView {
+    
+    fileprivate func operationViews() -> some View {
+        
+        HStack {
+            if showImageBrowser! {
+                HStack {
+                    Button(action: {
+                        isPresented = true
+                    }, label: {
+                        Image(systemName: AppConst.plusIcon)
+                    })
+                    .fileImporter(
+                        isPresented: $isPresented,
+                        allowedContentTypes: [.image],
+                        allowsMultipleSelection: true
+                    ) { result in
+                        switch result {
+                        case .success(let urls):
+                            showLoading = true
+                            ImageUploader.shared.uploadImages(urls: urls, completion: { _ in
+                                showLoading = false
+                            })
+                        case .failure(let error):
+                            print(error.localizedDescription)
+                        }
                     }
-                }
-                
-                if let issueName = selectionIssue?.title {
-                    HStack (spacing: 3) {
-                        Text("/")
-                            .padding(.horizontal, 5)
-                        Image(systemName: "menucard.fill")
-                        Text(issueName)
+                    Button {
+                        NotificationCenter.default.post(name: NSNotification.Name.syncNetImagesNotification, object: nil)
+                    } label: {
+                        Image(systemName: AppConst.downloadIcon)
                     }
-                    
-                }
-                
-                if let commentName = selectionComment?.body?.toTitle() {
-                    HStack (spacing: 3) {
-                        Text("/")
-                            .padding(.horizontal, 5)
-                        Image(systemName: "cup.and.saucer.fill")
-                        Text(commentName)
+                    Button {
+                        showImageBrowser = false
+                    } label: {
+                        Image(systemName: AppConst.closeIcon)
                     }
                 }
             }
+            if editIsShown && !showImageBrowser! {
+                ZStack {
+                    if uploadState == .sending {
+                        ProgressView()
+                            .controlSize(.mini)
+                    } else {
+                        Button {
+                            if uploadState != .normal {
+                                return
+                            }
+                            updateContent()
+                        } label: {
+                            Label("Show inspector", systemImage: uploadState.imageName)
+                        }
+                        .disabled(!editIsShown)
+                    }
+                }
+                .frame(width: 30, height: 40)
+            }
+            if !(showImageBrowser ?? false) {
+                Button {
+                    editIsShown.toggle()
+                } label: {
+                    Label("Show inspector", systemImage: editIsShown ? AppConst.closeIcon : AppConst.pencilIcon)
+                        .if(!editIsShown) { view in
+                            view.font(.system(size: 18))
+                        }
+                }
+                
+            }
         }
-        .font(.system(size: 12))
-        .foregroundColor(colorScheme == .dark ? Color(hex: "#DDDDDD") : Color(hex: "#444443"))
     }
+}
+
+extension NoteWritePannelView {
     
-    private func updateContent() -> Void {
+    fileprivate func updateContent() -> Void {
         guard let body = markdownString, let commentid = selectionComment?.id else { return }
         uploadState = .sending
         
@@ -281,13 +244,38 @@ struct NoteWritePannelView: View {
         }
     }
     
-    private func updateCommentData(_ comment: Comment, _ completion: @escaping CommonCallBack) -> Void {
+    fileprivate func updateCommentData(_ comment: Comment, _ completion: @escaping CommonCallBack) -> Void {
         CacheManager.updateComments([comment]) {
             CacheManager.fetchComments { localList in
                 commentGroups = localList
                 selectionComment = localList.first(where: {$0.id == comment.id})
                 completion()
             }
+        }
+    }
+    
+    fileprivate func debounceUpdateCacheText() {
+        workItem?.cancel()
+        workItem = DispatchWorkItem {
+            updateCacheText()
+        }
+        if let workItem = workItem {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: workItem)
+        }
+    }
+    
+    fileprivate func updateCacheText() {
+        guard var comment = selectionComment else { return }
+        comment.cache = markdownString
+        selectionComment = comment
+        CacheManager.updateCommentCache(comment) {}
+    }
+    
+    fileprivate func checkCacheData() -> Void {
+        guard let commentId = selectionComment?.id else { return }
+        CacheManager.fetchComment(commentId) { comment in
+            cache = comment?.cache ?? ""
+            cacheUpdate = comment?.cacheUpdate ?? 0
         }
     }
 }

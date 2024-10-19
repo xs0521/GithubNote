@@ -94,14 +94,14 @@ extension SQLManager {
         }
         
         var images = [GithubImage]()
-        let selectSQL = "SELECT * FROM \(tableName) ORDER BY idx;"
+        let selectSQL = "SELECT * FROM \(tableName) ORDER BY idx DESC;"
         
         if database.open() {
             do {
                 let resultSet = try database.executeQuery(selectSQL, values: [])
                 
                 while resultSet.next() {
-                    let image = GithubImage(
+                    var image = GithubImage(
                         index: Int(resultSet.int(forColumn: "idx")),
                         id: "",
                         uuid: resultSet.string(forColumn: "uuid"),
@@ -115,6 +115,7 @@ extension SQLManager {
                         downloadURL: resultSet.string(forColumn: "downloadURL")!,
                         type: resultSet.string(forColumn: "type") ?? ""
                     )
+                    image.defultModel()
                     images.append(image)
                 }
             } catch {

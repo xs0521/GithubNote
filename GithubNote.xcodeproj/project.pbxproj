@@ -97,6 +97,12 @@
 		B1B5AAE82CC2AB71003F4E71 /* ImageUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B5AAE62CC2AB71003F4E71 /* ImageUploader.swift */; };
 		B1B5AAEA2CC2B451003F4E71 /* SQLManager+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B5AAE92CC2B451003F4E71 /* SQLManager+Image.swift */; };
 		B1B5AAEB2CC2B451003F4E71 /* SQLManager+Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B5AAE92CC2B451003F4E71 /* SQLManager+Image.swift */; };
+		B1B5AAED2CC34C0E003F4E71 /* NoteWritePannelTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B5AAEC2CC34C0E003F4E71 /* NoteWritePannelTitleView.swift */; };
+		B1B5AAEE2CC34C0E003F4E71 /* NoteWritePannelTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B5AAEC2CC34C0E003F4E71 /* NoteWritePannelTitleView.swift */; };
+		B1B5AAF02CC36B85003F4E71 /* NoteImageBrowserPreViewImagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B5AAEF2CC36B85003F4E71 /* NoteImageBrowserPreViewImagesView.swift */; };
+		B1B5AAF12CC36B85003F4E71 /* NoteImageBrowserPreViewImagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B5AAEF2CC36B85003F4E71 /* NoteImageBrowserPreViewImagesView.swift */; };
+		B1B5AAF32CC3989A003F4E71 /* KeyCaptureViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B5AAF22CC3989A003F4E71 /* KeyCaptureViewRepresentable.swift */; };
+		B1B5AAF42CC3989A003F4E71 /* KeyCaptureViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B5AAF22CC3989A003F4E71 /* KeyCaptureViewRepresentable.swift */; };
 		B1C01ACA2BCA16BB009E9C20 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = B1C01AC92BCA16BB009E9C20 /* SDWebImageSwiftUI */; };
 		B1CE86582C57EF77002C8335 /* NoteImageBrowserImagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1CE86572C57EF77002C8335 /* NoteImageBrowserImagesView.swift */; };
 		B1CE865B2C5926B8002C8335 /* NotificationNameModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1CE865A2C5926B8002C8335 /* NotificationNameModule.swift */; };
@@ -198,6 +204,9 @@
 		B1B55A912C52A0C000820689 /* Data+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Extension.swift"; sourceTree = "<group>"; };
 		B1B5AAE62CC2AB71003F4E71 /* ImageUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploader.swift; sourceTree = "<group>"; };
 		B1B5AAE92CC2B451003F4E71 /* SQLManager+Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SQLManager+Image.swift"; sourceTree = "<group>"; };
+		B1B5AAEC2CC34C0E003F4E71 /* NoteWritePannelTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteWritePannelTitleView.swift; sourceTree = "<group>"; };
+		B1B5AAEF2CC36B85003F4E71 /* NoteImageBrowserPreViewImagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteImageBrowserPreViewImagesView.swift; sourceTree = "<group>"; };
+		B1B5AAF22CC3989A003F4E71 /* KeyCaptureViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyCaptureViewRepresentable.swift; sourceTree = "<group>"; };
 		B1CE86572C57EF77002C8335 /* NoteImageBrowserImagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteImageBrowserImagesView.swift; sourceTree = "<group>"; };
 		B1CE865A2C5926B8002C8335 /* NotificationNameModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNameModule.swift; sourceTree = "<group>"; };
 		B1D7CF532BCA11DE00362C35 /* ImagesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesModel.swift; sourceTree = "<group>"; };
@@ -477,6 +486,7 @@
 			children = (
 				B1FE67532C480B0200970DA0 /* NoteImageBrowserView.swift */,
 				B1CE86572C57EF77002C8335 /* NoteImageBrowserImagesView.swift */,
+				B1B5AAEF2CC36B85003F4E71 /* NoteImageBrowserPreViewImagesView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -527,6 +537,7 @@
 			isa = PBXGroup;
 			children = (
 				B1EBBD992C9ED695005FB760 /* CustomDivider.swift */,
+				B1B5AAF22CC3989A003F4E71 /* KeyCaptureViewRepresentable.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -616,6 +627,7 @@
 			isa = PBXGroup;
 			children = (
 				B1E538612C43816F00A4B3C4 /* NoteWritePannelView.swift */,
+				B1B5AAEC2CC34C0E003F4E71 /* NoteWritePannelTitleView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1048,6 +1060,7 @@
 				B14983D72CBB632E00CDAB6F /* NetworkError.swift in Sources */,
 				B14983D82CBB632E00CDAB6F /* NoteIssuesView.swift in Sources */,
 				B14983D92CBB632E00CDAB6F /* Account.swift in Sources */,
+				B1B5AAEE2CC34C0E003F4E71 /* NoteWritePannelTitleView.swift in Sources */,
 				B14983DA2CBB632E00CDAB6F /* CachePolicyPlugin.swift in Sources */,
 				B14983DB2CBB632E00CDAB6F /* NoteReposView.swift in Sources */,
 				B14983DC2CBB632E00CDAB6F /* LoginOutView.swift in Sources */,
@@ -1072,7 +1085,9 @@
 				B14983EE2CBB632E00CDAB6F /* CustomURLSchemeHandler.swift in Sources */,
 				B14983EF2CBB632E00CDAB6F /* NoteSidebarView.swift in Sources */,
 				B14983F02CBB632E00CDAB6F /* GithubNoteApp.swift in Sources */,
+				B1B5AAF42CC3989A003F4E71 /* KeyCaptureViewRepresentable.swift in Sources */,
 				B14983F12CBB632E00CDAB6F /* SQLManager.swift in Sources */,
+				B1B5AAF12CC36B85003F4E71 /* NoteImageBrowserPreViewImagesView.swift in Sources */,
 				B14983F22CBB632E00CDAB6F /* IssuesModel.swift in Sources */,
 				B14983F32CBB632E00CDAB6F /* Color+Extension.swift in Sources */,
 				B14983F42CBB632E00CDAB6F /* NoteTaskListView.swift in Sources */,
@@ -1112,6 +1127,7 @@
 				B1ED88672C4AC60000FD8DEB /* NetworkError.swift in Sources */,
 				B1EBBDBC2CA05FA6005FB760 /* NoteIssuesView.swift in Sources */,
 				B16462722BB0464A00F57548 /* Account.swift in Sources */,
+				B1B5AAED2CC34C0E003F4E71 /* NoteWritePannelTitleView.swift in Sources */,
 				B1ED88752C4C057200FD8DEB /* CachePolicyPlugin.swift in Sources */,
 				B1EBBDBA2CA05EEA005FB760 /* NoteReposView.swift in Sources */,
 				B148A5BA2BC1506000B7FBA8 /* LoginOutView.swift in Sources */,
@@ -1136,7 +1152,9 @@
 				B1EBBDA22C9F2AA9005FB760 /* CustomURLSchemeHandler.swift in Sources */,
 				B10930FD2C3D85C5006B5DB0 /* NoteSidebarView.swift in Sources */,
 				B1922A4D2BAFF1FB00200828 /* GithubNoteApp.swift in Sources */,
+				B1B5AAF32CC3989A003F4E71 /* KeyCaptureViewRepresentable.swift in Sources */,
 				B1EBBDC42CB23818005FB760 /* SQLManager.swift in Sources */,
+				B1B5AAF02CC36B85003F4E71 /* NoteImageBrowserPreViewImagesView.swift in Sources */,
 				B1E55A422BBF96B7000209ED /* IssuesModel.swift in Sources */,
 				B148A5BC2BC154FA00B7FBA8 /* Color+Extension.swift in Sources */,
 				B10930FF2C3D8748006B5DB0 /* NoteTaskListView.swift in Sources */,

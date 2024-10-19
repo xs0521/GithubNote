@@ -24,6 +24,8 @@ struct NoteImageBrowserImagesView: View {
     
     @State private var data: [GithubImage] = []
     
+    @State private var currentIndex: Int = 0
+    
     @Environment(\.colorScheme) var colorScheme
     
     let adaptiveColumn = [
@@ -43,35 +45,42 @@ struct NoteImageBrowserImagesView: View {
                         ForEach(data, id: \.self) { item in
                             Button(action: {
                                 url = item.imageUrl()
+                                currentIndex = data.firstIndex(of: item) ?? 0
                                 showPreview = true
                             }, label: {
                                 ZStack {
                                     Color.init(hex: "#D2D2D3")
                                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                                         .opacity(0.3)
-                                    WebImage(url: URL(string: item.imageUrl()))
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
+                                    WebImage(url: URL(string: item.imageUrl())) { image in
+                                            image.resizable() // Control layout like SwiftUI.AsyncImage, you must use this modifier or the view will use the image bitmap size
+                                        } placeholder: {
+                                            Rectangle().foregroundColor(.gray)
+                                        }
+                                        .indicator(.activity) // Activity Indicator
+                                        .transition(.fade(duration: 0.5)) // Fade Transition with duration
+                                        .aspectRatio(contentMode: .fill)
                                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                    
                                 }
-                                .frame(width: NoteImageBrowserImagesView.size.width, height: NoteImageBrowserImagesView.size.height)
-                                .cornerRadius(10)
-                                .transition(.fade(duration: 0.3))
                             })
+                            .frame(width: NoteImageBrowserImagesView.size.width, height: NoteImageBrowserImagesView.size.height)
+                            .cornerRadius(4)
+                            .transition(.fade(duration: 0.3))
                             .buttonStyle(.plain)
                             .contextMenu {
-                                Button("copy", role: .destructive) {
+                                Button(action: {
                                     copyAction(item.imageUrl())
+                                }) {
+                                    Text("Copy Image")
+                                    Image(systemName: "doc.on.doc.fill")
                                 }
-                                Button("delete", role: .destructive) {
+                                Button(action: {
                                     deleteFile(item)
+                                }) {
+                                    Text("Delete Image")
+                                    Image(systemName: "xmark.bin.circle.fill")
                                 }
                             }
-                            .onAppear {
-                                
-                            }
-                            
                         }
                     }
                 }
@@ -81,39 +90,22 @@ struct NoteImageBrowserImagesView: View {
             .background(Color.clear)
             .frame(minWidth: 220, maxWidth: .infinity, minHeight: 120, maxHeight: .infinity)
             if showPreview {
-                ZStack {
-                    VStack {
-                        colorScheme == .dark ? Color.init(hex: "#292929") : Color.init(hex: "#ECECEB")
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .onTapGesture {
-                        showPreview = false
-                    }
-                    WebImage(url: URL(string: url))
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 500, height: 500, alignment: .center)
-                        .transition(.fade(duration: 0.3))
-                        .onTapGesture {
-                            showPreview = false
-                        }
-                }
-                .contextMenu(menuItems: {
-                    Button("copy", role: .destructive) {
-                        copyAction(url)
-                    }
+                NoteImageBrowserPreViewImagesView(imageUrls: $data,
+                                                  showPreview: $showPreview,
+                                                  selectedImageIndex: currentIndex, copyCallBackAction: { url in
+                    copyAction(url)
                 })
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name.syncNetImagesNotification), perform: { _ in
             showLoading = true
-            requestImagesData(false, completion: { 
+            requestImagesData(false, completion: {
                 showLoading = false
             })
         })
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name.appendImagesNotification), perform: { notification in
             if let item = notification.object as? GithubImage {
-                data.append(item)
+                data.insert(item, at: 0)
             }
         })
         .onAppear(perform: {
@@ -201,8 +193,6 @@ extension NoteImageBrowserImagesView {
         pasteBoard.clearContents()
         pasteBoard.setString(content, forType: .string)
 #endif
-        toastMessage = "done"
-        showToast = false
-        showToast.toggle()
+        
     }
 }
