@@ -26,8 +26,18 @@ struct NoteSidebarToolView: View {
                 showReposView.toggle()
             }, label: {
                 Label {
-                    Text(repoTitle)
-                        .lineLimit(1)
+                    HStack {
+                        Text(repoTitle)
+                            .lineLimit(1)
+                        if selectionRepo?.private == true {
+                            Text("Private")
+                                .foregroundColor(Color.white)
+                                .font(.system(size: 6))
+                                .padding(EdgeInsets(top: 2, leading: 3, bottom: 2, trailing: 3))
+                                .background(Color.gray)
+                                .cornerRadius(5)
+                        }
+                    }
                 } icon: {
                     Image(systemName: "arrowtriangle.right.fill")
                         .rotationEffect(.degrees(-degreesValue))

@@ -13,8 +13,6 @@
 		8FE4E83CC5C2EDF289DCD29D /* Pods_GithubNoteTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1955D8C4A24B93D35230FA4A /* Pods_GithubNoteTests.framework */; };
 		B10930FB2C3D848B006B5DB0 /* NoteContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10930FA2C3D848A006B5DB0 /* NoteContentView.swift */; };
 		B10930FD2C3D85C5006B5DB0 /* NoteSidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10930FC2C3D85C5006B5DB0 /* NoteSidebarView.swift */; };
-		B10930FF2C3D8748006B5DB0 /* NoteTaskListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10930FE2C3D8748006B5DB0 /* NoteTaskListView.swift */; };
-		B10931012C3D8784006B5DB0 /* NoteTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10931002C3D8784006B5DB0 /* NoteTaskView.swift */; };
 		B119F6A72CBEAC110015ADA0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1922A502BAFF1FC00200828 /* Assets.xcassets */; };
 		B11FDA8B2BBFE8C500EC7083 /* AppConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11FDA8A2BBFE8C500EC7083 /* AppConst.swift */; };
 		B148A5BA2BC1506000B7FBA8 /* LoginOutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B148A5B92BC1506000B7FBA8 /* LoginOutView.swift */; };
@@ -48,7 +46,6 @@
 		B14983DD2CBB632E00CDAB6F /* CommentModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19DC59F2BBFD51B009C7DBE /* CommentModel.swift */; };
 		B14983DE2CBB632E00CDAB6F /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1ED88622C4ABC4E00FD8DEB /* Networking.swift */; };
 		B14983DF2CBB632E00CDAB6F /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EBBD962C9E93EE005FB760 /* SettingsView.swift */; };
-		B14983E02CBB632E00CDAB6F /* NoteTaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10931002C3D8784006B5DB0 /* NoteTaskView.swift */; };
 		B14983E22CBB632E00CDAB6F /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EC0DE72BBB8DD4007975D9 /* String+Extension.swift */; };
 		B14983E32CBB632E00CDAB6F /* ToastManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EBBDA32C9FDB28005FB760 /* ToastManager.swift */; };
 		B14983E42CBB632E00CDAB6F /* NoteImageBrowserImagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1CE86572C57EF77002C8335 /* NoteImageBrowserImagesView.swift */; };
@@ -67,7 +64,6 @@
 		B14983F12CBB632E00CDAB6F /* SQLManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EBBDC32CB23818005FB760 /* SQLManager.swift */; };
 		B14983F22CBB632E00CDAB6F /* IssuesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E55A412BBF96B7000209ED /* IssuesModel.swift */; };
 		B14983F32CBB632E00CDAB6F /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B148A5BB2BC154FA00B7FBA8 /* Color+Extension.swift */; };
-		B14983F42CBB632E00CDAB6F /* NoteTaskListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10930FE2C3D8748006B5DB0 /* NoteTaskListView.swift */; };
 		B14983F52CBB632E00CDAB6F /* NotificationNameModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1CE865A2C5926B8002C8335 /* NotificationNameModule.swift */; };
 		B14983F62CBB632E00CDAB6F /* NoteIssuesHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EBBDBD2CA06A63005FB760 /* NoteIssuesHeaderView.swift */; };
 		B14983F82CBB632E00CDAB6F /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = B14983BF2CBB632E00CDAB6F /* SDWebImageSwiftUI */; };
@@ -168,8 +164,6 @@
 		9DB5C6036F30764FE1ED6539 /* Pods_GithubNote_GithubNoteUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GithubNote_GithubNoteUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B10930FA2C3D848A006B5DB0 /* NoteContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteContentView.swift; sourceTree = "<group>"; };
 		B10930FC2C3D85C5006B5DB0 /* NoteSidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteSidebarView.swift; sourceTree = "<group>"; };
-		B10930FE2C3D8748006B5DB0 /* NoteTaskListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteTaskListView.swift; sourceTree = "<group>"; };
-		B10931002C3D8784006B5DB0 /* NoteTaskView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteTaskView.swift; sourceTree = "<group>"; };
 		B11FDA8A2BBFE8C500EC7083 /* AppConst.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConst.swift; sourceTree = "<group>"; };
 		B148A5B92BC1506000B7FBA8 /* LoginOutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginOutView.swift; sourceTree = "<group>"; };
 		B148A5BB2BC154FA00B7FBA8 /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
@@ -596,8 +590,6 @@
 				B1EBBDBF2CA06C99005FB760 /* NoteCommentsView.swift */,
 				B1EBBDC12CA06CA4005FB760 /* NoteCommentsHeaderView.swift */,
 				B1EBBDB92CA05EEA005FB760 /* NoteReposView.swift */,
-				B10930FE2C3D8748006B5DB0 /* NoteTaskListView.swift */,
-				B10931002C3D8784006B5DB0 /* NoteTaskView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1053,7 +1045,6 @@
 				B14983DD2CBB632E00CDAB6F /* CommentModel.swift in Sources */,
 				B14983DE2CBB632E00CDAB6F /* Networking.swift in Sources */,
 				B14983DF2CBB632E00CDAB6F /* SettingsView.swift in Sources */,
-				B14983E02CBB632E00CDAB6F /* NoteTaskView.swift in Sources */,
 				B14983E22CBB632E00CDAB6F /* String+Extension.swift in Sources */,
 				B14983E32CBB632E00CDAB6F /* ToastManager.swift in Sources */,
 				B14983E42CBB632E00CDAB6F /* NoteImageBrowserImagesView.swift in Sources */,
@@ -1075,7 +1066,6 @@
 				B1B5AAF12CC36B85003F4E71 /* NoteImageBrowserPreViewImagesView.swift in Sources */,
 				B14983F22CBB632E00CDAB6F /* IssuesModel.swift in Sources */,
 				B14983F32CBB632E00CDAB6F /* Color+Extension.swift in Sources */,
-				B14983F42CBB632E00CDAB6F /* NoteTaskListView.swift in Sources */,
 				B14983F52CBB632E00CDAB6F /* NotificationNameModule.swift in Sources */,
 				B14983F62CBB632E00CDAB6F /* NoteIssuesHeaderView.swift in Sources */,
 			);
@@ -1117,7 +1107,6 @@
 				B19DC5A02BBFD51B009C7DBE /* CommentModel.swift in Sources */,
 				B1ED88632C4ABC4E00FD8DEB /* Networking.swift in Sources */,
 				B1EBBD972C9E93EE005FB760 /* SettingsView.swift in Sources */,
-				B10931012C3D8784006B5DB0 /* NoteTaskView.swift in Sources */,
 				B1EC0DE82BBB8DD4007975D9 /* String+Extension.swift in Sources */,
 				B1EBBDA42C9FDB28005FB760 /* ToastManager.swift in Sources */,
 				B1CE86582C57EF77002C8335 /* NoteImageBrowserImagesView.swift in Sources */,
@@ -1139,7 +1128,6 @@
 				B1B5AAF02CC36B85003F4E71 /* NoteImageBrowserPreViewImagesView.swift in Sources */,
 				B1E55A422BBF96B7000209ED /* IssuesModel.swift in Sources */,
 				B148A5BC2BC154FA00B7FBA8 /* Color+Extension.swift in Sources */,
-				B10930FF2C3D8748006B5DB0 /* NoteTaskListView.swift in Sources */,
 				B1CE865B2C5926B8002C8335 /* NotificationNameModule.swift in Sources */,
 				B1EBBDBE2CA06A63005FB760 /* NoteIssuesHeaderView.swift in Sources */,
 			);
