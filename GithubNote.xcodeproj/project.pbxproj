@@ -292,6 +292,7 @@
 		B11B515A2BBF965D0016158E /* Issues */ = {
 			isa = PBXGroup;
 			children = (
+				B14EA4E12CC7E51E00F55A4D /* View */,
 				B11B515C2BBF96780016158E /* Model */,
 			);
 			path = Issues;
@@ -303,6 +304,32 @@
 				B1E55A412BBF96B7000209ED /* IssuesModel.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		B14EA4DF2CC7E4F000F55A4D /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B1EBBDB92CA05EEA005FB760 /* NoteReposView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		B14EA4E02CC7E4FC00F55A4D /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B1EBBDBF2CA06C99005FB760 /* NoteCommentsView.swift */,
+				B1EBBDC12CA06CA4005FB760 /* NoteCommentsHeaderView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		B14EA4E12CC7E51E00F55A4D /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B1EBBDBB2CA05FA6005FB760 /* NoteIssuesView.swift */,
+				B1EBBDBD2CA06A63005FB760 /* NoteIssuesHeaderView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		B18536282C4ABC1400867E91 /* Network */ = {
@@ -388,7 +415,7 @@
 			children = (
 				B1EBBD952C9E93E3005FB760 /* Settings */,
 				B1DA10592C9DB6A20074DA32 /* Markdown */,
-				B1EC0DEB2BBE428F007975D9 /* App */,
+				B1EC0DEB2BBE428F007975D9 /* Main */,
 				B1B55A8D2C515D8100820689 /* Repo */,
 				B1D7CF512BCA11BB00362C35 /* ImagesBrowser */,
 				B1E55A472BBFD482000209ED /* Comment */,
@@ -410,6 +437,7 @@
 		B1B55A8D2C515D8100820689 /* Repo */ = {
 			isa = PBXGroup;
 			children = (
+				B14EA4DF2CC7E4F000F55A4D /* View */,
 				B1B55A8E2C515D9C00820689 /* Model */,
 			);
 			path = Repo;
@@ -488,6 +516,7 @@
 		B1E55A472BBFD482000209ED /* Comment */ = {
 			isa = PBXGroup;
 			children = (
+				B14EA4E02CC7E4FC00F55A4D /* View */,
 				B1E55A492BBFD4E7000209ED /* Model */,
 			);
 			path = Comment;
@@ -552,13 +581,13 @@
 			path = SQL;
 			sourceTree = "<group>";
 		};
-		B1EC0DEB2BBE428F007975D9 /* App */ = {
+		B1EC0DEB2BBE428F007975D9 /* Main */ = {
 			isa = PBXGroup;
 			children = (
 				B1EC0DEF2BBE42BF007975D9 /* Model */,
 				B1EC0DEE2BBE42BB007975D9 /* View */,
 			);
-			path = App;
+			path = Main;
 			sourceTree = "<group>";
 		};
 		B1EC0DEC2BBE4295007975D9 /* Login */ = {
@@ -585,11 +614,6 @@
 				B10930FA2C3D848A006B5DB0 /* NoteContentView.swift */,
 				B10930FC2C3D85C5006B5DB0 /* NoteSidebarView.swift */,
 				B1EBBDD02CB3CD7A005FB760 /* NoteSidebarToolView.swift */,
-				B1EBBDBB2CA05FA6005FB760 /* NoteIssuesView.swift */,
-				B1EBBDBD2CA06A63005FB760 /* NoteIssuesHeaderView.swift */,
-				B1EBBDBF2CA06C99005FB760 /* NoteCommentsView.swift */,
-				B1EBBDC12CA06CA4005FB760 /* NoteCommentsHeaderView.swift */,
-				B1EBBDB92CA05EEA005FB760 /* NoteReposView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
