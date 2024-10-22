@@ -11,6 +11,13 @@ struct AppConst {}
 
 extension AppConst {
     
+    static var noteRepo: String {
+        let dateformatter = DateFormatter()
+        dateformatter.dateFormat = "MMdd-HHmmss"
+        let time = dateformatter.string(from: Date())
+        return "GithubNote-\(time)"
+    }
+    
     static var markdown: String {
         let dateformatter = DateFormatter()
         dateformatter.dateFormat = "MM-dd HH:mm:ss"

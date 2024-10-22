@@ -12,11 +12,18 @@ struct NoteReposView: View {
     @Binding var reposGroups: [RepoModel]
     @Binding var selectionRepo: RepoModel?
     
+    var refreshCallBack: CommonCallBack?
+    
     var body: some View {
         List(selection: $selectionRepo) {
             ForEach(reposGroups) { selection in
                 Label(title: {
-                    Text(selection.name ?? "unknow")
+                    HStack {
+                        Text(selection.name ?? "unknow")
+                        if selection.private == true {
+                            PrivateTagView()
+                        }
+                    }
                 }, icon: {
                     Image(systemName: "square.stack.3d.up")
                         .foregroundStyle(Color.primary)

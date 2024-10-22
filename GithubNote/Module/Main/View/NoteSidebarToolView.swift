@@ -10,15 +10,17 @@ import SwiftUI
 struct NoteSidebarToolView: View {
     
     @Binding var showReposView: Bool
-    @Binding var isSyncRepos: Bool
+    
     @Binding var showImageBrowser: Bool?
     @Binding var selectionRepo: RepoModel?
     
+    @State private var isSyncRepos: Bool = false
+    @State private var isCreateRepos: Bool = false
     @State private var repoTitle: String = "Select Repo"
     
     @State private var degreesValue: Double = 0
     
-    var requestAllRepoCallBack: CommonTCallBack<CommonCallBack>
+    var requestAllRepoCallBack: (_ cache: Bool, _ callBack: @escaping CommonCallBack) -> Void
     
     var body: some View {
         HStack {
@@ -30,12 +32,7 @@ struct NoteSidebarToolView: View {
                         Text(repoTitle)
                             .lineLimit(1)
                         if selectionRepo?.private == true {
-                            Text("Private")
-                                .foregroundColor(Color.white)
-                                .font(.system(size: 6))
-                                .padding(EdgeInsets(top: 2, leading: 3, bottom: 2, trailing: 3))
-                                .background(Color.gray)
-                                .cornerRadius(5)
+                            PrivateTagView()
                         }
                     }
                 } icon: {
@@ -56,24 +53,45 @@ struct NoteSidebarToolView: View {
             }
             
             if showReposView {
-                if isSyncRepos {
-                    ProgressView()
-                        .controlSize(.mini)
-                        .padding()
+                HStack {
+                    if isSyncRepos {
+                        ProgressView()
+                            .controlSize(.mini)
+                            .padding()
+                            .padding(.trailing, 5)
+                            .frame(width: 20, height: 15)
+                    } else {
+                        Button {
+                            isSyncRepos = true
+                            requestAllRepoCallBack(false, {
+                                isSyncRepos = false
+                            })
+                        } label: {
+                            Image(systemName: AppConst.downloadIcon)
+                        }
+                        .buttonStyle(.plain)
                         .padding(.trailing, 5)
-                        .frame(width: 20, height: 20)
-                } else {
-                    Button {
-                        isSyncRepos = true
-                        requestAllRepoCallBack({
-                            isSyncRepos = false
-                        })
-                    } label: {
-                        Image(systemName: AppConst.downloadIcon)
                     }
-                    .buttonStyle(.plain)
-                    .padding(EdgeInsets(top: 5, leading: 5, bottom: 16, trailing: 16))
+                    if isCreateRepos {
+                        ProgressView()
+                            .controlSize(.mini)
+                            .padding()
+                            .padding(.trailing, 5)
+                            .frame(width: 15, height: 15)
+                    } else {
+                        Button {
+                            isCreateRepos = true
+                            createRepo { success in
+                                isCreateRepos = false
+                            }
+                        } label: {
+                            Image(systemName: AppConst.plusIcon)
+                        }
+                        .buttonStyle(.plain)
+                    }
                 }
+                .frame(width: 40)
+                .padding(EdgeInsets(top: 5, leading: 16, bottom: 16, trailing: 10))
             } else {
                 Button(action: {
                     showImageBrowser?.toggle()
@@ -82,6 +100,31 @@ struct NoteSidebarToolView: View {
                 })
                 .buttonStyle(.plain)
                 .padding(EdgeInsets(top: 5, leading: 5, bottom: 16, trailing: 16))
+            }
+        }
+    }
+}
+
+extension NoteSidebarToolView {
+    
+    func createRepo(_ completion: @escaping CommonTCallBack<Bool>) -> Void {
+        
+        let noteRepoName = AppConst.noteRepo
+        
+        Networking<RepoModel>().request(API.createRepo(repoName: noteRepoName), parseHandler: ModelGenerator(snakeCase: true)) { (data, _, _) in
+            
+            guard let list = data, let item = list.first else {
+                "#request# createRepo error".logE()
+                completion(false)
+                return
+            }
+            
+            "#request# createRepo \(noteRepoName)".logI()
+            
+            CacheManager.insertRepos(repos: [item]) {
+                self.requestAllRepoCallBack(true, {
+                    completion(true)
+                })
             }
         }
     }

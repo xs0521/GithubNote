@@ -30,7 +30,6 @@ struct NoteSidebarView: View {
     
     @Binding var showImageBrowser: Bool?
     
-    @State private var isSyncRepos: Bool = false
     @State private var showReposView: Bool = false
     
     @State private var isLoaded: Bool = false
@@ -102,18 +101,19 @@ struct NoteSidebarView: View {
                 }
             }
             if showReposView {
-                NoteReposView(reposGroups: $reposGroups, selectionRepo: $selectionRepo)
+                NoteReposView(reposGroups: $reposGroups, selectionRepo: $selectionRepo) {
+                    requestAllRepo {}
+                }
             }
         }
 #if MOBILE
         .background(colorScheme == .dark ? Color.init(hex: "#1C1C1E") : Color.init(hex: "#F2F2F7"))
 #endif
         .safeAreaInset(edge: .bottom) {
-            NoteSidebarToolView(showReposView: $showReposView, 
-                                isSyncRepos: $isSyncRepos,
+            NoteSidebarToolView(showReposView: $showReposView,
                                 showImageBrowser: $showImageBrowser,
-                                selectionRepo: $selectionRepo) { callBack in
-                requestAllRepo(false) {
+                                selectionRepo: $selectionRepo) { cache, callBack in
+                requestAllRepo(cache) {
                     callBack()
                 }
             }
@@ -141,9 +141,15 @@ extension NoteSidebarView {
         let allRepos: [RepoModel] = []
         requestRepo(repoPage, allRepos, readCache, true) { netList, success, more in
             "#request# Repo all \(netList.count)".logI()
-            CacheManager.insertRepos(repos: netList) {
+            CacheManager.insertRepos(repos: netList, deleteNoFound: true) {
                 CacheManager.fetchRepos { list in
                     reposGroups = list
+                    let container = reposGroups.contains { item in
+                        item.name == selectionRepo?.name
+                    }
+                    if !container {
+                        selectionRepo = reposGroups.first
+                    }
                     completion()
                 }
             }

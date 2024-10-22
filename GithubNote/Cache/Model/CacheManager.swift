@@ -34,13 +34,31 @@ class CacheManager: Setupable {
 
 extension CacheManager {
     
-    static func insertRepos(repos: [RepoModel], completion: CommonCallBack? = nil) -> Void {
-        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
-            CacheManager.shared.manager?.insertItems(items: repos, database: database)
-            DispatchQueue.main.async {
-                completion?()
+    static func insertRepos(repos: [RepoModel], deleteNoFound: Bool = false, completion: CommonCallBack? = nil) -> Void {
+        
+        func insertAction() {
+            CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+                CacheManager.shared.manager?.insertItems(items: repos, database: database)
+                DispatchQueue.main.async {
+                    completion?()
+                }
+            })
+        }
+        
+        if !deleteNoFound {
+            insertAction()
+            return
+        }
+        
+        fetchRepos { localList in
+            let deleteList = localList.filter { item in
+                !repos.contains(where: {$0.id == item.id})
+            }.compactMap({$0.id})
+            "#insertRepo# delete \(deleteList.map({String($0)}).joined(separator: ","))".logI()
+            deleteRepo(deleteList) {
+                insertAction()
             }
-        })
+        }
     }
     
     static func fetchRepos(_ completion: @escaping CommonTCallBack<[RepoModel]>) -> Void {
@@ -51,26 +69,22 @@ extension CacheManager {
             }
         })
     }
+    
+    static func deleteRepo(_ ids: [Int], _ completion: @escaping CommonCallBack) -> Void {
+        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
+            guard let manager = CacheManager.shared.manager else { return }
+            let tableName = RepoModel.tableName
+            CacheManager.shared.manager?.deleteItems(in: tableName, byId: ids, database: database)
+            DispatchQueue.main.async {
+                completion()
+            }
+        })
+    }
 }
 
 extension CacheManager {
     
     static func insertIssues(issues: [Issue], deleteNoFound: Bool = false, completion: CommonCallBack? = nil) -> Void {
-        
-        if deleteNoFound {
-            fetchIssues { localList in
-                let deleteList = localList.filter { item in
-                    !issues.contains(where: {$0.id == item.id})
-                }.compactMap({$0.id})
-                "#insertIssues# delete \(deleteList.map({String($0)}).joined(separator: ","))".logI()
-                deleteIssue(deleteList) {
-                    insertAction()
-                }
-            }
-            return
-        } else {
-            insertAction()
-        }
         
         func insertAction() -> Void {
             CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
@@ -80,6 +94,21 @@ extension CacheManager {
                     completion?()
                 }
             })
+        }
+        
+        if !deleteNoFound {
+            insertAction()
+            return
+        }
+        
+        fetchIssues { localList in
+            let deleteList = localList.filter { item in
+                !issues.contains(where: {$0.id == item.id})
+            }.compactMap({$0.id})
+            "#insertIssues# delete \(deleteList.map({String($0)}).joined(separator: ","))".logI()
+            deleteIssue(deleteList) {
+                insertAction()
+            }
         }
     }
     

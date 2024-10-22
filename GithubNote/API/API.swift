@@ -14,6 +14,7 @@ enum API {
     
     case user(_ userName: String)
     case repos(page: Int)
+    case createRepo(repoName: String)
     case repoIssues(repoName: String, page: Int)
     case comments(issueId: Int, page: Int)
     case newComment(issueId: Int, body: String)
@@ -41,9 +42,11 @@ extension API: TargetType {
     var path: String {
         switch self {
         case .user(let userName):
-            return "users/\(userName)"
+            return "/users/\(userName)"
         case .repos:
             return accessToken.isEmpty ? "/users/\(owner)/repos" : "/user/repos"
+        case .createRepo:
+            return "/user/repos"
         case .repoIssues(let repoName, _):
             return "/repos/\(owner)/\(repoName)/issues"
         case .comments(let issueId, _), .newComment(let issueId, _):
@@ -61,15 +64,15 @@ extension API: TargetType {
         case .repoImages:
             return "/repos/\(owner)/\(selectRepo)/contents/githubnote"
         case .updateImage(_, let fileName):
-            return "repos/\(owner)/\(selectRepo)/contents/githubnote/\(fileName)"
+            return "/repos/\(owner)/\(selectRepo)/contents/githubnote/\(fileName)"
         case .deleteImage(let filePath, _):
-            return "repos/\(owner)/\(selectRepo)/contents/\(filePath)"
+            return "/repos/\(owner)/\(selectRepo)/contents/\(filePath)"
         }
     }
     
     var method: Moya.Method {
         switch self {
-        case .newComment, .newIssue, .updateComment:
+        case .createRepo, .newComment, .newIssue, .updateComment:
             return .post
         case .updateIssue:
             return .patch
@@ -88,7 +91,7 @@ extension API: TargetType {
             params["Authorization"] = "token \(accessToken)"
         }
         switch self {
-        case .newIssue, .deleteComment, .updateImage, .deleteImage:
+        case .createRepo, .newIssue, .deleteComment, .updateImage, .deleteImage:
             params["Accept"] = "application/vnd.github.v3+json"
         default: break
         }
@@ -103,6 +106,10 @@ extension API: TargetType {
              .comments(_, let page):
             parameters["per_page"] = kMaxPage
             parameters["page"] = page
+        case .createRepo(let repoName):
+            parameters["name"] = repoName
+            parameters["content"] = "This is your new repository"
+            parameters["private"] = true
         case .newComment(_, let body):
             parameters["body"] = body
         case .newIssue(let title, let body):
