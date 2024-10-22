@@ -24,42 +24,29 @@ class Networking<T> where T: APIModelable {
     
     @discardableResult
     func request<R: TargetType>(_ type: R,
-                                writeCache: Bool = true,
-                                readCache: Bool = true,
                                 parseHandler: HandleJSONClosure? = nil,
                                 completionModelHandler: CompletionModelClosure? = nil,
                                 error: ErrorClosure? = nil) -> Cancellable? {
-        execute(type, writeCache: writeCache, readCache: readCache, parseHandler: parseHandler, progress: nil, completionModelHandler: completionModelHandler, error: error)
+        execute(type, parseHandler: parseHandler, progress: nil, completionModelHandler: completionModelHandler, error: error)
     }
     
     @discardableResult
     func uploadImage<R: TargetType>(_ type: R,
-                                writeCache: Bool = false,
                                 readCache: Bool = false,
                                 parseHandler: HandleJSONClosure? = nil,
                                 progress: ProgressBlock? = nil,
                                 completionModelHandler: CompletionModelClosure? = nil,
                                 error: ErrorClosure? = nil) -> Cancellable? {
-        execute(type, writeCache: writeCache, readCache: readCache, parseHandler: parseHandler, progress: progress, completionModelHandler: completionModelHandler, error: error)
+        execute(type, parseHandler: parseHandler, progress: progress, completionModelHandler: completionModelHandler, error: error)
     }
     
     private func execute<R: TargetType>(_ type: R,
-                                        writeCache: Bool = true,
-                                        readCache: Bool = true,
                                         parseHandler: HandleJSONClosure?,
                                         progress: ProgressBlock? = nil,
                                         completionModelHandler: CompletionModelClosure?,
                                         error: ErrorClosure? = nil) -> Cancellable? {
         
-        let provider = provider(type, writeCache: writeCache)
-#if false
-        if readCache {
-            if let api = type as? API, let cacheData = api.cacheData {
-                self.handleData(type, parseHandler: parseHandler, data: cacheData, isCache: true, completionModelHandler: completionModelHandler)
-                return nil
-            }
-        }
-#endif
+        let provider = provider(type)
         
         let targetType = type as! API
         
@@ -114,7 +101,7 @@ class Networking<T> where T: APIModelable {
         return cancellable
     }
     
-    private func provider<R: TargetType>(_ type: R, writeCache: Bool) -> MoyaProvider<R> {
+    private func provider<R: TargetType>(_ type: R) -> MoyaProvider<R> {
         
         var plugins = [PluginType]()
         
@@ -133,17 +120,9 @@ class Networking<T> where T: APIModelable {
             plugins.append(plugin)
         }
         
-        func writeCachePlugin() -> Void {
-            let plugin = WriteCachePlugin()
-            plugins.append(plugin)
-        }
-        
         networkActivityPlugin()
         cachePolicyPlugin()
 //        networkLoggerPlugin()
-        if writeCache {
-//            writeCachePlugin()
-        }
         
         let provider = MoyaProvider<R>(plugins: plugins)
         return provider

@@ -128,30 +128,6 @@ extension SQLManager {
     }
     
     
-    func deleteGithubImage(byIndex indexs: [Int], from tableName: String?, database: FMDatabase) {
-        
-        guard let tableName = tableName else {
-            assert(false, "tableName error")
-            return
-        }
-        
-        let deleteSQL = "DELETE FROM \(tableName) WHERE idx = ?;"
-        
-        if database.open() {
-            
-            indexs.forEach { index in
-                do {
-                    try database.executeUpdate(deleteSQL, values: [index])
-                } catch {
-                    "Failed to delete GithubImage: \(error.localizedDescription)".logE()
-                }
-            }
-            
-            "GithubImage deleted successfully".logI()
-        }
-        database.close()
-    }
-    
     func deleteGithubImage(byUrls urls: [String], from tableName: String?, database: FMDatabase) {
         
         guard let tableName = tableName else {

@@ -158,7 +158,7 @@ extension NoteImageBrowserImagesView {
     
     fileprivate func requestCreateImageDir(completion: @escaping CommonCallBack) -> Void {
         
-        Networking<PushCommitModel>().request(API.createImagesDirectory, writeCache: false, readCache: false) { data, cache, code in
+        Networking<PushCommitModel>().request(API.createImagesDirectory) { data, cache, code in
             completion()
             if code != MessageCode.createSuccess.rawValue {
                 return
@@ -170,7 +170,7 @@ extension NoteImageBrowserImagesView {
     
     fileprivate func deleteFile(_ item: GithubImage) -> Void {
         self.showLoading = true
-        Networking<PushCommitModel>().request(API.deleteImage(filePath: item.path, sha: item.sha), writeCache: false, readCache: false) { _, cache, code in
+        Networking<PushCommitModel>().request(API.deleteImage(filePath: item.path, sha: item.sha)) { _, cache, code in
             if code == MessageCode.success.rawValue {
                 data = data.filter({$0.identifier != item.identifier})
                 CacheManager.deleteGithubImage(item.url) {

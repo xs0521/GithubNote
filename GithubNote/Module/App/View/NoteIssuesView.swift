@@ -65,7 +65,7 @@ struct NoteIssuesView: View {
                                     Button {
                                         updateIssueTitle(editIssue, editText)
                                     } label: {
-                                        Image(systemName: "greaterthan.circle")
+                                        Image(systemName: "checkmark.circle.fill")
                                     }
                                     .buttonStyle(.plain)
                                     .frame(width: 20, height: 20)
@@ -144,7 +144,7 @@ extension NoteIssuesView {
         isEditIssueTitleSending = true
         let body = issue.body ?? ""
         guard let issueId = issue.number else { return }
-        Networking<Issue>().request(API.updateIssue(issueId: issueId, state: .open, title: title, body: body), writeCache: false, readCache: false) { data, cache, _ in
+        Networking<Issue>().request(API.updateIssue(issueId: issueId, state: .open, title: title, body: body)) { data, cache, _ in
             if data != nil {
                 "#issue# update success".logI()
                 var issue = issue
@@ -167,7 +167,7 @@ extension NoteIssuesView {
     
     func closeIssue(_ issue: Issue) -> Void {
         guard let number = issue.number, let title = issue.title, let body = issue.body else { return }
-        Networking<Issue>().request(API.updateIssue(issueId: number, state: .closed, title: title, body: body), writeCache: false, readCache: false) { data, cache, _ in
+        Networking<Issue>().request(API.updateIssue(issueId: number, state: .closed, title: title, body: body)) { data, cache, _ in
             if data != nil {
                 guard let issueId = issue.id else { return }
                 CacheManager.deleteIssue([issueId]) {

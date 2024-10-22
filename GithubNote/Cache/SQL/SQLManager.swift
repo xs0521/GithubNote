@@ -10,6 +10,29 @@ import FMDB
 
 private let dbName = "note.db"
 
+protocol SQLModelable {
+    
+    static var tableName: String { get }
+    
+    func maxIndex(_ database: FMDatabase) -> Int
+    
+    var insertSql: String { get }
+    func insertValues(_ index: Int) -> [Any]
+    
+    static var fetchSql: String { get }
+    static func item(_ resultSet: FMResultSet) -> Self
+    
+    var updateSql: String { get }
+    func updateValues() -> [Any]
+}
+
+extension SQLModelable {
+    
+    func maxIndex(_ database: FMDatabase) -> Int {
+        CacheManager.shared.manager?.getMaxIndex(Self.tableName, from: database) ?? 0
+    }
+}
+
 class SQLManager {
     
     private lazy var dbURL: URL = {
@@ -227,5 +250,96 @@ class SQLManager {
         }
         
         return tableExists
+    }
+}
+
+extension SQLManager {
+    
+    func insertItems<T: SQLModelable>(items: [T], database: FMDatabase) {
+        
+        guard let item = items.first else {
+            "No repositories to insert.".logI()
+            return
+        }
+        
+        var index = item.maxIndex(database)
+
+        if database.open() {
+            do {
+                database.beginTransaction() // 开始事务
+                for item in items {
+                    index += 1
+                    try database.executeUpdate(item.insertSql, values: item.insertValues(index))
+                }
+                database.commit() // 提交事务
+                "Batch insert or update successful".logI()
+            } catch {
+                database.rollback() // 回滚事务
+                "Failed to insert or update: \(error.localizedDescription)".logE()
+            }
+        } else {
+            "Failed to open database".logE()
+        }
+    }
+    
+    func fetchItems<T: SQLModelable>(database: FMDatabase, where value: String? = nil) -> [T] {
+        
+        let selectSQL = T.fetchSql
+        var items = [T]()
+        
+        do {
+            let results = try database.executeQuery(selectSQL, values: value != nil ? [value as Any] : nil)
+            while results.next() {
+                let item = T.item(results)
+                items.append(item)
+            }
+            
+        } catch {
+            "Failed to fetch repos: \(error.localizedDescription)".logE()
+        }
+        
+        return items
+    }
+    
+    func updateItems<T: SQLModelable>(items: [T], database: FMDatabase) {
+        
+        guard let item = items.first else {
+            "No items to update.".logI()
+            return
+        }
+        
+        let updateSQL = item.updateSql
+        
+        if database.open() {
+            items.forEach { item in
+                do {
+                    try database.executeUpdate(updateSQL, values: item.updateValues())
+                } catch {
+                    "Failed to update comment: \(error.localizedDescription)".logE()
+                }
+            }
+            "Comment updated successfully".logI()
+        }
+        database.close()
+    }
+    
+    func deleteItems(in tableName: String,  byId ids: [Int], database: FMDatabase) {
+        
+        // 通过类型T访问 static 的 tableName
+        let deleteSQL = "DELETE FROM \(tableName) WHERE id = ?;"
+        
+        if database.open() {
+            ids.forEach { id in
+                do {
+                    try database.executeUpdate(deleteSQL, values: [id])
+                } catch {
+                    "Failed to delete item: \(error.localizedDescription)".logE()
+                }
+            }
+            "Items deleted successfully".logI()
+        } else {
+            "Failed to open database".logE()
+        }
+        database.close()
     }
 }

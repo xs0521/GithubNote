@@ -30,25 +30,6 @@ enum API {
     var owner: String { Account.owner }
     var selectRepo: String { Account.repo }
     var accessToken: String { Account.accessToken }
-    
-    var cachePath: String? {
-        let value = Account.owner + path
-        return value.MD5()
-    }
-    
-    var cacheData: Data? {
-//        guard let cachePath = cachePath else { return nil }
-//        do {
-//            let exit = try CacheManager.shared.store.existsObject(forKey: cachePath)
-//            if exit {
-//                let value = try CacheManager.shared.store.object(forKey: cachePath)
-//                return value
-//            }
-//        } catch (let error) {
-//            print(error)
-//        }
-        return nil
-    }
 }
 
 extension API: TargetType {

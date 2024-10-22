@@ -156,7 +156,7 @@ extension NoteSidebarView {
         
         "#request# Repo start page \(page) readCache \(readCache) next \(next)".logI()
         
-        Networking<RepoModel>().request(API.repos(page: page), readCache: readCache, parseHandler: ModelGenerator(snakeCase: true)) { (data, _, _) in
+        Networking<RepoModel>().request(API.repos(page: page), parseHandler: ModelGenerator(snakeCase: true)) { (data, _, _) in
             
             guard let list = data else {
                 "#request# Repo page \(page) error".logE()
@@ -236,7 +236,7 @@ extension NoteSidebarView {
         
         "#request# Issue start page \(page) readCache \(readCache) next \(next) repoName \(repoName)".logI()
         
-        Networking<Issue>().request(API.repoIssues(repoName: repoName, page: page), readCache: readCache,
+        Networking<Issue>().request(API.repoIssues(repoName: repoName, page: page),
                                     parseHandler: ModelGenerator(snakeCase: true, filter: true)) { (data, _, _) in
             guard let list = data else {
                 "#request# Issue page \(page) error".logE()
@@ -296,7 +296,7 @@ extension NoteSidebarView {
         
         "#request# comment start page \(page) readCache \(readCache) next \(next) number \(number)".logI()
         
-        Networking<Comment>().request(API.comments(issueId: number, page: commentPage), readCache: readCache, parseHandler: ModelGenerator(snakeCase: true)) { (data, _, _) in
+        Networking<Comment>().request(API.comments(issueId: number, page: commentPage), parseHandler: ModelGenerator(snakeCase: true)) { (data, _, _) in
             guard let list = data else {
                 "#request# comment page \(page) error".logE()
                 completion(comments, false, false)

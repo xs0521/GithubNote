@@ -68,7 +68,7 @@ extension NoteCommentsHeaderView {
         guard let issueId = issue?.number else { return }
         let body = AppConst.markdown
         isNewCommentSending = true
-        Networking<Comment>().request(API.newComment(issueId: issueId, body: body), writeCache: false, readCache: false, parseHandler: ModelGenerator(snakeCase: true)) { data, cache, _ in
+        Networking<Comment>().request(API.newComment(issueId: issueId, body: body), parseHandler: ModelGenerator(snakeCase: true)) { data, cache, _ in
             guard let comment = data?.first else {
                 isNewCommentSending = false
                 return

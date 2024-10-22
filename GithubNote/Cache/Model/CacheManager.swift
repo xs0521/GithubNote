@@ -6,7 +6,6 @@
 //
 
 import Foundation
-//import Cache
 
 class CacheManager: Setupable {
     
@@ -37,7 +36,7 @@ extension CacheManager {
     
     static func insertRepos(repos: [RepoModel], completion: CommonCallBack? = nil) -> Void {
         CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
-            CacheManager.shared.manager?.insertRepos(repos: repos, database: database)
+            CacheManager.shared.manager?.insertItems(items: repos, database: database)
             DispatchQueue.main.async {
                 completion?()
             }
@@ -46,16 +45,10 @@ extension CacheManager {
     
     static func fetchRepos(_ completion: @escaping CommonTCallBack<[RepoModel]>) -> Void {
         CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
-            let models = CacheManager.shared.manager?.fetchRepos(database: database)
+            let models = CacheManager.shared.manager?.fetchItems(database: database) ?? [RepoModel]()
             DispatchQueue.main.async {
-                completion(models ?? [])
+                completion(models)
             }
-        })
-    }
-    
-    static func deleteRepo(_ id: Int, _ completion: @escaping CommonTCallBack<[RepoModel]>) -> Void {
-        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
-            CacheManager.shared.manager?.deleteRepo(byId: id, database: database)
         })
     }
 }
@@ -82,8 +75,7 @@ extension CacheManager {
         func insertAction() -> Void {
             CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
                 CacheManager.shared.manager?.createIssueTable()
-                let tableName = CacheManager.shared.manager?.issueTableName()
-                CacheManager.shared.manager?.insertIssue(issues: issues, into: tableName, database: database)
+                CacheManager.shared.manager?.insertItems(items: issues, database: database)
                 DispatchQueue.main.async {
                     completion?()
                 }
@@ -94,10 +86,9 @@ extension CacheManager {
     static func fetchIssues(_ completion: @escaping CommonTCallBack<[Issue]>) -> Void {
         
         CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
-            let tableName = CacheManager.shared.manager?.issueTableName()
-            let url = CacheManager.shared.currentRepo?.url ?? ""
-            assert(!url.isEmpty, "url error")
-            let models = CacheManager.shared.manager?.fetchIssues(from: tableName, where: url, database: database) ?? []
+            let repositoryUrl = CacheManager.shared.currentRepo?.url ?? ""
+            assert(!repositoryUrl.isEmpty, "url error")
+            let models = CacheManager.shared.manager?.fetchItems(database: database, where: repositoryUrl) ?? [Issue]()
             DispatchQueue.main.async {
                 completion(models)
             }
@@ -107,8 +98,7 @@ extension CacheManager {
     static func updateIssues(_ list: [Issue], _ completion: @escaping CommonCallBack) -> Void {
         
         CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
-            let tableName = CacheManager.shared.manager?.issueTableName()
-            CacheManager.shared.manager?.updateIssues(issues: list, in: tableName, database: database)
+            CacheManager.shared.manager?.updateItems(items: list, database: database)
             DispatchQueue.main.async {
                 completion()
             }
@@ -119,7 +109,7 @@ extension CacheManager {
         CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
             guard let manager = CacheManager.shared.manager else { return }
             let tableName = manager.issueTableName()
-            CacheManager.shared.manager?.deleteIssue(byId: ids, from: tableName, database: database)
+            CacheManager.shared.manager?.deleteItems(in: tableName, byId: ids, database: database)
             DispatchQueue.main.async {
                 completion()
             }
@@ -150,8 +140,7 @@ extension CacheManager {
             
             CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
                 CacheManager.shared.manager?.createCommentTable()
-                let tableName = CacheManager.shared.manager?.commentTableName()
-                CacheManager.shared.manager?.insertComments(comments: comments, into: tableName, database: database)
+                CacheManager.shared.manager?.insertItems(items: comments, database: database)
                 DispatchQueue.main.async {
                     completion?()
                 }
@@ -171,10 +160,9 @@ extension CacheManager {
     
     static func fetchComments(_ completion: @escaping CommonTCallBack<[Comment]>) -> Void {
         CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
-            let tableName = CacheManager.shared.manager?.commentTableName()
-            let url = CacheManager.shared.currentIssue?.url ?? ""
-            assert(!url.isEmpty, "url error")
-            let models = CacheManager.shared.manager?.fetchComments(from: tableName, where: url, database: database) ?? []
+            let issueURL = CacheManager.shared.currentIssue?.url ?? ""
+            assert(!issueURL.isEmpty, "url error")
+            let models = CacheManager.shared.manager?.fetchItems(database: database, where: issueURL) ?? [Comment]()
             DispatchQueue.main.async {
                 completion(models)
             }
@@ -184,8 +172,7 @@ extension CacheManager {
     static func updateComments(_ list: [Comment], _ completion: @escaping CommonCallBack) -> Void {
         
         CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
-            let tableName = CacheManager.shared.manager?.commentTableName()
-            CacheManager.shared.manager?.updateComments(comments: list, in: tableName, database: database)
+            CacheManager.shared.manager?.updateItems(items: list, database: database)
             DispatchQueue.main.async {
                 completion()
             }
@@ -207,8 +194,9 @@ extension CacheManager {
     
     static func deleteComment(_ ids: [Int], _ completion: @escaping CommonCallBack) -> Void {
         CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
-            let tableName = CacheManager.shared.manager?.commentTableName()
-            CacheManager.shared.manager?.deleteComment(byId: ids, from: tableName, database: database)
+            let tableName = CacheManager.shared.manager?.commentTableName() ?? ""
+            assert(!tableName.isEmpty, "tableName error")
+            CacheManager.shared.manager?.deleteItems(in: tableName, byId: ids, database: database)
             DispatchQueue.main.async {
                 completion()
             }
@@ -273,17 +261,6 @@ extension CacheManager {
             let models = CacheManager.shared.manager?.fetchGithubImages(from: tableName, database: database) ?? []
             DispatchQueue.main.async {
                 completion(models)
-            }
-        })
-    }
-    
-    // 删除指定 ID 的 GithubImages
-    static func deleteGithubImages(_ indexs: [Int], _ completion: @escaping CommonCallBack) -> Void {
-        CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
-            let tableName = CacheManager.shared.manager?.imagesTableName()
-            CacheManager.shared.manager?.deleteGithubImage(byIndex: indexs, from: tableName, database: database)
-            DispatchQueue.main.async {
-                completion()
             }
         })
     }

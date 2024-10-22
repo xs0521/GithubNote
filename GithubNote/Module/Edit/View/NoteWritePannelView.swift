@@ -226,7 +226,7 @@ extension NoteWritePannelView {
         guard let body = markdownString, let commentid = selectionComment?.id else { return }
         uploadState = .sending
         
-        Networking<Comment>().request(API.updateComment(commentId: commentid, body: body), writeCache: false, readCache: false, parseHandler: ModelGenerator(snakeCase: true)) { data, cache, _ in
+        Networking<Comment>().request(API.updateComment(commentId: commentid, body: body), parseHandler: ModelGenerator(snakeCase: true)) { data, cache, _ in
             
             guard let comment = data?.first else {
                 uploadState = .fail
