@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct GithubNoteApp: App {
     
-    @State var logined: Bool = Account.enble
+    @State var logined = UserManager.shared.isLogin()
     @State var willLoginOut: Bool = false
     @State private var importing: Bool? = true
     @State var isSetting: Bool = false
@@ -22,8 +22,9 @@ struct GithubNoteApp: App {
     }
     
     private func loginOutAction() -> Void {
-        Account.reset()
-        logined = Account.enble
+        AppUserDefaults.reset()
+        UserManager.shared.save(nil)
+        logined = UserManager.shared.isLogin()
         willLoginOut = false
     }
     
@@ -54,7 +55,7 @@ struct GithubNoteApp: App {
                 }
             } else {
                 GitHubLoginView(loginCallBack: {
-                    logined = Account.enble
+                    logined = UserManager.shared.isLogin()
                 })
                 .onAppear {
 #if !MOBILE

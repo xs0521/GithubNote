@@ -7,97 +7,56 @@
 
 import Foundation
 
-enum AccountType: CaseIterable {
+class UserManager {
     
-    case owner
-    case token
-    case repo
-    case issue
-    case comment
-    case userID
+    static let shared = UserManager()
     
-    var key: String {
-        switch self {
-        case .owner:
-            return "com.githubnote.owner"
-        case .repo:
-            return "com.githubnote.repo"
-        case .token:
-            return "com.githubnote.token"
-        case .issue:
-            return "com.githubnote.issue"
-        case .comment:
-            return "com.githubnote.comment"   
-        case .userID:
-            return "com.githubnote.userID"
+    var user: UserModel?
+    
+    init() {
+        let fileURL = path().appendingPathComponent("userResponse.json")
+        do {
+            let data = try Data.init(contentsOf: fileURL)
+            save(data)
+        } catch {
+            "save: \(error)".logE()
         }
     }
     
-    var value: Any? {
-        UserDefaults.value(key)
-    }
-    
-    var title: String {
-        switch self {
-        case .owner:
-            return "owner name"
-        case .repo:
-            return "repo name"
-        case .token:
-            return "access token"
-        case .comment, .issue, .userID:
-            return ""
+    func save(_ data: Data?) -> Void {
+        let fileURL = path().appendingPathComponent("userResponse.json")
+        if data == nil {
+            do {
+                self.user = nil
+                try FileManager.default.removeItem(at: fileURL)
+            } catch {
+            }
+            return
+        }
+        do {
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            self.user = try? decoder.decode(UserModel.self, from: data!)
+            try data?.write(to: fileURL)
+            "save: \(fileURL)".logI()
+        } catch {
+            "save: \(error)".logE()
         }
     }
     
-    func remove() -> Void {
-        UserDefaults.save(value: nil, key: key)
+    func isLogin() -> Bool {
+        return user == nil ? false : true
+    }
+    
+    // 确定要保存文件的位置，通常在用户的文档目录下
+    func path() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
     }
 }
 
-struct Account {
+struct UserModel: APIModelable, Identifiable, Hashable, Equatable, Codable {
     
-    static var owner: String {
-        guard let value = AccountType.owner.value, let owner = value as? String else { return "" }
-        return owner
-    }
-    
-    static var userId: Int {
-        guard let value = AccountType.userID.value, let userId = value as? Int else { return 0 }
-        return userId
-    }
-    
-    static var repo: String {
-        guard let value = AccountType.repo.value, let repo = value as? String else { return "" }
-        return repo
-    }
-    
-    static var accessToken: String {
-        guard let value = AccountType.token.value, let token = value as? String else { return "" }
-        return token
-    }
-    
-    static var issue: Int {
-        guard let value = AccountType.issue.value, let issue = value as? Int else { return 0 }
-        return issue
-    }
-    
-    static var comment: Int {
-        guard let value = AccountType.owner.value, let comment = value as? Int else { return 0 }
-        return comment
-    }
-    
-    static var enble: Bool {
-        return !Account.owner.isEmpty && !Account.accessToken.isEmpty
-    }
-    
-    static func reset() -> Void {
-        AccountType.allCases.forEach({$0.remove()})
-    }
-}
-
-struct UserModel: APIModelable, Identifiable, Hashable, Equatable {
-
     var uuid: String?
     
     var identifier: String {
@@ -105,21 +64,31 @@ struct UserModel: APIModelable, Identifiable, Hashable, Equatable {
     }
     
     public func hash(into hasher: inout Hasher) {
-        return hasher.combine(identifier)
+        hasher.combine(identifier)
     }
     
     public static func == (lhs: UserModel, rhs: UserModel) -> Bool {
         return lhs.id == rhs.id
     }
-
+    
     let id: Int?
     let login, nodeId, avatarUrl, gravatarId: String?
     let url, htmlUrl, followersUrl, followingUrl: String?
     let gistsUrl, starredUrl, subscriptionsUrl, organizationsUrl: String?
     let reposUrl, eventsUrl, receivedEventsUrl: String?
-    let type: String?
+    let type, userViewType: String?
     let siteAdmin: Bool?
     let name, company, blog, location, email, hireable, bio, twitterUsername: String?
     let publicRepos, publicGists, followers, following: Int?
     let createdAt, updatedAt: String?
+    let privateGists, totalPrivateRepos, ownedPrivateRepos, diskUsage, collaborators: Int?
+    let twoFactorAuthentication: Bool?
+    let notificationEmail: String?
+    
+    struct Plan: Codable {
+        let name: String?
+        let space, collaborators, privateRepos: Int?
+    }
+    
+    let plan: Plan?
 }

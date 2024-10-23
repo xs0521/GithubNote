@@ -94,6 +94,10 @@ struct NoteSidebarToolView: View {
                 .padding(EdgeInsets(top: 5, leading: 16, bottom: 16, trailing: 10))
             } else {
                 Button(action: {
+                    if CacheManager.shared.currentRepo == nil {
+                        ToastManager.shared.show("Please select a code repository")
+                        return
+                    }
                     showImageBrowser?.toggle()
                 }, label: {
                     Image(systemName: AppConst.photoIcon)

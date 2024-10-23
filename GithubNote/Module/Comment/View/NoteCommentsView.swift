@@ -18,9 +18,7 @@ struct NoteCommentsView: View {
     var body: some View {
         VStack {
             if commentGroups.isEmpty {
-                Image(systemName: "cup.and.saucer")
-                    .font(.system(size: 25))
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                NoteEmptyView()
             } else {
                 List(selection: $selectionComment) {
                     ForEach(commentGroups) { selection in

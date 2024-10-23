@@ -28,9 +28,9 @@ enum API {
     case deleteImage(filePath: String, sha: String)
     
     
-    var owner: String { Account.owner }
-    var selectRepo: String { Account.repo }
-    var accessToken: String { Account.accessToken }
+    var owner: String { UserManager.shared.user?.login ?? "" }
+    var selectRepo: String { AppUserDefaults.repo }
+    var accessToken: String { AppUserDefaults.accessToken }
 }
 
 extension API: TargetType {

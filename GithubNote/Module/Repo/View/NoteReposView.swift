@@ -15,23 +15,28 @@ struct NoteReposView: View {
     var refreshCallBack: CommonCallBack?
     
     var body: some View {
-        List(selection: $selectionRepo) {
-            ForEach(reposGroups) { selection in
-                Label(title: {
-                    HStack {
-                        Text(selection.name ?? "unknow")
-                        if selection.private == true {
-                            PrivateTagView()
+        if reposGroups.isEmpty {
+            NoteEmptyView()
+                .background(Color.background)
+        } else {
+            List(selection: $selectionRepo) {
+                ForEach(reposGroups) { selection in
+                    Label(title: {
+                        HStack {
+                            Text(selection.name ?? "unknow")
+                            if selection.private == true {
+                                PrivateTagView()
+                            }
                         }
-                    }
-                }, icon: {
-                    Image(systemName: "square.stack.3d.up")
-                        .foregroundStyle(Color.primary)
-                })
-                .tag(selection)
+                    }, icon: {
+                        Image(systemName: "square.stack.3d.up")
+                            .foregroundStyle(Color.primary)
+                    })
+                    .tag(selection)
+                }
             }
+            .background(Color.background)
         }
-        .background(Color.background)
     }
 }
 

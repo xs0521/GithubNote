@@ -26,7 +26,7 @@ struct NoteWritePannelTitleView: View {
             } else {
                 HStack (spacing: 3) {
                     Image(systemName: "star.fill")
-                    Text("\(Account.owner)")
+                    Text("\(UserManager.shared.user?.login ?? "")")
                 }
                 
                 if let repoName = selectionRepo?.name {

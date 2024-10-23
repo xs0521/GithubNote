@@ -37,9 +37,7 @@ struct NoteIssuesView: View {
     var body: some View {
         VStack {
             if issueGroups.isEmpty {
-                Image(systemName: "cup.and.saucer")
-                    .font(.system(size: 25))
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                NoteEmptyView()
             } else {
                 List(selection: $selectionIssue) {
                     ForEach(issueGroups) { selection in
@@ -109,7 +107,7 @@ struct NoteIssuesView: View {
         .onChange(of: selectionRepo) { oldValue, newValue in
             if oldValue != newValue {
                 guard let repoName = newValue?.name else { return }
-                UserDefaults.save(value: repoName, key: AccountType.repo.key)
+                AppUserDefaults.repo = repoName
                 showReposView = false
             }
             endEdit()

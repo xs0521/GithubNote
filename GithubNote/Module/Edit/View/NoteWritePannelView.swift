@@ -34,9 +34,11 @@ struct NoteWritePannelView: View {
     @State private var cache: String = ""
     @State private var cacheUpdate: Int = 0
     
+#if !MOBILE
     private var undoManager: UndoManager? {
         NSApplication.shared.windows.first?.undoManager
     }
+#endif
     
     var body: some View {
         VStack {
@@ -55,25 +57,32 @@ struct NoteWritePannelView: View {
                         cacheItemView()
                     }
                 }
+#if !MOBILE
                 .onChange(of: editIsShown, { _, newValue in
                     if !newValue {
                         ///When editing again, attempting to undo causes a crash.
                         undoManager?.removeAllActions()
                     }
                 })
+#endif
                 .padding(EdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10))
-                bottomTimeView()
+                if let value = selectionComment?.updatedAt?.localTime(), !value.isEmpty {
+                    bottomTimeView()
+                }
+                
             }
             .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
             .toolbar {
                 ToolbarItemGroup {
-                    NoteWritePannelTitleView(showImageBrowser: $showImageBrowser,
-                                             selectionRepo: $selectionRepo,
-                                             selectionIssue: $selectionIssue,
-                                             selectionComment: $selectionComment)
-                    
-                    Spacer()
-                    operationViews()
+                    if selectionComment != nil {
+                        NoteWritePannelTitleView(showImageBrowser: $showImageBrowser,
+                                                 selectionRepo: $selectionRepo,
+                                                 selectionIssue: $selectionIssue,
+                                                 selectionComment: $selectionComment)
+                        
+                        Spacer()
+                        operationViews()
+                    }
                 }
                 
             }
@@ -93,8 +102,6 @@ struct NoteWritePannelView: View {
             }
         }
     }
-    
-    
 }
 
 extension NoteWritePannelView {

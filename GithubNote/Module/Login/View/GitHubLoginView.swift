@@ -103,16 +103,22 @@ struct GitHubLoginView: View {
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             isLoading = false
-            if let data = data,
-               let userResponse = try? JSONDecoder().decode(GitHubUser.self, from: data) {
-                DispatchQueue.main.async {
-                    UserDefaults.save(value: userResponse.id, key: AccountType.userID.key)
-                    UserDefaults.save(value: userResponse.login, key: AccountType.owner.key)
-                    UserDefaults.save(value: accessToken, key: AccountType.token.key)
-                    LaunchApp.shared.loginSetup()
-                    loginCallBack()
-                }
-            }
+            
+            UserManager.shared.save(data)
+            AppUserDefaults.accessToken = accessToken
+            LaunchApp.shared.loginSetup()
+            loginCallBack()
+            
+//            if let data = data,
+//               let userResponse = try? JSONDecoder().decode(UserModel.self, from: data) {
+//                DispatchQueue.main.async {
+//                    UserDefaults.save(value: userResponse.id, key: AccountType.userID.key)
+//                    UserDefaults.save(value: userResponse.login, key: AccountType.owner.key)
+//                    UserDefaults.save(value: accessToken, key: AccountType.token.key)
+//                    LaunchApp.shared.loginSetup()
+//                    loginCallBack()
+//                }
+//            }
         }.resume()
     }
 }
@@ -123,11 +129,6 @@ struct GitHubTokenResponse: Codable {
     enum CodingKeys: String, CodingKey {
         case accessToken = "access_token"
     }
-}
-
-struct GitHubUser: Codable {
-    let login: String
-    let id: Int
 }
 
 class GitHubLoginManager {

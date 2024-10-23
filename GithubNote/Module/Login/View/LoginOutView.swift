@@ -22,9 +22,9 @@ struct LoginOutView: View {
     var loginOutCallBack: LoginOutCallBack
     
     
-    @State var ownerName = Account.owner
-    @State var repoName = Account.repo
-    @State var token = Account.accessToken
+    @State var ownerName = UserManager.shared.user?.login ?? ""
+    @State var repoName = AppUserDefaults.repo
+    @State var token = AppUserDefaults.accessToken
     
     var body: some View {
         VStack {
@@ -45,33 +45,6 @@ struct LoginOutView: View {
                         .padding(EdgeInsets(top: 0, leading: 10, bottom: 10, trailing: 10))
                         .font(.system(size: 18))
                     
-                    Text(repoName)
-                        .foregroundStyle(Color(hex: "#7E7E7E"))
-                        .padding(EdgeInsets(top: 0, leading: 10, bottom: 10, trailing: 10))
-                        .font(.system(size: 18))
-                    
-                    HStack (alignment: .center) {
-                        Text(token.encrypt(20))
-                            .foregroundStyle(Color(hex: "#7E7E7E"))
-                            .padding(EdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 0))
-                            .font(.system(size: 18))
-                            .textFieldStyle(.plain)
-                        Button(action: {
-                            #if MOBILE
-                            let pasteboard = UIPasteboard.general
-                            #else
-                            let pasteboard = NSPasteboard.general
-                            pasteboard.clearContents()
-                            pasteboard.setString(token, forType: .string)
-                            #endif
-                        }, label: {
-                            Image(systemName: "doc.on.doc")
-                                .symbolRenderingMode(.hierarchical)
-                        })
-                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
-                        .buttonStyle(.plain)
-                    }
-                    
                     Button(action: {
                         loginOutCallBack()
                     }, label: {
@@ -90,10 +63,6 @@ struct LoginOutView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.clear)
-    }
-    
-    func enbleStart() -> Bool {
-        return !repoName.isEmpty && !token.isEmpty && !ownerName.isEmpty
     }
 }
 

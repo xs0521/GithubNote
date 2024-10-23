@@ -17,7 +17,7 @@ class SQLManager {
     private lazy var dbURL: URL = {
         
         let bundleID = Bundle.main.bundleIdentifier ?? "github.note"
-        var userId = Account.userId
+        var userId = UserManager.shared.user?.id ?? 0
         assert(userId > 0, "userId error")
         
         let fileManager = FileManager.default

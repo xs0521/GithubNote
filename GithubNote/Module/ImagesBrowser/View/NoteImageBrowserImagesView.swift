@@ -36,9 +36,7 @@ struct NoteImageBrowserImagesView: View {
         ZStack {
             ScrollView (showsIndicators: false) {
                 if data.isEmpty {
-                    Image(systemName: "cup.and.saucer")
-                        .font(.system(size: 25))
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    NoteEmptyView()
                         .padding(.top, 100)
                 } else {
                     LazyVGrid(columns: adaptiveColumn, spacing: 8) {

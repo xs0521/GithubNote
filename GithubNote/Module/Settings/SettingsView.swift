@@ -53,7 +53,7 @@ enum SettingType {
     var detail: String {
         switch self {
         case .account:
-            return Account.owner
+            return UserManager.shared.user?.login ?? ""
         default:
             return ""
         }

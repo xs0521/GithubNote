@@ -129,7 +129,7 @@ extension NoteSidebarView {
             CacheManager.fetchRepos { list in
                 "#request# Repo all cache \(list.count)".logI()
                 reposGroups = list
-                if let repo = list.first(where: {$0.name == Account.repo}) {
+                if let repo = list.first(where: {$0.name == AppUserDefaults.repo}) {
                     selectionRepo = repo
                 }
                 completion()
@@ -172,15 +172,7 @@ extension NoteSidebarView {
             
             "#request# Repo page \(page) \(list.count)".logI()
             
-            if page <= 1 {
-                if let owner = list.first?.fullName?.split(separator: "/").first {
-                    "#repo# owner \(owner) - \(Account.owner)".logI()
-                    if owner != Account.owner {
-                        ToastManager.shared.showFail("owner error")
-                    }
-                }
-            }
-            if let repo = list.first(where: {$0.name == Account.repo}) {
+            if let repo = list.first(where: {$0.name == AppUserDefaults.repo}) {
                 selectionRepo = repo
             }
             
@@ -206,7 +198,7 @@ extension NoteSidebarView {
     private func requestAllIssue(_ readCache: Bool = true, _ completion: @escaping CommonCallBack) -> Void {
         
         if selectionRepo == nil {
-            ToastManager.shared.showFail("Please select a code repository")
+            ToastManager.shared.show("Please select a code repository")
             completion()
             return
         }

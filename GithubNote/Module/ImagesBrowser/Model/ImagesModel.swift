@@ -14,8 +14,8 @@ class ImagesModel {
 
 struct SDWebImageDownloaderSetup: Setupable {
     static func setup() {
-        "#image# accessToken length \(Account.accessToken.count)".logI()
-        SDWebImageDownloader.shared.setValue("Bearer \(Account.accessToken)", forHTTPHeaderField: "Authorization")
+        "#image# accessToken length \(AppUserDefaults.accessToken.count)".logI()
+        SDWebImageDownloader.shared.setValue("Bearer \(AppUserDefaults.accessToken)", forHTTPHeaderField: "Authorization")
     }
 }
 

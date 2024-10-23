@@ -17,7 +17,7 @@ class LaunchApp {
     static let shared = LaunchApp()
     init() {
         SETUPLIST.forEach({$0.setup()})
-        if Account.enble {
+        if UserManager.shared.isLogin() {
             loginSetup()
         }
     }

@@ -10,6 +10,7 @@ import AlertToast
 
 struct NoteContentView: View {
     
+    @Environment(\.colorScheme) private var colorScheme
     
     @State private var selectionRepo: RepoModel?
     
@@ -18,7 +19,6 @@ struct NoteContentView: View {
     @State private var allComment = [Comment]()
     @State private var selectionComment: Comment?
     
-    @State private var markdownString: String? = ""
     @State private var showImageBrowser: Bool? = false
     
     @State private var showLoading: Bool = false
@@ -30,22 +30,17 @@ struct NoteContentView: View {
     
     var body: some View {
         ZStack {
+#if MOBILE
+            VStack {
+                HStack {
+                    
+                }
+            }
+#else
             NavigationSplitView {
-                NoteSidebarView(selectionRepo: $selectionRepo,
-                                selectionIssue: $selectionIssue,
-                                commentGroups: $allComment,
-                                selectionComment: $selectionComment, 
-                                showImageBrowser: $showImageBrowser)
-              
+                sidebarView()
             } detail: {
-                NoteWritePannelView(commentGroups: $allComment,
-                                    selectionRepo: $selectionRepo,
-                                   selectionIssue: $selectionIssue,
-                                 selectionComment: $selectionComment,
-                                            issue: $selectionIssue,
-                                 showImageBrowser: $showImageBrowser,
-                                      showLoading: $showLoading)
-                .background(Color.white)
+                writePannelView()
             }
             .blur(radius: (showImageBrowser ?? false) ? 5 : 0, opaque: true)
             .onAppear(perform: {
@@ -60,6 +55,7 @@ struct NoteContentView: View {
             .toast(isPresenting: $showLoading){
                 AlertToast(type: .loading, title: nil, subTitle: nil)
             }
+#endif
             if showImageBrowser! {
                 NoteImageBrowserView(showImageBrowser: $showImageBrowser,
                                      showToast: $showToast,
@@ -68,5 +64,30 @@ struct NoteContentView: View {
             }
             
         }
+    }
+    
+    private func sidebarView() -> some View {
+        NoteSidebarView(selectionRepo: $selectionRepo,
+                        selectionIssue: $selectionIssue,
+                        commentGroups: $allComment,
+                        selectionComment: $selectionComment,
+                        showImageBrowser: $showImageBrowser)
+    }
+    
+    private func writePannelView() -> some View {
+        ZStack {
+            NoteWritePannelView(commentGroups: $allComment,
+                                selectionRepo: $selectionRepo,
+                               selectionIssue: $selectionIssue,
+                             selectionComment: $selectionComment,
+                                        issue: $selectionIssue,
+                             showImageBrowser: $showImageBrowser,
+                                  showLoading: $showLoading)
+            if selectionComment == nil {
+                NoteEmptyView()
+                    .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
+            }
+        }
+        .background(Color.white)
     }
 }

@@ -22,10 +22,12 @@ struct NoteImageBrowserPreViewImagesView: View {
         VStack {
             ZStack {
                 // 添加 NSViewRepresentable 以捕获键盘事件
+#if !MOBILE
                 KeyCaptureViewRepresentable { event in
                     handleKeyDown(event: event)
                 }
                 .frame(width: 0, height: 0)
+#endif
                 TabView(selection: $selectedImageIndex) {
                     ForEach(0..<imageUrls.count, id: \.self) { index in
                         WebImage(url: URL(string: imageUrls[index].imageUrl()))
@@ -106,6 +108,7 @@ struct NoteImageBrowserPreViewImagesView: View {
 #endif
     }
     
+#if !MOBILE
     // 键盘事件处理
     func handleKeyDown(event: NSEvent) {
         switch event.keyCode {
@@ -121,6 +124,7 @@ struct NoteImageBrowserPreViewImagesView: View {
             break
         }
     }
+#endif
     
     func copyImage(url: String) {
         copyCallBackAction(url)
