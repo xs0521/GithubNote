@@ -107,8 +107,9 @@ struct NoteIssuesView: View {
         .onChange(of: selectionRepo) { oldValue, newValue in
             if oldValue != newValue {
                 guard let repoName = newValue?.name else { return }
-                AppUserDefaults.repo = repoName
-                showReposView = false
+//                AppUserDefaults.repo = repoName
+//                showReposView = false
+                store.dispatch(action: SideActions.ReposViewState(show: false))
             }
             endEdit()
         }

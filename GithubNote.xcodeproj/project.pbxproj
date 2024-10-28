@@ -13,6 +13,26 @@
 		8FE4E83CC5C2EDF289DCD29D /* Pods_GithubNoteTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1955D8C4A24B93D35230FA4A /* Pods_GithubNoteTests.framework */; };
 		B10930FB2C3D848B006B5DB0 /* NoteContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10930FA2C3D848A006B5DB0 /* NoteContentView.swift */; };
 		B10930FD2C3D85C5006B5DB0 /* NoteSidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10930FC2C3D85C5006B5DB0 /* NoteSidebarView.swift */; };
+		B11237282CCA8EDD0085F9EB /* SwiftUIFlux in Frameworks */ = {isa = PBXBuildFile; productRef = B11237272CCA8EDD0085F9EB /* SwiftUIFlux */; };
+		B112372A2CCA8FC00085F9EB /* SwiftUIFlux in Frameworks */ = {isa = PBXBuildFile; productRef = B11237292CCA8FC00085F9EB /* SwiftUIFlux */; };
+		B112372C2CCA90140085F9EB /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B112372B2CCA90140085F9EB /* AppState.swift */; };
+		B112372D2CCA90140085F9EB /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B112372B2CCA90140085F9EB /* AppState.swift */; };
+		B11237302CCA91360085F9EB /* ReposState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B112372F2CCA91360085F9EB /* ReposState.swift */; };
+		B11237312CCA91360085F9EB /* ReposState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B112372F2CCA91360085F9EB /* ReposState.swift */; };
+		B11237332CCA92E90085F9EB /* loggingMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11237322CCA92E90085F9EB /* loggingMiddleware.swift */; };
+		B11237342CCA92E90085F9EB /* loggingMiddleware.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11237322CCA92E90085F9EB /* loggingMiddleware.swift */; };
+		B11237372CCA93460085F9EB /* AppReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11237362CCA93460085F9EB /* AppReducer.swift */; };
+		B11237382CCA93460085F9EB /* AppReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11237362CCA93460085F9EB /* AppReducer.swift */; };
+		B112373B2CCA94E60085F9EB /* ReposActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B112373A2CCA94E60085F9EB /* ReposActions.swift */; };
+		B112373C2CCA94E60085F9EB /* ReposActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B112373A2CCA94E60085F9EB /* ReposActions.swift */; };
+		B112373E2CCA962D0085F9EB /* NoteReposListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = B112373D2CCA962D0085F9EB /* NoteReposListener.swift */; };
+		B112373F2CCA962D0085F9EB /* NoteReposListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = B112373D2CCA962D0085F9EB /* NoteReposListener.swift */; };
+		B11237412CCAA25B0085F9EB /* RepoModelStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11237402CCAA25B0085F9EB /* RepoModelStore.swift */; };
+		B11237422CCAA25B0085F9EB /* RepoModelStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11237402CCAA25B0085F9EB /* RepoModelStore.swift */; };
+		B11237452CCAAA8F0085F9EB /* SideState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11237442CCAAA8F0085F9EB /* SideState.swift */; };
+		B11237462CCAAA8F0085F9EB /* SideState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11237442CCAAA8F0085F9EB /* SideState.swift */; };
+		B11237482CCAAAC00085F9EB /* SideActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11237472CCAAAC00085F9EB /* SideActions.swift */; };
+		B11237492CCAAAC00085F9EB /* SideActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11237472CCAAAC00085F9EB /* SideActions.swift */; };
 		B11FDA8B2BBFE8C500EC7083 /* AppConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11FDA8A2BBFE8C500EC7083 /* AppConst.swift */; };
 		B148A5BA2BC1506000B7FBA8 /* LoginOutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B148A5B92BC1506000B7FBA8 /* LoginOutView.swift */; };
 		B148A5BC2BC154FA00B7FBA8 /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B148A5BB2BC154FA00B7FBA8 /* Color+Extension.swift */; };
@@ -79,6 +99,8 @@
 		B14EA4EC2CC93EEE00F55A4D /* AppUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14EA4EA2CC93EEE00F55A4D /* AppUserDefaults.swift */; };
 		B14EA4EE2CC949F300F55A4D /* NoteEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14EA4ED2CC949F300F55A4D /* NoteEmptyView.swift */; };
 		B14EA4EF2CC949F300F55A4D /* NoteEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14EA4ED2CC949F300F55A4D /* NoteEmptyView.swift */; };
+		B14EA4F22CC9505F00F55A4D /* NoteContentHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14EA4F12CC9505F00F55A4D /* NoteContentHeaderView.swift */; };
+		B14EA4F42CC951FA00F55A4D /* NoteContentTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14EA4F32CC951FA00F55A4D /* NoteContentTableView.swift */; };
 		B16462722BB0464A00F57548 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16462712BB0464A00F57548 /* Account.swift */; };
 		B16C4AD42BB3164800F417D3 /* Binding+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16C4AD32BB3164800F417D3 /* Binding+Extension.swift */; };
 		B1922A4D2BAFF1FB00200828 /* GithubNoteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1922A4C2BAFF1FB00200828 /* GithubNoteApp.swift */; };
@@ -171,6 +193,15 @@
 		9DB5C6036F30764FE1ED6539 /* Pods_GithubNote_GithubNoteUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GithubNote_GithubNoteUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B10930FA2C3D848A006B5DB0 /* NoteContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteContentView.swift; sourceTree = "<group>"; };
 		B10930FC2C3D85C5006B5DB0 /* NoteSidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteSidebarView.swift; sourceTree = "<group>"; };
+		B112372B2CCA90140085F9EB /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		B112372F2CCA91360085F9EB /* ReposState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReposState.swift; sourceTree = "<group>"; };
+		B11237322CCA92E90085F9EB /* loggingMiddleware.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = loggingMiddleware.swift; sourceTree = "<group>"; };
+		B11237362CCA93460085F9EB /* AppReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReducer.swift; sourceTree = "<group>"; };
+		B112373A2CCA94E60085F9EB /* ReposActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReposActions.swift; sourceTree = "<group>"; };
+		B112373D2CCA962D0085F9EB /* NoteReposListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteReposListener.swift; sourceTree = "<group>"; };
+		B11237402CCAA25B0085F9EB /* RepoModelStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoModelStore.swift; sourceTree = "<group>"; };
+		B11237442CCAAA8F0085F9EB /* SideState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideState.swift; sourceTree = "<group>"; };
+		B11237472CCAAAC00085F9EB /* SideActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideActions.swift; sourceTree = "<group>"; };
 		B11FDA8A2BBFE8C500EC7083 /* AppConst.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConst.swift; sourceTree = "<group>"; };
 		B148A5B92BC1506000B7FBA8 /* LoginOutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginOutView.swift; sourceTree = "<group>"; };
 		B148A5BB2BC154FA00B7FBA8 /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
@@ -182,6 +213,8 @@
 		B14EA4E52CC7E89D00F55A4D /* SQLModelable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLModelable.swift; sourceTree = "<group>"; };
 		B14EA4EA2CC93EEE00F55A4D /* AppUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUserDefaults.swift; sourceTree = "<group>"; };
 		B14EA4ED2CC949F300F55A4D /* NoteEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEmptyView.swift; sourceTree = "<group>"; };
+		B14EA4F12CC9505F00F55A4D /* NoteContentHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteContentHeaderView.swift; sourceTree = "<group>"; };
+		B14EA4F32CC951FA00F55A4D /* NoteContentTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteContentTableView.swift; sourceTree = "<group>"; };
 		B16462712BB0464A00F57548 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		B16C4AD32BB3164800F417D3 /* Binding+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Binding+Extension.swift"; sourceTree = "<group>"; };
 		B1922A492BAFF1FB00200828 /* GithubNote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GithubNote.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -252,6 +285,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B14983F82CBB632E00CDAB6F /* SDWebImageSwiftUI in Frameworks */,
+				B112372A2CCA8FC00085F9EB /* SwiftUIFlux in Frameworks */,
 				4A2908708BBC95CDDD9AECF6 /* Pods_GithubNoteMobile.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -261,6 +295,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B1C01ACA2BCA16BB009E9C20 /* SDWebImageSwiftUI in Frameworks */,
+				B11237282CCA8EDD0085F9EB /* SwiftUIFlux in Frameworks */,
 				E9A119FC00268F2F27DE1D6F /* (null) in Frameworks */,
 				0289871750C37BAADDC3B735 /* Pods_GithubNote.framework in Frameworks */,
 			);
@@ -298,6 +333,44 @@
 				D5794CA2FFC03E3587DE82C4 /* Pods-GithubNoteMobile.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		B112372E2CCA90FC0085F9EB /* State */ = {
+			isa = PBXGroup;
+			children = (
+				B11237432CCAAA7B0085F9EB /* Side */,
+				B11237392CCA94C90085F9EB /* Repos */,
+			);
+			path = State;
+			sourceTree = "<group>";
+		};
+		B11237352CCA93350085F9EB /* Flux */ = {
+			isa = PBXGroup;
+			children = (
+				B11237362CCA93460085F9EB /* AppReducer.swift */,
+				B112372B2CCA90140085F9EB /* AppState.swift */,
+				B11237322CCA92E90085F9EB /* loggingMiddleware.swift */,
+				B112372E2CCA90FC0085F9EB /* State */,
+			);
+			path = Flux;
+			sourceTree = "<group>";
+		};
+		B11237392CCA94C90085F9EB /* Repos */ = {
+			isa = PBXGroup;
+			children = (
+				B112372F2CCA91360085F9EB /* ReposState.swift */,
+				B112373A2CCA94E60085F9EB /* ReposActions.swift */,
+			);
+			path = Repos;
+			sourceTree = "<group>";
+		};
+		B11237432CCAAA7B0085F9EB /* Side */ = {
+			isa = PBXGroup;
+			children = (
+				B11237442CCAAA8F0085F9EB /* SideState.swift */,
+				B11237472CCAAAC00085F9EB /* SideActions.swift */,
+			);
+			path = Side;
 			sourceTree = "<group>";
 		};
 		B11B515A2BBF965D0016158E /* Issues */ = {
@@ -341,6 +414,15 @@
 				B1EBBDBD2CA06A63005FB760 /* NoteIssuesHeaderView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		B14EA4F02CC9504000F55A4D /* Mobile */ = {
+			isa = PBXGroup;
+			children = (
+				B14EA4F12CC9505F00F55A4D /* NoteContentHeaderView.swift */,
+				B14EA4F32CC951FA00F55A4D /* NoteContentTableView.swift */,
+			);
+			path = Mobile;
 			sourceTree = "<group>";
 		};
 		B18536282C4ABC1400867E91 /* Network */ = {
@@ -457,7 +539,9 @@
 		B1B55A8E2C515D9C00820689 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				B112373D2CCA962D0085F9EB /* NoteReposListener.swift */,
 				B1ED886E2C4ACBB900FD8DEB /* RepoModel.swift */,
+				B11237402CCAA25B0085F9EB /* RepoModelStore.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -628,6 +712,7 @@
 				B1EBBDD02CB3CD7A005FB760 /* NoteSidebarToolView.swift */,
 				B14EA4E22CC7E70400F55A4D /* PrivateTagView.swift */,
 				B14EA4ED2CC949F300F55A4D /* NoteEmptyView.swift */,
+				B14EA4F02CC9504000F55A4D /* Mobile */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -635,6 +720,7 @@
 		B1EC0DEF2BBE42BF007975D9 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				B11237352CCA93350085F9EB /* Flux */,
 				B11FDA8A2BBFE8C500EC7083 /* AppConst.swift */,
 				B1B55A8A2C515C9000820689 /* AppModel.swift */,
 				B14EA4EA2CC93EEE00F55A4D /* AppUserDefaults.swift */,
@@ -755,6 +841,7 @@
 			name = GithubNoteMobile;
 			packageProductDependencies = (
 				B14983BF2CBB632E00CDAB6F /* SDWebImageSwiftUI */,
+				B11237292CCA8FC00085F9EB /* SwiftUIFlux */,
 			);
 			productName = GithubNote;
 			productReference = B14984022CBB632E00CDAB6F /* GithubNoteMobile.app */;
@@ -777,6 +864,7 @@
 			name = GithubNote;
 			packageProductDependencies = (
 				B1C01AC92BCA16BB009E9C20 /* SDWebImageSwiftUI */,
+				B11237272CCA8EDD0085F9EB /* SwiftUIFlux */,
 			);
 			productName = GithubNote;
 			productReference = B1922A492BAFF1FB00200828 /* GithubNote.app */;
@@ -855,6 +943,7 @@
 			mainGroup = B1922A402BAFF1FB00200828;
 			packageReferences = (
 				B1C01AC82BCA16BB009E9C20 /* XCLocalSwiftPackageReference "GithubNote/Local/SDWebImageSwiftUI" */,
+				B11237262CCA8EDD0085F9EB /* XCLocalSwiftPackageReference "GithubNote/Local/SwiftUIFlux" */,
 			);
 			productRefGroup = B1922A4A2BAFF1FB00200828 /* Products */;
 			projectDirPath = "";
@@ -1056,6 +1145,7 @@
 				B14983C42CBB632E00CDAB6F /* NoteWriteModel.swift in Sources */,
 				B14983C52CBB632E00CDAB6F /* NoteContentView.swift in Sources */,
 				B14983C62CBB632E00CDAB6F /* CustomDivider.swift in Sources */,
+				B11237492CCAAAC00085F9EB /* SideActions.swift in Sources */,
 				B1A3FBC42CC0180A00C8ADF7 /* Int+Extension.swift in Sources */,
 				B14983C72CBB632E00CDAB6F /* NoteWritePannelView.swift in Sources */,
 				B14983C82CBB632E00CDAB6F /* NoteImageBrowserView.swift in Sources */,
@@ -1071,16 +1161,21 @@
 				B14983D02CBB632E00CDAB6F /* LaunchApp.swift in Sources */,
 				B14983D12CBB632E00CDAB6F /* NoteCommentsView.swift in Sources */,
 				B14983D32CBB632E00CDAB6F /* AppConst.swift in Sources */,
+				B11237342CCA92E90085F9EB /* loggingMiddleware.swift in Sources */,
 				B14983D42CBB632E00CDAB6F /* LogManager.swift in Sources */,
 				B1B5AAE82CC2AB71003F4E71 /* ImageUploader.swift in Sources */,
+				B11237382CCA93460085F9EB /* AppReducer.swift in Sources */,
+				B11237312CCA91360085F9EB /* ReposState.swift in Sources */,
 				B14983D52CBB632E00CDAB6F /* RepoModel.swift in Sources */,
 				B14983D62CBB632E00CDAB6F /* WebServerManager.swift in Sources */,
 				B14983D72CBB632E00CDAB6F /* NetworkError.swift in Sources */,
 				B14983D82CBB632E00CDAB6F /* NoteIssuesView.swift in Sources */,
 				B14983D92CBB632E00CDAB6F /* Account.swift in Sources */,
+				B112372D2CCA90140085F9EB /* AppState.swift in Sources */,
 				B1B5AAEE2CC34C0E003F4E71 /* NoteWritePannelTitleView.swift in Sources */,
 				B14983DA2CBB632E00CDAB6F /* CachePolicyPlugin.swift in Sources */,
 				B14983DB2CBB632E00CDAB6F /* NoteReposView.swift in Sources */,
+				B112373C2CCA94E60085F9EB /* ReposActions.swift in Sources */,
 				B14983DC2CBB632E00CDAB6F /* LoginOutView.swift in Sources */,
 				B14983DD2CBB632E00CDAB6F /* CommentModel.swift in Sources */,
 				B14983DE2CBB632E00CDAB6F /* Networking.swift in Sources */,
@@ -1093,6 +1188,9 @@
 				B14983E62CBB632E00CDAB6F /* SQLManager+Comment.swift in Sources */,
 				B14983E72CBB632E00CDAB6F /* GitHubLoginView.swift in Sources */,
 				B14983E82CBB632E00CDAB6F /* Modelable.swift in Sources */,
+				B14EA4F42CC951FA00F55A4D /* NoteContentTableView.swift in Sources */,
+				B11237422CCAA25B0085F9EB /* RepoModelStore.swift in Sources */,
+				B11237462CCAAA8F0085F9EB /* SideState.swift in Sources */,
 				B14983E92CBB632E00CDAB6F /* EmailManager.swift in Sources */,
 				B14983EA2CBB632E00CDAB6F /* MarkdownWebView.swift in Sources */,
 				B14983EB2CBB632E00CDAB6F /* bool+Extension.swift in Sources */,
@@ -1105,8 +1203,10 @@
 				B14EA4E72CC7E89D00F55A4D /* SQLModelable.swift in Sources */,
 				B14983F12CBB632E00CDAB6F /* SQLManager.swift in Sources */,
 				B14EA4EF2CC949F300F55A4D /* NoteEmptyView.swift in Sources */,
+				B112373F2CCA962D0085F9EB /* NoteReposListener.swift in Sources */,
 				B1B5AAF12CC36B85003F4E71 /* NoteImageBrowserPreViewImagesView.swift in Sources */,
 				B14983F22CBB632E00CDAB6F /* IssuesModel.swift in Sources */,
+				B14EA4F22CC9505F00F55A4D /* NoteContentHeaderView.swift in Sources */,
 				B14983F32CBB632E00CDAB6F /* Color+Extension.swift in Sources */,
 				B14983F52CBB632E00CDAB6F /* NotificationNameModule.swift in Sources */,
 				B14983F62CBB632E00CDAB6F /* NoteIssuesHeaderView.swift in Sources */,
@@ -1124,13 +1224,16 @@
 				B1A3FBC32CC0180A00C8ADF7 /* Int+Extension.swift in Sources */,
 				B1E538622C43816F00A4B3C4 /* NoteWritePannelView.swift in Sources */,
 				B1FE67542C480B0200970DA0 /* NoteImageBrowserView.swift in Sources */,
+				B112373B2CCA94E60085F9EB /* ReposActions.swift in Sources */,
 				B1B55A922C52A0C000820689 /* Data+Extension.swift in Sources */,
 				B1EC0DF82BBE47A8007975D9 /* UserDefaults+Extension.swift in Sources */,
 				B16C4AD42BB3164800F417D3 /* Binding+Extension.swift in Sources */,
 				B1D7CF542BCA11DE00362C35 /* ImagesModel.swift in Sources */,
 				B1FE674E2C45767600970DA0 /* Common.swift in Sources */,
 				B1B55A8B2C515C9000820689 /* AppModel.swift in Sources */,
+				B11237482CCAAAC00085F9EB /* SideActions.swift in Sources */,
 				B1EBBDD12CB3CD7A005FB760 /* NoteSidebarToolView.swift in Sources */,
+				B11237452CCAAA8F0085F9EB /* SideState.swift in Sources */,
 				B1A3FBC02CC008E900C8ADF7 /* TimeManager.swift in Sources */,
 				B1EBBDA02C9F0079005FB760 /* LaunchApp.swift in Sources */,
 				B1EBBDC02CA06C99005FB760 /* NoteCommentsView.swift in Sources */,
@@ -1147,12 +1250,16 @@
 				B1ED88752C4C057200FD8DEB /* CachePolicyPlugin.swift in Sources */,
 				B1EBBDBA2CA05EEA005FB760 /* NoteReposView.swift in Sources */,
 				B148A5BA2BC1506000B7FBA8 /* LoginOutView.swift in Sources */,
+				B11237372CCA93460085F9EB /* AppReducer.swift in Sources */,
 				B19DC5A02BBFD51B009C7DBE /* CommentModel.swift in Sources */,
 				B1ED88632C4ABC4E00FD8DEB /* Networking.swift in Sources */,
 				B1EBBD972C9E93EE005FB760 /* SettingsView.swift in Sources */,
+				B11237412CCAA25B0085F9EB /* RepoModelStore.swift in Sources */,
 				B1EC0DE82BBB8DD4007975D9 /* String+Extension.swift in Sources */,
+				B11237302CCA91360085F9EB /* ReposState.swift in Sources */,
 				B14EA4E32CC7E70400F55A4D /* PrivateTagView.swift in Sources */,
 				B1EBBDA42C9FDB28005FB760 /* ToastManager.swift in Sources */,
+				B11237332CCA92E90085F9EB /* loggingMiddleware.swift in Sources */,
 				B1CE86582C57EF77002C8335 /* NoteImageBrowserImagesView.swift in Sources */,
 				B1ED886A2C4ACAFE00FD8DEB /* API.swift in Sources */,
 				B1EBBDCA2CB24DA9005FB760 /* SQLManager+Comment.swift in Sources */,
@@ -1168,11 +1275,13 @@
 				B1EBBDA22C9F2AA9005FB760 /* CustomURLSchemeHandler.swift in Sources */,
 				B14EA4EB2CC93EEE00F55A4D /* AppUserDefaults.swift in Sources */,
 				B10930FD2C3D85C5006B5DB0 /* NoteSidebarView.swift in Sources */,
+				B112372C2CCA90140085F9EB /* AppState.swift in Sources */,
 				B1922A4D2BAFF1FB00200828 /* GithubNoteApp.swift in Sources */,
 				B14EA4E62CC7E89D00F55A4D /* SQLModelable.swift in Sources */,
 				B1EBBDC42CB23818005FB760 /* SQLManager.swift in Sources */,
 				B1B5AAF02CC36B85003F4E71 /* NoteImageBrowserPreViewImagesView.swift in Sources */,
 				B1E55A422BBF96B7000209ED /* IssuesModel.swift in Sources */,
+				B112373E2CCA962D0085F9EB /* NoteReposListener.swift in Sources */,
 				B148A5BC2BC154FA00B7FBA8 /* Color+Extension.swift in Sources */,
 				B1CE865B2C5926B8002C8335 /* NotificationNameModule.swift in Sources */,
 				B1EBBDBE2CA06A63005FB760 /* NoteIssuesHeaderView.swift in Sources */,
@@ -1645,6 +1754,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
+		B11237262CCA8EDD0085F9EB /* XCLocalSwiftPackageReference "GithubNote/Local/SwiftUIFlux" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = GithubNote/Local/SwiftUIFlux;
+		};
 		B1C01AC82BCA16BB009E9C20 /* XCLocalSwiftPackageReference "GithubNote/Local/SDWebImageSwiftUI" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = GithubNote/Local/SDWebImageSwiftUI;
@@ -1652,6 +1765,14 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		B11237272CCA8EDD0085F9EB /* SwiftUIFlux */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SwiftUIFlux;
+		};
+		B11237292CCA8FC00085F9EB /* SwiftUIFlux */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SwiftUIFlux;
+		};
 		B14983BF2CBB632E00CDAB6F /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SDWebImageSwiftUI;

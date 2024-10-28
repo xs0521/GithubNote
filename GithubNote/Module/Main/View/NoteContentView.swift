@@ -8,6 +8,7 @@
 import SwiftUI
 import AlertToast
 
+
 struct NoteContentView: View {
     
     @Environment(\.colorScheme) private var colorScheme
@@ -16,7 +17,7 @@ struct NoteContentView: View {
     
     @State private var selectionIssue: Issue?
     
-    @State private var allComment = [Comment]()
+    @State private var commentGroups = [Comment]()
     @State private var selectionComment: Comment?
     
     @State private var showImageBrowser: Bool? = false
@@ -28,13 +29,19 @@ struct NoteContentView: View {
     @State private var toastItem: ToastItem?
     
     
+    
+    
     var body: some View {
         ZStack {
 #if MOBILE
             VStack {
-                HStack {
-                    
-                }
+                NoteContentHeaderView()
+                CustomDivider()
+                NoteContentTableView(selectionRepo: $selectionRepo,
+                                     selectionIssue: $selectionIssue,
+                                     commentGroups: $commentGroups,
+                                     selectionComment: $selectionComment)
+                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
 #else
             NavigationSplitView {
@@ -69,14 +76,14 @@ struct NoteContentView: View {
     private func sidebarView() -> some View {
         NoteSidebarView(selectionRepo: $selectionRepo,
                         selectionIssue: $selectionIssue,
-                        commentGroups: $allComment,
+                        commentGroups: $commentGroups,
                         selectionComment: $selectionComment,
                         showImageBrowser: $showImageBrowser)
     }
     
     private func writePannelView() -> some View {
         ZStack {
-            NoteWritePannelView(commentGroups: $allComment,
+            NoteWritePannelView(commentGroups: $commentGroups,
                                 selectionRepo: $selectionRepo,
                                selectionIssue: $selectionIssue,
                              selectionComment: $selectionComment,

@@ -8,28 +8,36 @@
 import Foundation
 
 @propertyWrapper
-public struct UserDefault<T> {
+public struct UserDefault<T: Codable> {
     let key: String
     let defaultValue: T
-    
+
     init(_ key: String, defaultValue: T) {
         self.key = key
         self.defaultValue = defaultValue
     }
-    
+
     public var wrappedValue: T {
         get {
-            return UserDefaults.standard.object(forKey: key) as? T ?? defaultValue
+            guard let data = UserDefaults.standard.data(forKey: key) else {
+                return defaultValue
+            }
+            let decoder = JSONDecoder()
+            return (try? decoder.decode(T.self, from: data)) ?? defaultValue
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: key)
+            let encoder = JSONEncoder()
+            if let encodedData = try? encoder.encode(newValue) {
+                UserDefaults.standard.set(encodedData, forKey: key)
+            }
         }
     }
 }
 
-public struct AppUserDefaults {
-    @UserDefault("com.githubnote.repo", defaultValue: "")
-    public static var repo: String
+
+struct AppUserDefaults {
+    @UserDefault("com.githubnote.repo", defaultValue: nil)
+    public static var repo: RepoModel?
         
     @UserDefault("com.githubnote.issue", defaultValue: "")
     public static var issue: String
@@ -41,7 +49,7 @@ public struct AppUserDefaults {
     public static var accessToken: String
 
     static func reset() -> Void {
-        self.repo = ""
+        self.repo = nil
         self.issue = ""
         self.comment = ""
         self.accessToken = ""

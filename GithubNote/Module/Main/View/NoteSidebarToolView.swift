@@ -25,7 +25,9 @@ struct NoteSidebarToolView: View {
     var body: some View {
         HStack {
             Button(action: {
-                showReposView.toggle()
+//                showReposView.toggle()
+                let showReposView = !store.state.sideStates.showReposView
+                store.dispatch(action: SideActions.ReposViewState(show: showReposView))
             }, label: {
                 Label {
                     HStack {

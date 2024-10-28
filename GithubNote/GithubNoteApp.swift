@@ -6,6 +6,13 @@
 //
 
 import SwiftUI
+import SwiftUIFlux
+
+let store = Store<AppState>(reducer: appStateReducer,
+                            middleware: [loggingMiddleware],
+                            state: AppState())
+
+let repoStore = RepoModelStore(select: AppUserDefaults.repo)
 
 @main
 struct GithubNoteApp: App {
@@ -30,37 +37,42 @@ struct GithubNoteApp: App {
     
     var body: some Scene {
         WindowGroup {
-            if logined {
-                ZStack {
-                    NoteContentView()
-                    if willLoginOut {
-                        LoginOutView(cancelCallBack: {
-                            willLoginOut = false
-                        }, loginOutCallBack: {
+            StoreProvider(store: store) {
+                VStack {
+                    if logined {
+                        ZStack {
+                            NoteContentView()
+                                .environmentObject(repoStore)
+                            if willLoginOut {
+                                LoginOutView(cancelCallBack: {
+                                    willLoginOut = false
+                                }, loginOutCallBack: {
+                                    loginOutAction()
+                                })
+                            }
+                        }
+                        .onReceive(NotificationCenter.default.publisher(for: Notification.Name.logoutNotification), perform: { _ in
+                            willLoginOut = true
+                        })
+                        .onReceive(NotificationCenter.default.publisher(for: Notification.Name.logoutForceNotification), perform: { _ in
                             loginOutAction()
                         })
+                        .onAppear {
+        #if !MOBILE
+                            NSWindow.allowsAutomaticWindowTabbing = false
+        #endif
+                            
+                        }
+                    } else {
+                        GitHubLoginView(loginCallBack: {
+                            logined = UserManager.shared.isLogin()
+                        })
+                        .onAppear {
+        #if !MOBILE
+                            NSWindow.allowsAutomaticWindowTabbing = false
+        #endif
+                        }
                     }
-                }
-                .onReceive(NotificationCenter.default.publisher(for: Notification.Name.logoutNotification), perform: { _ in
-                    willLoginOut = true
-                })
-                .onReceive(NotificationCenter.default.publisher(for: Notification.Name.logoutForceNotification), perform: { _ in
-                    loginOutAction()
-                })
-                .onAppear {
-#if !MOBILE
-                    NSWindow.allowsAutomaticWindowTabbing = false
-#endif
-                    
-                }
-            } else {
-                GitHubLoginView(loginCallBack: {
-                    logined = UserManager.shared.isLogin()
-                })
-                .onAppear {
-#if !MOBILE
-                    NSWindow.allowsAutomaticWindowTabbing = false
-#endif
                 }
             }
         }

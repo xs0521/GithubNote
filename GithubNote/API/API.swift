@@ -29,7 +29,7 @@ enum API {
     
     
     var owner: String { UserManager.shared.user?.login ?? "" }
-    var selectRepo: String { AppUserDefaults.repo }
+    var selectRepo: String { AppUserDefaults.repo?.name ?? "" }
     var accessToken: String { AppUserDefaults.accessToken }
 }
 

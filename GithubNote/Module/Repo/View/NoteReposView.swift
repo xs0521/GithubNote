@@ -6,39 +6,85 @@
 //
 
 import SwiftUI
+import Combine
+import SwiftUIFlux
 
-struct NoteReposView: View {
+struct NoteReposView: ConnectedView {
     
-    @Binding var reposGroups: [RepoModel]
-    @Binding var selectionRepo: RepoModel?
+    struct Props {
+        let list: [RepoModel]
+    }
     
-    var refreshCallBack: CommonCallBack?
+    @EnvironmentObject var repoStore: RepoModelStore
+
+    func map(state: AppState, dispatch: @escaping DispatchFunction) -> Props {
+        return Props(list: state.reposStates.items)
+    }
     
-    var body: some View {
-        if reposGroups.isEmpty {
-            NoteEmptyView()
-                .background(Color.background)
-        } else {
-            List(selection: $selectionRepo) {
-                ForEach(reposGroups) { selection in
-                    Label(title: {
-                        HStack {
-                            Text(selection.name ?? "unknow")
-                            if selection.private == true {
-                                PrivateTagView()
+    func body(props: Props) -> some View {
+        VStack {
+            if props.list.isEmpty {
+                NoteEmptyView()
+                    .background(Color.background)
+            } else {
+                List(selection: $repoStore.select) {
+                    ForEach(props.list) { selection in
+                        Label(title: {
+                            HStack {
+                                Text(selection.name ?? "unknow")
+                                if selection.private == true {
+                                    PrivateTagView()
+                                }
                             }
-                        }
-                    }, icon: {
-                        Image(systemName: "square.stack.3d.up")
-                            .foregroundStyle(Color.primary)
-                    })
-                    .tag(selection)
+                        }, icon: {
+                            Image(systemName: "square.stack.3d.up")
+                                .foregroundStyle(Color.primary)
+                        })
+                        .tag(selection)
+                    }
                 }
+                .background(Color.background)
             }
-            .background(Color.background)
         }
+        .onAppear(perform: {
+            repoStore.listener.loadPage()
+        })
     }
 }
+
+
+//struct NoteReposView: View {
+//    
+//    @Binding var reposGroups: [RepoModel]
+//    @Binding var selectionRepo: RepoModel?
+//    
+//    var refreshCallBack: CommonCallBack?
+//    
+//    var body: some View {
+//        if reposGroups.isEmpty {
+//            NoteEmptyView()
+//                .background(Color.background)
+//        } else {
+//            List(selection: $selectionRepo) {
+//                ForEach(reposGroups) { selection in
+//                    Label(title: {
+//                        HStack {
+//                            Text(selection.name ?? "unknow")
+//                            if selection.private == true {
+//                                PrivateTagView()
+//                            }
+//                        }
+//                    }, icon: {
+//                        Image(systemName: "square.stack.3d.up")
+//                            .foregroundStyle(Color.primary)
+//                    })
+//                    .tag(selection)
+//                }
+//            }
+//            .background(Color.background)
+//        }
+//    }
+//}
 
 //#Preview {
 //    NoteReposView()
