@@ -17,6 +17,7 @@ final class IssueModelStore: ObservableObject {
         didSet {
             AppUserDefaults.issue = select
             store.dispatch(action: IssuesActions.WillEditAction(issue: nil))
+            store.dispatch(action: CommentActions.FetchList(readCache: true, completion: nil))
         }
     }
     

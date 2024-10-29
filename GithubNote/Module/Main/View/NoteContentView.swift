@@ -45,7 +45,7 @@ struct NoteContentView: View {
             }
 #else
             NavigationSplitView {
-                sidebarView()
+                NoteSidebarView()
             } detail: {
                 writePannelView()
             }
@@ -71,14 +71,6 @@ struct NoteContentView: View {
             }
             
         }
-    }
-    
-    private func sidebarView() -> some View {
-        NoteSidebarView(selectionRepo: $selectionRepo,
-                        selectionIssue: $selectionIssue,
-                        commentGroups: $commentGroups,
-                        selectionComment: $selectionComment,
-                        showImageBrowser: $showImageBrowser)
     }
     
     private func writePannelView() -> some View {

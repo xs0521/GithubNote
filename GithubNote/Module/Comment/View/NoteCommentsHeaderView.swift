@@ -9,9 +9,7 @@ import SwiftUI
 
 struct NoteCommentsHeaderView: View {
     
-    @Binding var selectionIssue: Issue?
-    
-    @State var isCommentRefreshing: Bool = false
+    @State private var isCommentRefreshing: Bool = false
     @State private var isNewCommentSending: Bool = false
     
     var refreshCallBack: CommonTCallBack<CommonCallBack>?
@@ -30,11 +28,10 @@ struct NoteCommentsHeaderView: View {
                         .frame(width: 20, height: 30)
                 } else {
                     Button {
-    //                    commentsData(false) {}
                         isCommentRefreshing = true
-                        refreshCallBack?({
+                        store.dispatch(action: CommentActions.FetchList(readCache: false, completion: { finish in
                             isCommentRefreshing = false
-                        })
+                        }))
                         
                     } label: {
                         
@@ -49,7 +46,12 @@ struct NoteCommentsHeaderView: View {
                         .frame(width: 20, height: 30)
                 } else {
                     Button {
-                        createComment(selectionIssue)
+                        isNewCommentSending = true
+                        store.dispatch(action: CommentActions.Create(completion: { finish in
+                            store.dispatch(action: CommentActions.FetchList(readCache: true, completion: { _ in
+                                isNewCommentSending = false
+                            }))
+                        }))
                     } label: {
                         Image(systemName: AppConst.plusIcon)
                     }
@@ -58,24 +60,6 @@ struct NoteCommentsHeaderView: View {
                 }
             }
             .padding(.trailing, 12)
-        }
-    }
-}
-
-extension NoteCommentsHeaderView {
-    
-    func createComment(_ issue: Issue?) -> Void {
-        guard let issueId = issue?.number else { return }
-        let body = AppConst.markdown
-        isNewCommentSending = true
-        Networking<Comment>().request(API.newComment(issueId: issueId, body: body), parseHandler: ModelGenerator(snakeCase: true)) { data, cache, _ in
-            guard let comment = data?.first else {
-                isNewCommentSending = false
-                return
-            }
-            createCallBack?(comment, {
-                isNewCommentSending = false
-            })
         }
     }
 }

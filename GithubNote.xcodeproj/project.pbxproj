@@ -38,6 +38,14 @@
 		B139AF392CD10E00002F101A /* IssuesState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B139AF372CD10E00002F101A /* IssuesState.swift */; };
 		B139AF3B2CD10E6B002F101A /* IssuesActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B139AF3A2CD10E6B002F101A /* IssuesActions.swift */; };
 		B139AF3C2CD10E6B002F101A /* IssuesActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B139AF3A2CD10E6B002F101A /* IssuesActions.swift */; };
+		B139AF442CD12A25002F101A /* CommentState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B139AF432CD12A25002F101A /* CommentState.swift */; };
+		B139AF452CD12A25002F101A /* CommentState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B139AF432CD12A25002F101A /* CommentState.swift */; };
+		B139AF472CD12A38002F101A /* CommentActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B139AF462CD12A38002F101A /* CommentActions.swift */; };
+		B139AF482CD12A38002F101A /* CommentActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B139AF462CD12A38002F101A /* CommentActions.swift */; };
+		B139AF4A2CD12D3F002F101A /* CommentModelStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B139AF492CD12D3F002F101A /* CommentModelStore.swift */; };
+		B139AF4B2CD12D3F002F101A /* CommentModelStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B139AF492CD12D3F002F101A /* CommentModelStore.swift */; };
+		B139AF4D2CD12D6F002F101A /* CommentListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = B139AF4C2CD12D6F002F101A /* CommentListener.swift */; };
+		B139AF4E2CD12D6F002F101A /* CommentListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = B139AF4C2CD12D6F002F101A /* CommentListener.swift */; };
 		B148A5BA2BC1506000B7FBA8 /* LoginOutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B148A5B92BC1506000B7FBA8 /* LoginOutView.swift */; };
 		B148A5BC2BC154FA00B7FBA8 /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B148A5BB2BC154FA00B7FBA8 /* Color+Extension.swift */; };
 		B14983BD2CBAD5BE00CDAB6F /* GitHubLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14983BC2CBAD5BE00CDAB6F /* GitHubLoginView.swift */; };
@@ -213,6 +221,10 @@
 		B11FDA8A2BBFE8C500EC7083 /* AppConst.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConst.swift; sourceTree = "<group>"; };
 		B139AF372CD10E00002F101A /* IssuesState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssuesState.swift; sourceTree = "<group>"; };
 		B139AF3A2CD10E6B002F101A /* IssuesActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssuesActions.swift; sourceTree = "<group>"; };
+		B139AF432CD12A25002F101A /* CommentState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentState.swift; sourceTree = "<group>"; };
+		B139AF462CD12A38002F101A /* CommentActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentActions.swift; sourceTree = "<group>"; };
+		B139AF492CD12D3F002F101A /* CommentModelStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentModelStore.swift; sourceTree = "<group>"; };
+		B139AF4C2CD12D6F002F101A /* CommentListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentListener.swift; sourceTree = "<group>"; };
 		B148A5B92BC1506000B7FBA8 /* LoginOutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginOutView.swift; sourceTree = "<group>"; };
 		B148A5BB2BC154FA00B7FBA8 /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
 		B14983BB2CBAD3C400CDAB6F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -420,6 +432,15 @@
 				B1EBBDD02CB3CD7A005FB760 /* NoteSidebarToolView.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		B139AF422CD129ED002F101A /* State */ = {
+			isa = PBXGroup;
+			children = (
+				B139AF432CD12A25002F101A /* CommentState.swift */,
+				B139AF462CD12A38002F101A /* CommentActions.swift */,
+			);
+			path = State;
 			sourceTree = "<group>";
 		};
 		B14EA4DF2CC7E4F000F55A4D /* View */ = {
@@ -646,6 +667,7 @@
 		B1E55A472BBFD482000209ED /* Comment */ = {
 			isa = PBXGroup;
 			children = (
+				B139AF422CD129ED002F101A /* State */,
 				B14EA4E02CC7E4FC00F55A4D /* View */,
 				B1E55A492BBFD4E7000209ED /* Model */,
 			);
@@ -656,6 +678,8 @@
 			isa = PBXGroup;
 			children = (
 				B19DC59F2BBFD51B009C7DBE /* CommentModel.swift */,
+				B139AF492CD12D3F002F101A /* CommentModelStore.swift */,
+				B139AF4C2CD12D6F002F101A /* CommentListener.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -676,13 +700,13 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
-		B1EBBD982C9ED683005FB760 /* View */ = {
+		B1EBBD982C9ED683005FB760 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				B1EBBD992C9ED695005FB760 /* CustomDivider.swift */,
 				B1B5AAF22CC3989A003F4E71 /* KeyCaptureViewRepresentable.swift */,
 			);
-			path = View;
+			path = Views;
 			sourceTree = "<group>";
 		};
 		B1EBBD9B2C9EF50F005FB760 /* Email */ = {
@@ -836,7 +860,7 @@
 				B1FE674D2C45767600970DA0 /* Common.swift */,
 				B1EBBDA32C9FDB28005FB760 /* ToastManager.swift */,
 				B1EBBD9B2C9EF50F005FB760 /* Email */,
-				B1EBBD982C9ED683005FB760 /* View */,
+				B1EBBD982C9ED683005FB760 /* Views */,
 				B1CE86592C592690002C8335 /* Notification */,
 			);
 			path = Common;
@@ -1190,6 +1214,7 @@
 				B14983CE2CBB632E00CDAB6F /* AppModel.swift in Sources */,
 				B14EA4EC2CC93EEE00F55A4D /* AppUserDefaults.swift in Sources */,
 				B14983CF2CBB632E00CDAB6F /* NoteSidebarToolView.swift in Sources */,
+				B139AF4E2CD12D6F002F101A /* CommentListener.swift in Sources */,
 				B1A3FBC12CC008E900C8ADF7 /* TimeManager.swift in Sources */,
 				B14983D02CBB632E00CDAB6F /* LaunchApp.swift in Sources */,
 				B14983D12CBB632E00CDAB6F /* NoteCommentsView.swift in Sources */,
@@ -1216,6 +1241,7 @@
 				B14983DF2CBB632E00CDAB6F /* SettingsView.swift in Sources */,
 				B14983E22CBB632E00CDAB6F /* String+Extension.swift in Sources */,
 				B14EA4E42CC7E70400F55A4D /* PrivateTagView.swift in Sources */,
+				B139AF4B2CD12D3F002F101A /* CommentModelStore.swift in Sources */,
 				B14983E32CBB632E00CDAB6F /* ToastManager.swift in Sources */,
 				B14983E42CBB632E00CDAB6F /* NoteImageBrowserImagesView.swift in Sources */,
 				B14983E52CBB632E00CDAB6F /* API.swift in Sources */,
@@ -1234,6 +1260,7 @@
 				B14983ED2CBB632E00CDAB6F /* View+Extension.swift in Sources */,
 				B1B5AAEB2CC2B451003F4E71 /* SQLManager+Image.swift in Sources */,
 				B14983EE2CBB632E00CDAB6F /* CustomURLSchemeHandler.swift in Sources */,
+				B139AF452CD12A25002F101A /* CommentState.swift in Sources */,
 				B14983EF2CBB632E00CDAB6F /* NoteSidebarView.swift in Sources */,
 				B14983F02CBB632E00CDAB6F /* GithubNoteApp.swift in Sources */,
 				B14EA4E72CC7E89D00F55A4D /* SQLModelable.swift in Sources */,
@@ -1242,6 +1269,7 @@
 				B112373F2CCA962D0085F9EB /* NoteReposListener.swift in Sources */,
 				B1B5AAF12CC36B85003F4E71 /* NoteImageBrowserPreViewImagesView.swift in Sources */,
 				B14983F22CBB632E00CDAB6F /* IssuesModel.swift in Sources */,
+				B139AF482CD12A38002F101A /* CommentActions.swift in Sources */,
 				B14EA4F22CC9505F00F55A4D /* NoteContentHeaderView.swift in Sources */,
 				B14983F32CBB632E00CDAB6F /* Color+Extension.swift in Sources */,
 				B14983F52CBB632E00CDAB6F /* NotificationNameModule.swift in Sources */,
@@ -1262,6 +1290,7 @@
 				B1FE67542C480B0200970DA0 /* NoteImageBrowserView.swift in Sources */,
 				B112373B2CCA94E60085F9EB /* ReposActions.swift in Sources */,
 				B1B55A922C52A0C000820689 /* Data+Extension.swift in Sources */,
+				B139AF442CD12A25002F101A /* CommentState.swift in Sources */,
 				B1EC0DF82BBE47A8007975D9 /* UserDefaults+Extension.swift in Sources */,
 				B16C4AD42BB3164800F417D3 /* Binding+Extension.swift in Sources */,
 				B1D7CF542BCA11DE00362C35 /* ImagesModel.swift in Sources */,
@@ -1271,6 +1300,7 @@
 				B1EBBDD12CB3CD7A005FB760 /* NoteSidebarToolView.swift in Sources */,
 				B11237452CCAAA8F0085F9EB /* SideState.swift in Sources */,
 				B1A3FBC02CC008E900C8ADF7 /* TimeManager.swift in Sources */,
+				B139AF472CD12A38002F101A /* CommentActions.swift in Sources */,
 				B1EBBDA02C9F0079005FB760 /* LaunchApp.swift in Sources */,
 				B1EBBDC02CA06C99005FB760 /* NoteCommentsView.swift in Sources */,
 				B11FDA8B2BBFE8C500EC7083 /* AppConst.swift in Sources */,
@@ -1287,6 +1317,7 @@
 				B1ED88752C4C057200FD8DEB /* CachePolicyPlugin.swift in Sources */,
 				B1EBBDBA2CA05EEA005FB760 /* NoteReposView.swift in Sources */,
 				B148A5BA2BC1506000B7FBA8 /* LoginOutView.swift in Sources */,
+				B139AF4A2CD12D3F002F101A /* CommentModelStore.swift in Sources */,
 				B11237372CCA93460085F9EB /* AppReducer.swift in Sources */,
 				B19DC5A02BBFD51B009C7DBE /* CommentModel.swift in Sources */,
 				B168824C2CCFE92600E3D8DD /* IssuesListener.swift in Sources */,
@@ -1299,6 +1330,7 @@
 				B14EA4E32CC7E70400F55A4D /* PrivateTagView.swift in Sources */,
 				B1EBBDA42C9FDB28005FB760 /* ToastManager.swift in Sources */,
 				B11237332CCA92E90085F9EB /* loggingMiddleware.swift in Sources */,
+				B139AF4D2CD12D6F002F101A /* CommentListener.swift in Sources */,
 				B1CE86582C57EF77002C8335 /* NoteImageBrowserImagesView.swift in Sources */,
 				B1ED886A2C4ACAFE00FD8DEB /* API.swift in Sources */,
 				B1EBBDCA2CB24DA9005FB760 /* SQLManager+Comment.swift in Sources */,

@@ -45,10 +45,7 @@ struct NoteContentTableView: View {
             .tabItem{
                 self.tabbarItem(text: "Note", image: "note")
             }.tag(Tab.notes)
-            NoteIssuesView(issueGroups: $issueGroups,
-                           selectionIssue: $selectionIssue,
-                           selectionRepo: $selectionRepo,
-                           showReposView: $showReposView)
+            NoteIssuesView()
             .tabItem{
                 self.tabbarItem(text: "NoteBook", image: "menucard")
             }.tag(Tab.folders)

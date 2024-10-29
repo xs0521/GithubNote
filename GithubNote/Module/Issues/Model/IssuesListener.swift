@@ -12,10 +12,4 @@ class IssuesListener {
     func loadPage(_ cache: Bool = true, _ completion: CommonTCallBack<Bool>? = nil) {
         store.dispatch(action: IssuesActions.FetchList(readCache: cache, completion: completion))
     }
-    
-    func create(_ completion: CommonTCallBack<Bool>? = nil) -> Void {
-//        store.dispatch(action: ReposActions.CreateRepo(completion: completion))
-    }
-    
-    
 }

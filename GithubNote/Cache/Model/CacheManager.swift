@@ -72,7 +72,6 @@ extension CacheManager {
     
     static func deleteRepo(_ ids: [Int], _ completion: @escaping CommonCallBack) -> Void {
         CacheManager.shared.manager?.dbQueue?.inDatabase({ database in
-            guard let manager = CacheManager.shared.manager else { return }
             let tableName = RepoModel.tableName
             CacheManager.shared.manager?.deleteItems(in: tableName, byId: ids, database: database)
             DispatchQueue.main.async {

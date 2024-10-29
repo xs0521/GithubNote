@@ -6,26 +6,38 @@
 //
 
 import SwiftUI
+import SwiftUIFlux
 
-struct NoteCommentsView: View {
+struct NoteCommentsView: ConnectedView {
     
-    @Binding var commentGroups: [Comment]
-    @Binding var selectionComment: Comment?
-    @Binding var selectionIssue: Issue?
+    @EnvironmentObject var issueStore: IssueModelStore
+    @EnvironmentObject var commentStore: CommentModelStore
     
-    @State var deleteComment: Comment?
+    struct Props {
+        let editComment: Comment?
+        let deleteComment: Comment?
+        let list: [Comment]
+        let selectionIssue: Issue?
+    }
     
-    var body: some View {
+    func map(state: AppState, dispatch: @escaping DispatchFunction) -> Props {
+        return Props(editComment: state.commentStates.editItem,
+                     deleteComment: state.commentStates.deleteItem,
+                     list: state.commentStates.items,
+                     selectionIssue: issueStore.select)
+    }
+    
+    func body(props: Props) -> some View {
         VStack {
-            if commentGroups.isEmpty {
+            if props.list.isEmpty {
                 NoteEmptyView()
             } else {
-                List(selection: $selectionComment) {
-                    ForEach(commentGroups) { selection in
+                List(selection: $commentStore.select) {
+                    ForEach(props.list) { selection in
                         Label(title: {
                             Text(selection.body?.toTitle() ?? "")
                         }, icon: {
-                            if deleteComment?.id == selection.id {
+                            if props.deleteComment?.id == selection.id {
                                 ProgressView()
                                     .controlSize(.mini)
                                     .frame(width: 20, height: 20)
@@ -38,8 +50,8 @@ struct NoteCommentsView: View {
                         .contextMenu {
                             Button("Delete", role: .destructive) {
                                 "delete \(selection.body?.toTitle() ?? "")".logI()
-                                deleteComment = selection
-                                deleteComment(selection)
+//                                deleteComment = selection
+//                                deleteComment(selection)
                             }
                         }
                     }
@@ -47,21 +59,24 @@ struct NoteCommentsView: View {
                 }
             }
         }
+        .onAppear {
+            commentStore.listener.loadPage()
+        }
     }
 }
 
 extension NoteCommentsView {
     
-    private func deleteComment(_ comment: Comment) -> Void {
-        guard let commentId = comment.id else { return }
-        Networking<Comment>().request(API.deleteComment(commentId: commentId)) { data, cache, code in
-            if MessageCode.finish.rawValue != code {
-                return
-            }
-            commentGroups.removeAll(where: {$0.id == commentId})
-            CacheManager.deleteComment([commentId]) { }
-        }
-    }
+//    private func deleteComment(_ comment: Comment) -> Void {
+//        guard let commentId = comment.id else { return }
+//        Networking<Comment>().request(API.deleteComment(commentId: commentId)) { data, cache, code in
+//            if MessageCode.finish.rawValue != code {
+//                return
+//            }
+//            commentGroups.removeAll(where: {$0.id == commentId})
+//            CacheManager.deleteComment([commentId]) { }
+//        }
+//    }
 }
 
 //#Preview {
