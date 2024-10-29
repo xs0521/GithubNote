@@ -6,13 +6,15 @@
 //
 
 import SwiftUI
+import SwiftUIFlux
 
-struct NoteSidebarToolView: View {
+struct NoteSidebarToolView: ConnectedView {
     
-    @Binding var showReposView: Bool
-    
-    @Binding var showImageBrowser: Bool?
-    @Binding var selectionRepo: RepoModel?
+    struct Props {
+        let isReposVisible: Bool
+        let isImageBrowserVisible: Bool
+        let selectionRepo: RepoModel?
+    }
     
     @State private var isSyncRepos: Bool = false
     @State private var isCreateRepos: Bool = false
@@ -20,26 +22,37 @@ struct NoteSidebarToolView: View {
     
     @State private var degreesValue: Double = 0
     
-    var requestAllRepoCallBack: (_ cache: Bool, _ callBack: @escaping CommonCallBack) -> Void
+    @EnvironmentObject var repoStore: RepoModelStore
     
-    var body: some View {
+//    var requestAllRepoCallBack: (_ cache: Bool, _ callBack: @escaping CommonCallBack) -> Void
+    
+    func map(state: AppState, dispatch: @escaping DispatchFunction) -> Props {
+        let isReposVisible = state.sideStates.isReposVisible
+        let isImageBrowserVisible = state.sideStates.isImageBrowserVisible
+        let selectionRepo = state.sideStates.selectionRepo
+        
+        return Props(isReposVisible: isReposVisible,
+                     isImageBrowserVisible: isImageBrowserVisible,
+                     selectionRepo: selectionRepo)
+    }
+    
+    func body(props: Props) -> some View {
         HStack {
             Button(action: {
-//                showReposView.toggle()
-                let showReposView = !store.state.sideStates.showReposView
-                store.dispatch(action: SideActions.ReposViewState(show: showReposView))
+                let visible = !store.state.sideStates.isReposVisible
+                store.dispatch(action: SideActions.ReposViewState(visible: visible))
             }, label: {
                 Label {
                     HStack {
-                        Text(repoTitle)
+                        Text(props.selectionRepo?.name ?? "Select Repo")
                             .lineLimit(1)
-                        if selectionRepo?.private == true {
+                        if props.selectionRepo?.private == true {
                             PrivateTagView()
                         }
                     }
                 } icon: {
                     Image(systemName: "arrowtriangle.right.fill")
-                        .rotationEffect(.degrees(-degreesValue))
+                        .rotationEffect(.degrees(props.isReposVisible ? -90 : 0))
                 }
                 .foregroundStyle(Color.primary)
             })
@@ -47,14 +60,8 @@ struct NoteSidebarToolView: View {
             .foregroundColor(.accentColor)
             .padding(EdgeInsets(top: 5, leading: 16, bottom: 16, trailing: 5))
             .frame(maxWidth: .infinity, alignment: .leading)
-            .onChange(of: selectionRepo) { oldValue, newValue in
-                repoTitle = selectionRepo?.name ?? "Select Repo"
-            }
-            .onChange(of: showReposView) { oldValue, newValue in
-                degreesValue = newValue ? 90 : 0
-            }
             
-            if showReposView {
+            if props.isReposVisible {
                 HStack {
                     if isSyncRepos {
                         ProgressView()
@@ -64,10 +71,15 @@ struct NoteSidebarToolView: View {
                             .frame(width: 20, height: 15)
                     } else {
                         Button {
+//                            isSyncRepos = true
+//                            requestAllRepoCallBack(false, {
+//                                isSyncRepos = false
+//                            })
                             isSyncRepos = true
-                            requestAllRepoCallBack(false, {
+                            repoStore.listener.loadPage(false, {_ in 
                                 isSyncRepos = false
                             })
+                            
                         } label: {
                             Image(systemName: AppConst.downloadIcon)
                         }
@@ -82,9 +94,15 @@ struct NoteSidebarToolView: View {
                             .frame(width: 15, height: 15)
                     } else {
                         Button {
+//                            isCreateRepos = true
+//                            createRepo { success in
+//                                isCreateRepos = false
+//                            }
                             isCreateRepos = true
-                            createRepo { success in
-                                isCreateRepos = false
+                            repoStore.listener.create { finish in
+                                repoStore.listener.loadPage(true, {_ in
+                                    isCreateRepos = false
+                                })
                             }
                         } label: {
                             Image(systemName: AppConst.plusIcon)
@@ -100,7 +118,7 @@ struct NoteSidebarToolView: View {
                         ToastManager.shared.show("Please select a code repository")
                         return
                     }
-                    showImageBrowser?.toggle()
+                    store.dispatch(action: SideActions.ImagesViewState(visible: true))
                 }, label: {
                     Image(systemName: AppConst.photoIcon)
                 })
@@ -128,9 +146,9 @@ extension NoteSidebarToolView {
             "#request# createRepo \(noteRepoName)".logI()
             
             CacheManager.insertRepos(repos: [item]) {
-                self.requestAllRepoCallBack(true, {
-                    completion(true)
-                })
+//                self.requestAllRepoCallBack(true, {
+//                    completion(true)
+//                })
             }
         }
     }

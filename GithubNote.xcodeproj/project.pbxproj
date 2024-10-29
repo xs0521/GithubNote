@@ -34,6 +34,10 @@
 		B11237482CCAAAC00085F9EB /* SideActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11237472CCAAAC00085F9EB /* SideActions.swift */; };
 		B11237492CCAAAC00085F9EB /* SideActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11237472CCAAAC00085F9EB /* SideActions.swift */; };
 		B11FDA8B2BBFE8C500EC7083 /* AppConst.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11FDA8A2BBFE8C500EC7083 /* AppConst.swift */; };
+		B139AF382CD10E00002F101A /* IssuesState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B139AF372CD10E00002F101A /* IssuesState.swift */; };
+		B139AF392CD10E00002F101A /* IssuesState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B139AF372CD10E00002F101A /* IssuesState.swift */; };
+		B139AF3B2CD10E6B002F101A /* IssuesActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B139AF3A2CD10E6B002F101A /* IssuesActions.swift */; };
+		B139AF3C2CD10E6B002F101A /* IssuesActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B139AF3A2CD10E6B002F101A /* IssuesActions.swift */; };
 		B148A5BA2BC1506000B7FBA8 /* LoginOutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B148A5B92BC1506000B7FBA8 /* LoginOutView.swift */; };
 		B148A5BC2BC154FA00B7FBA8 /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B148A5BB2BC154FA00B7FBA8 /* Color+Extension.swift */; };
 		B14983BD2CBAD5BE00CDAB6F /* GitHubLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14983BC2CBAD5BE00CDAB6F /* GitHubLoginView.swift */; };
@@ -102,6 +106,10 @@
 		B14EA4F22CC9505F00F55A4D /* NoteContentHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14EA4F12CC9505F00F55A4D /* NoteContentHeaderView.swift */; };
 		B14EA4F42CC951FA00F55A4D /* NoteContentTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B14EA4F32CC951FA00F55A4D /* NoteContentTableView.swift */; };
 		B16462722BB0464A00F57548 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16462712BB0464A00F57548 /* Account.swift */; };
+		B16882492CCFE90300E3D8DD /* IssueModelStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16882482CCFE90300E3D8DD /* IssueModelStore.swift */; };
+		B168824A2CCFE90300E3D8DD /* IssueModelStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16882482CCFE90300E3D8DD /* IssueModelStore.swift */; };
+		B168824C2CCFE92600E3D8DD /* IssuesListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = B168824B2CCFE92600E3D8DD /* IssuesListener.swift */; };
+		B168824D2CCFE92600E3D8DD /* IssuesListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = B168824B2CCFE92600E3D8DD /* IssuesListener.swift */; };
 		B16C4AD42BB3164800F417D3 /* Binding+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16C4AD32BB3164800F417D3 /* Binding+Extension.swift */; };
 		B1922A4D2BAFF1FB00200828 /* GithubNoteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1922A4C2BAFF1FB00200828 /* GithubNoteApp.swift */; };
 		B1922A552BAFF1FC00200828 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1922A542BAFF1FC00200828 /* Preview Assets.xcassets */; };
@@ -203,6 +211,8 @@
 		B11237442CCAAA8F0085F9EB /* SideState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideState.swift; sourceTree = "<group>"; };
 		B11237472CCAAAC00085F9EB /* SideActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideActions.swift; sourceTree = "<group>"; };
 		B11FDA8A2BBFE8C500EC7083 /* AppConst.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConst.swift; sourceTree = "<group>"; };
+		B139AF372CD10E00002F101A /* IssuesState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssuesState.swift; sourceTree = "<group>"; };
+		B139AF3A2CD10E6B002F101A /* IssuesActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssuesActions.swift; sourceTree = "<group>"; };
 		B148A5B92BC1506000B7FBA8 /* LoginOutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginOutView.swift; sourceTree = "<group>"; };
 		B148A5BB2BC154FA00B7FBA8 /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
 		B14983BB2CBAD3C400CDAB6F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -216,6 +226,8 @@
 		B14EA4F12CC9505F00F55A4D /* NoteContentHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteContentHeaderView.swift; sourceTree = "<group>"; };
 		B14EA4F32CC951FA00F55A4D /* NoteContentTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteContentTableView.swift; sourceTree = "<group>"; };
 		B16462712BB0464A00F57548 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
+		B16882482CCFE90300E3D8DD /* IssueModelStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssueModelStore.swift; sourceTree = "<group>"; };
+		B168824B2CCFE92600E3D8DD /* IssuesListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssuesListener.swift; sourceTree = "<group>"; };
 		B16C4AD32BB3164800F417D3 /* Binding+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Binding+Extension.swift"; sourceTree = "<group>"; };
 		B1922A492BAFF1FB00200828 /* GithubNote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GithubNote.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1922A4C2BAFF1FB00200828 /* GithubNoteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubNoteApp.swift; sourceTree = "<group>"; };
@@ -338,6 +350,7 @@
 		B112372E2CCA90FC0085F9EB /* State */ = {
 			isa = PBXGroup;
 			children = (
+				B168824E2CCFEB3700E3D8DD /* Issue */,
 				B11237432CCAAA7B0085F9EB /* Side */,
 				B11237392CCA94C90085F9EB /* Repos */,
 			);
@@ -386,6 +399,8 @@
 			isa = PBXGroup;
 			children = (
 				B1E55A412BBF96B7000209ED /* IssuesModel.swift */,
+				B16882482CCFE90300E3D8DD /* IssueModelStore.swift */,
+				B168824B2CCFE92600E3D8DD /* IssuesListener.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -423,6 +438,15 @@
 				B14EA4F32CC951FA00F55A4D /* NoteContentTableView.swift */,
 			);
 			path = Mobile;
+			sourceTree = "<group>";
+		};
+		B168824E2CCFEB3700E3D8DD /* Issue */ = {
+			isa = PBXGroup;
+			children = (
+				B139AF372CD10E00002F101A /* IssuesState.swift */,
+				B139AF3A2CD10E6B002F101A /* IssuesActions.swift */,
+			);
+			path = Issue;
 			sourceTree = "<group>";
 		};
 		B18536282C4ABC1400867E91 /* Network */ = {
@@ -1146,6 +1170,7 @@
 				B14983C52CBB632E00CDAB6F /* NoteContentView.swift in Sources */,
 				B14983C62CBB632E00CDAB6F /* CustomDivider.swift in Sources */,
 				B11237492CCAAAC00085F9EB /* SideActions.swift in Sources */,
+				B168824A2CCFE90300E3D8DD /* IssueModelStore.swift in Sources */,
 				B1A3FBC42CC0180A00C8ADF7 /* Int+Extension.swift in Sources */,
 				B14983C72CBB632E00CDAB6F /* NoteWritePannelView.swift in Sources */,
 				B14983C82CBB632E00CDAB6F /* NoteImageBrowserView.swift in Sources */,
@@ -1161,6 +1186,7 @@
 				B14983D02CBB632E00CDAB6F /* LaunchApp.swift in Sources */,
 				B14983D12CBB632E00CDAB6F /* NoteCommentsView.swift in Sources */,
 				B14983D32CBB632E00CDAB6F /* AppConst.swift in Sources */,
+				B139AF3C2CD10E6B002F101A /* IssuesActions.swift in Sources */,
 				B11237342CCA92E90085F9EB /* loggingMiddleware.swift in Sources */,
 				B14983D42CBB632E00CDAB6F /* LogManager.swift in Sources */,
 				B1B5AAE82CC2AB71003F4E71 /* ImageUploader.swift in Sources */,
@@ -1185,10 +1211,12 @@
 				B14983E32CBB632E00CDAB6F /* ToastManager.swift in Sources */,
 				B14983E42CBB632E00CDAB6F /* NoteImageBrowserImagesView.swift in Sources */,
 				B14983E52CBB632E00CDAB6F /* API.swift in Sources */,
+				B139AF392CD10E00002F101A /* IssuesState.swift in Sources */,
 				B14983E62CBB632E00CDAB6F /* SQLManager+Comment.swift in Sources */,
 				B14983E72CBB632E00CDAB6F /* GitHubLoginView.swift in Sources */,
 				B14983E82CBB632E00CDAB6F /* Modelable.swift in Sources */,
 				B14EA4F42CC951FA00F55A4D /* NoteContentTableView.swift in Sources */,
+				B168824D2CCFE92600E3D8DD /* IssuesListener.swift in Sources */,
 				B11237422CCAA25B0085F9EB /* RepoModelStore.swift in Sources */,
 				B11237462CCAAA8F0085F9EB /* SideState.swift in Sources */,
 				B14983E92CBB632E00CDAB6F /* EmailManager.swift in Sources */,
@@ -1247,16 +1275,19 @@
 				B16462722BB0464A00F57548 /* Account.swift in Sources */,
 				B14EA4EE2CC949F300F55A4D /* NoteEmptyView.swift in Sources */,
 				B1B5AAED2CC34C0E003F4E71 /* NoteWritePannelTitleView.swift in Sources */,
+				B139AF382CD10E00002F101A /* IssuesState.swift in Sources */,
 				B1ED88752C4C057200FD8DEB /* CachePolicyPlugin.swift in Sources */,
 				B1EBBDBA2CA05EEA005FB760 /* NoteReposView.swift in Sources */,
 				B148A5BA2BC1506000B7FBA8 /* LoginOutView.swift in Sources */,
 				B11237372CCA93460085F9EB /* AppReducer.swift in Sources */,
 				B19DC5A02BBFD51B009C7DBE /* CommentModel.swift in Sources */,
+				B168824C2CCFE92600E3D8DD /* IssuesListener.swift in Sources */,
 				B1ED88632C4ABC4E00FD8DEB /* Networking.swift in Sources */,
 				B1EBBD972C9E93EE005FB760 /* SettingsView.swift in Sources */,
 				B11237412CCAA25B0085F9EB /* RepoModelStore.swift in Sources */,
 				B1EC0DE82BBB8DD4007975D9 /* String+Extension.swift in Sources */,
 				B11237302CCA91360085F9EB /* ReposState.swift in Sources */,
+				B16882492CCFE90300E3D8DD /* IssueModelStore.swift in Sources */,
 				B14EA4E32CC7E70400F55A4D /* PrivateTagView.swift in Sources */,
 				B1EBBDA42C9FDB28005FB760 /* ToastManager.swift in Sources */,
 				B11237332CCA92E90085F9EB /* loggingMiddleware.swift in Sources */,
@@ -1281,6 +1312,7 @@
 				B1EBBDC42CB23818005FB760 /* SQLManager.swift in Sources */,
 				B1B5AAF02CC36B85003F4E71 /* NoteImageBrowserPreViewImagesView.swift in Sources */,
 				B1E55A422BBF96B7000209ED /* IssuesModel.swift in Sources */,
+				B139AF3B2CD10E6B002F101A /* IssuesActions.swift in Sources */,
 				B112373E2CCA962D0085F9EB /* NoteReposListener.swift in Sources */,
 				B148A5BC2BC154FA00B7FBA8 /* Color+Extension.swift in Sources */,
 				B1CE865B2C5926B8002C8335 /* NotificationNameModule.swift in Sources */,

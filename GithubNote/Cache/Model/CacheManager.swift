@@ -11,13 +11,13 @@ class CacheManager: Setupable {
     
     var manager: SQLManager?
     var currentRepo: RepoModel? {
-        didSet {
-            "#cache# current repo \(currentRepo?.name ?? "")".logI()
+        get {
+            AppUserDefaults.repo
         }
     }
     var currentIssue: Issue? {
-        didSet {
-            "#cache# current issue \(currentIssue?.title ?? "")".logI()
+        get {
+            AppUserDefaults.issue
         }
     }
     

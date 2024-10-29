@@ -10,5 +10,7 @@ import SwiftUIFlux
 
 struct SideState: FluxState, Codable {
     
-    var showReposView: Bool = false
+    var isReposVisible: Bool = false
+    var selectionRepo: RepoModel? = AppUserDefaults.repo
+    var isImageBrowserVisible: Bool = false
 }

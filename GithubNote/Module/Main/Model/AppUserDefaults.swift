@@ -39,19 +39,19 @@ struct AppUserDefaults {
     @UserDefault("com.githubnote.repo", defaultValue: nil)
     public static var repo: RepoModel?
         
-    @UserDefault("com.githubnote.issue", defaultValue: "")
-    public static var issue: String
+    @UserDefault("com.githubnote.issue", defaultValue: nil)
+    public static var issue: Issue?
     
-    @UserDefault("com.githubnote.comment", defaultValue: "")
-    public static var comment: String
+    @UserDefault("com.githubnote.comment", defaultValue: nil)
+    public static var comment: Comment?
     
     @UserDefault("com.githubnote.accessToken", defaultValue: "")
     public static var accessToken: String
 
     static func reset() -> Void {
         self.repo = nil
-        self.issue = ""
-        self.comment = ""
+        self.issue = nil
+        self.comment = nil
         self.accessToken = ""
     }
 }

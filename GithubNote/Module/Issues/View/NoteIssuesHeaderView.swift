@@ -12,10 +12,6 @@ struct NoteIssuesHeaderView: View {
     @State private var isNewIssueSending: Bool = false
     @State private var isIssueRefreshing: Bool = false
     
-    var issueSyncCallBack: (_ callBack: @escaping CommonCallBack) -> ()
-    var createIssueCallBack: (_ issue: Issue) -> ()
-    
-    
     var body: some View {
         HStack {
             Text("NoteBook")
@@ -29,9 +25,9 @@ struct NoteIssuesHeaderView: View {
                 } else {
                     Button {
                         isIssueRefreshing = true
-                        issueSyncCallBack({
+                        store.dispatch(action: IssuesActions.FetchList(readCache: false, completion: { finish in
                             isIssueRefreshing = false
-                        })
+                        }))
                     } label: {
                         Image(systemName: AppConst.downloadIcon)
                     }
@@ -44,7 +40,12 @@ struct NoteIssuesHeaderView: View {
                         .frame(width: 20, height: 30)
                 } else {
                     Button {
-                        createIssue()
+                        isNewIssueSending = true
+                        store.dispatch(action: IssuesActions.Create(completion: { finish in
+                            store.dispatch(action: IssuesActions.FetchList(readCache: true, completion: { _ in
+                                isNewIssueSending = false
+                            }))
+                        }))
                     } label: {
                         Image(systemName: AppConst.plusIcon)
                     }
@@ -62,19 +63,21 @@ struct NoteIssuesHeaderView: View {
 
 extension NoteIssuesHeaderView {
     
-    func createIssue() -> Void {
-        isNewIssueSending = true
-        let title = AppConst.issueMarkdown
-        let body = AppConst.issueBodyMarkdown
-        Networking<Issue>().request(API.newIssue(title: title, body: body), parseHandler: ModelGenerator(snakeCase: true)) { data, cache, _ in
-            guard let issue = data?.first else {
-                isNewIssueSending = false
-                return
-            }
-            createIssueCallBack(issue)
-            isNewIssueSending = false
-        }
-    }
+//    func createIssue() -> Void {
+//        isNewIssueSending = true
+//        let title = AppConst.issueMarkdown
+//        let body = AppConst.issueBodyMarkdown
+//        Networking<Issue>().request(API.newIssue(title: title, body: body), parseHandler: ModelGenerator(snakeCase: true)) { data, cache, _ in
+//            guard let issue = data?.first else {
+//                isNewIssueSending = false
+//                return
+//            }
+//            createIssueCallBack(issue)
+//            isNewIssueSending = false
+//        }
+        
+        
+//    }
 }
 
 //#Preview {

@@ -16,7 +16,8 @@ final class RepoModelStore: ObservableObject {
     @Published var select: RepoModel? {
         didSet {
             if AppUserDefaults.repo != select && select != nil {
-                store.dispatch(action: SideActions.ReposViewState(show: false))
+                store.dispatch(action: SideActions.ReposViewState(visible: false))
+                store.dispatch(action: IssuesActions.FetchList(readCache: true, completion: nil))
             }
             AppUserDefaults.repo = select
         }

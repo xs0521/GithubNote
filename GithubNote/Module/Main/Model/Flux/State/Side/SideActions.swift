@@ -11,6 +11,10 @@ import SwiftUIFlux
 struct SideActions {
     
     struct ReposViewState: Action {
-        let show: Bool
+        let visible: Bool
+    }
+    
+    struct ImagesViewState: Action {
+        let visible: Bool
     }
 }

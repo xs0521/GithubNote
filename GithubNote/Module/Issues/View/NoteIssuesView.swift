@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import SwiftUIFlux
+
 #if MOBILE
 import UIKit
 #else
@@ -13,41 +15,48 @@ import AppKit
 #endif
 
 
-struct NoteIssuesView: View {
+struct NoteIssuesView: ConnectedView {
+    
+    @EnvironmentObject var issueStore: IssueModelStore
     
     private enum Field: Int, Hashable {
         case title
     }
     
-    @Binding var issueGroups: [Issue]
-    @Binding var selectionIssue: Issue?
-    @Binding var selectionRepo: RepoModel?
-    @Binding var showReposView: Bool
+    struct Props {
+        let editIssue: Issue?
+        let deleteIssue: Issue?
+        let issueGroups: [Issue]
+        let selectionRepo: RepoModel?
+        let showReposView: Bool = false
+    }
     
-    @State private var editIssue: Issue?
-    @State private var editText: String = ""
-    @State private var deleteIssue: Issue?
     @State private var isEditIssueTitleSending: Bool = false
-    
-    
     @FocusState private var focusedField: Field?
     
     var requestComments: CommonTCallBack<Issue?>?
     
-    var body: some View {
+    func map(state: AppState, dispatch: @escaping DispatchFunction) -> Props {
+        return Props(editIssue: state.issuesStates.editItem,
+                     deleteIssue: state.issuesStates.deleteItem,
+                     issueGroups: state.issuesStates.items,
+                     selectionRepo: state.sideStates.selectionRepo)
+    }
+    
+    func body(props: Props) -> some View {
         VStack {
-            if issueGroups.isEmpty {
+            if props.issueGroups.isEmpty {
                 NoteEmptyView()
             } else {
-                List(selection: $selectionIssue) {
-                    ForEach(issueGroups) { selection in
-                        if selection == editIssue {
+                List(selection: $issueStore.select) {
+                    ForEach(props.issueGroups) { selection in
+                        if selection == props.editIssue {
                             HStack {
                                 Image(systemName: "menucard")
                                     .foregroundStyle(Color.primary)
                                     .padding(.leading, 3)
                                 HStack {
-                                    TextField("", text: $editText)
+                                    TextField("", text: $issueStore.editText)
                                         .focused($focusedField, equals: .title)
                                         .frame(height: 18)
                                         .font(.system(size: 13))
@@ -61,7 +70,15 @@ struct NoteIssuesView: View {
                                         .frame(width: 20, height: 20)
                                 } else {
                                     Button {
-                                        updateIssueTitle(editIssue, editText)
+                                        guard let editIssue = props.editIssue else { return }
+                                        isEditIssueTitleSending = true
+                                        store.dispatch(action: IssuesActions.Edit(issue: editIssue, title: issueStore.editText, completion: { finish in
+                                            store.dispatch(action: IssuesActions.FetchList(readCache: true, completion: { _  in
+                                                isEditIssueTitleSending = false
+                                                focusedField = nil
+                                                store.dispatch(action: IssuesActions.WillEditAction(issue: nil))
+                                            }))
+                                        }))
                                     } label: {
                                         Image(systemName: "checkmark.circle.fill")
                                     }
@@ -74,7 +91,7 @@ struct NoteIssuesView: View {
                             Label(title: {
                                 Text(selection.title ?? "unknow")
                             }, icon: {
-                                if deleteIssue?.id == selection.id {
+                                if props.deleteIssue?.id == selection.id {
                                     ProgressView()
                                         .controlSize(.mini)
                                         .frame(width: 20, height: 20)
@@ -87,14 +104,18 @@ struct NoteIssuesView: View {
                             .contextMenu {
                                 Button("Delete", role: .destructive) {
                                     "delete \(selection.title ?? "")".logI()
-                                    deleteIssue = selection
-                                    closeIssue(selection)
+                                    store.dispatch(action: IssuesActions.WillDeleteAction(issue: selection))
+                                    store.dispatch(action: IssuesActions.Delete(issue: selection, completion: { finish in
+                                        store.dispatch(action: IssuesActions.FetchList(readCache: true, completion: { _  in
+                                            store.dispatch(action: IssuesActions.WillDeleteAction(issue: nil))
+                                        }))
+                                    }))
                                 }
                                 Button("Edit", role: .destructive) {
                                     "edit \(selection.title ?? "")".logI()
-                                    editIssue = selection
-                                    editText = editIssue?.title ?? ""
                                     focusedField = .title
+                                    issueStore.editText = selection.title ?? ""
+                                    store.dispatch(action: IssuesActions.WillEditAction(issue: selection))
                                 }
                             }
                             .frame(height: AppConst.sideItemHeight)
@@ -104,84 +125,77 @@ struct NoteIssuesView: View {
             }
         }
         .frame(maxHeight: 200)
-        .onChange(of: selectionRepo) { oldValue, newValue in
-            if oldValue != newValue {
-                guard let repoName = newValue?.name else { return }
-//                AppUserDefaults.repo = repoName
-//                showReposView = false
-                store.dispatch(action: SideActions.ReposViewState(show: false))
-            }
-            endEdit()
+        .onAppear {
+            issueStore.listener.loadPage()
         }
-        .onChange(of: selectionIssue) { oldValue, newValue in
-            if oldValue != newValue {
-                requestComments?(newValue)
-            }
-            endEdit()
-        }
+//        .onChange(of: selectionRepo) { oldValue, newValue in
+//            if oldValue != newValue {
+//                guard let repoName = newValue?.name else { return }
+////                AppUserDefaults.repo = repoName
+////                showReposView = false
+//                store.dispatch(action: SideActions.ReposViewState(visible: false))
+//            }
+//            endEdit()
+//        }
+//        .onChange(of: selectionIssue) { oldValue, newValue in
+//            if oldValue != newValue {
+//                requestComments?(newValue)
+//            }
+//            endEdit()
+//        }
     }
 }
 
 extension NoteIssuesView {
     
-    func endEdit() -> Void {
-        focusedField = nil
-        editIssue = nil
-    }
+//    func updateIssueTitle(_ issue: Issue?, _ title: String) -> Void {
+//        
+//        guard let issue = issue else { return }
+//        
+//        "#issue# update title \(title)".logI()
+//        
+//        isEditIssueTitleSending = true
+//        let body = issue.body ?? ""
+//        guard let issueId = issue.number else { return }
+//        Networking<Issue>().request(API.updateIssue(issueId: issueId, state: .open, title: title, body: body)) { data, cache, _ in
+//            if data != nil {
+//                "#issue# update success".logI()
+//                var issue = issue
+//                issue.title = title
+//                CacheManager.updateIssues([issue]) {
+//                    CacheManager.fetchIssues { localList in
+//                        issueGroups = localList
+//                        isEditIssueTitleSending = false
+//                        endEdit()
+//                    }
+//                }
+//            } else {
+//                "#issue# update fail".logI()
+//                ToastManager.shared.showFail("fail")
+//                isEditIssueTitleSending = false
+//                endEdit()
+//            }
+//        }
+//    }
     
-    
-}
-
-extension NoteIssuesView {
-    
-    func updateIssueTitle(_ issue: Issue?, _ title: String) -> Void {
-        
-        guard let issue = issue else { return }
-        
-        "#issue# update title \(title)".logI()
-        
-        isEditIssueTitleSending = true
-        let body = issue.body ?? ""
-        guard let issueId = issue.number else { return }
-        Networking<Issue>().request(API.updateIssue(issueId: issueId, state: .open, title: title, body: body)) { data, cache, _ in
-            if data != nil {
-                "#issue# update success".logI()
-                var issue = issue
-                issue.title = title
-                CacheManager.updateIssues([issue]) {
-                    CacheManager.fetchIssues { localList in
-                        issueGroups = localList
-                        isEditIssueTitleSending = false
-                        endEdit()
-                    }
-                }
-            } else {
-                "#issue# update fail".logI()
-                ToastManager.shared.showFail("fail")
-                isEditIssueTitleSending = false
-                endEdit()
-            }
-        }
-    }
-    
-    func closeIssue(_ issue: Issue) -> Void {
-        guard let number = issue.number, let title = issue.title, let body = issue.body else { return }
-        Networking<Issue>().request(API.updateIssue(issueId: number, state: .closed, title: title, body: body)) { data, cache, _ in
-            if data != nil {
-                guard let issueId = issue.id else { return }
-                CacheManager.deleteIssue([issueId]) {
-                    guard let tableName = CacheManager.shared.manager?.commentTableName(issueId), let url = issue.url else {
-                        return
-                    }
-                    CacheManager.deleteComment(url, tableName) { }
-                    issueGroups.removeAll(where: {$0.id == issueId})
-                    selectionIssue = issueGroups.first
-                }
-            } else {
-                ToastManager.shared.showFail("fail")
-            }
-        }
-    }
+//    func closeIssue(_ issue: Issue) -> Void {
+//        guard let number = issue.number, let title = issue.title, let body = issue.body else { return }
+//        Networking<Issue>().request(API.updateIssue(issueId: number, state: .closed, title: title, body: body)) { data, cache, _ in
+//            if data != nil {
+//                guard let issueId = issue.id else { return }
+//                CacheManager.deleteIssue([issueId]) {
+//                    guard let tableName = CacheManager.shared.manager?.commentTableName(issueId), let url = issue.url else {
+//                        return
+//                    }
+//                    CacheManager.deleteComment(url, tableName) { }
+//                    issueGroups.removeAll(where: {$0.id == issueId})
+//                    selectionIssue = issueGroups.first
+//                }
+//            } else {
+//                ToastManager.shared.showFail("fail")
+//            }
+//        }
+//    }
 }
 
 //#Preview {

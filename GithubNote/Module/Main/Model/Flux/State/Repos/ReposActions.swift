@@ -19,14 +19,16 @@ struct ReposActions {
         
         let readCache: Bool
         let config = Config()
+        let completion: CommonTCallBack<Bool>?
         
         func execute(state: SwiftUIFlux.FluxState?, dispatch: @escaping SwiftUIFlux.DispatchFunction) {
-            requestAllRepo(readCache) {
+            requestAllRepo(readCache) { value in
                 dispatch(SetList(list: config.list))
+                completion?(value)
             }
         }
         
-        private func requestAllRepo(_ readCache: Bool = true, _ completion: @escaping CommonCallBack) -> Void {
+        private func requestAllRepo(_ readCache: Bool = true, _ completion: @escaping CommonTCallBack<Bool>) -> Void {
             
             if readCache {
                 CacheManager.fetchRepos { list in
@@ -35,7 +37,7 @@ struct ReposActions {
 //                    if let repo = list.first(where: {$0.name == AppUserDefaults.repo?.name}) {
 //                        config.select = repo
 //                    }
-                    completion()
+                    completion(true)
                 }
                 return
             }
@@ -53,7 +55,7 @@ struct ReposActions {
 //                        if !container {
 //                            config.select = list.first
 //                        }
-                        completion()
+                        completion(true)
                     }
                 }
             }
@@ -91,6 +93,39 @@ struct ReposActions {
                 } else {
                     completion(repos, true, !list.isEmpty)
                 }
+            }
+        }
+    }
+    
+    struct CreateRepo: AsyncAction {
+        
+        let completion: CommonTCallBack<Bool>?
+        
+        func execute(state: SwiftUIFlux.FluxState?, dispatch: @escaping SwiftUIFlux.DispatchFunction) {
+            createRepo { item in
+                guard let item = item else {
+                    completion?(false)
+                    return
+                }
+                CacheManager.insertRepos(repos: [item]) {
+                    completion?(true)
+                }
+            }
+        }
+        
+        func createRepo(_ completion: @escaping CommonTCallBack<RepoModel?>) -> Void {
+            
+            let noteRepoName = AppConst.noteRepo
+            
+            Networking<RepoModel>().request(API.createRepo(repoName: noteRepoName), parseHandler: ModelGenerator(snakeCase: true)) { (data, _, _) in
+                
+                guard let list = data, let item = list.first else {
+                    "#request# createRepo error".logE()
+                    completion(nil)
+                    return
+                }
+                "#request# createRepo \(noteRepoName)".logI()
+                completion(item)
             }
         }
     }

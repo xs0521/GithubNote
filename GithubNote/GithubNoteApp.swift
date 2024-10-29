@@ -13,6 +13,9 @@ let store = Store<AppState>(reducer: appStateReducer,
                             state: AppState())
 
 let repoStore = RepoModelStore(select: AppUserDefaults.repo)
+let issueStore = IssueModelStore(select: AppUserDefaults.issue)
+
+
 
 @main
 struct GithubNoteApp: App {
@@ -43,6 +46,7 @@ struct GithubNoteApp: App {
                         ZStack {
                             NoteContentView()
                                 .environmentObject(repoStore)
+                                .environmentObject(issueStore)
                             if willLoginOut {
                                 LoginOutView(cancelCallBack: {
                                     willLoginOut = false

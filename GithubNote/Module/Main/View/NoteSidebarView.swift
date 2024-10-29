@@ -17,12 +17,34 @@ import AppKit
 
 struct NoteSidebarView: ConnectedView {
     
+    @Environment(\.colorScheme) private var colorScheme
+    
+    @State private var reposGroups: [RepoModel] = [RepoModel]()
+    @State private var repoPage = 1
+    @Binding var selectionRepo: RepoModel?
+    
+    @State private var issueGroups = [Issue]()
+    @State private var issuePage = 1
+    @Binding var selectionIssue: Issue?
+    
+    @Binding var commentGroups: [Comment]
+    @State private var commentPage = 1
+    @Binding var selectionComment: Comment?
+    
+    @Binding var showImageBrowser: Bool?
+    
+    @State private var showReposView: Bool = false
+    
+    @State private var isLoaded: Bool = false
+    
     struct Props {
-        let showReposView: Bool
+        let isReposVisible: Bool
+        var selectionRepo: RepoModel?
     }
     
     func map(state: AppState, dispatch: @escaping DispatchFunction) -> Props {
-        return Props(showReposView: state.sideStates.showReposView)
+        return Props(isReposVisible: state.sideStates.isReposVisible,
+                     selectionRepo: state.sideStates.selectionRepo)
     }
     
     func body(props: Props) -> some View {
@@ -49,50 +71,38 @@ struct NoteSidebarView: ConnectedView {
                                      selectionComment: $selectionComment,
                                      selectionIssue: $selectionIssue)
                     Spacer()
-                    NoteIssuesHeaderView() { callBack in
-                        requestAllIssue(false) {
-                            callBack()
-                        }
-                    } createIssueCallBack: { issue in
-                        CacheManager.insertIssues(issues: [issue]) {
-                            CacheManager.fetchIssues { localList in
-                                DispatchQueue.main.async {
-                                    issueGroups = localList
-                                    selectionIssue = localList.first(where: {$0.id == issue.id})
-                                }
-                            }
-                        }
-                    }
-                    NoteIssuesView(issueGroups: $issueGroups,
-                                   selectionIssue: $selectionIssue,
-                                   selectionRepo: $selectionRepo,
-                                   showReposView: $showReposView) { issue in
-                        guard let issue = issue else {
-                            commentGroups.removeAll()
-                            return
-                        }
-                        CacheManager.shared.currentIssue = issue
-                        requestAllComment {}
-                    }
+                    NoteIssuesHeaderView()
+                    NoteIssuesView()
+//                    NoteIssuesView(issueGroups: $issueGroups,
+//                                   selectionIssue: $selectionIssue,
+//                                   selectionRepo: $selectionRepo,
+//                                   showReposView: $showReposView) { issue in
+//                        guard let issue = issue else {
+//                            commentGroups.removeAll()
+//                            return
+//                        }
+//                        CacheManager.shared.currentIssue = issue
+//                        requestAllComment {}
+//                    }
                 }
     #if !MOBILE
                 .frame(minWidth: 200)
     #endif
-                .onChange(of: selectionRepo) { oldValue, newValue in
-                    if oldValue != newValue {
-                        CacheManager.shared.currentRepo = selectionRepo
-                        requestAllIssue(true) {
-                            selectionComment = nil
-                        }
-                    }
-                }
+//                .onChange(of: selectionRepo) { oldValue, newValue in
+//                    if oldValue != newValue {
+//                        CacheManager.shared.currentRepo = selectionRepo
+//                        requestAllIssue(true) {
+//                            selectionComment = nil
+//                        }
+//                    }
+//                }
                 .onAppear {
                     if !isLoaded {
                         requestAllRepo {}
                         isLoaded = true
                     }
                 }
-                if props.showReposView {
+                if props.isReposVisible {
     //                NoteReposView(reposGroups: $reposGroups, selectionRepo: $selectionRepo) {
     //                    requestAllRepo {}
     //                }
@@ -105,117 +115,7 @@ struct NoteSidebarView: ConnectedView {
         .background(colorScheme == .dark ? Color.init(hex: "#1C1C1E") : Color.init(hex: "#F2F2F7"))
 #endif
         .safeAreaInset(edge: .bottom) {
-            NoteSidebarToolView(showReposView: $showReposView,
-                                showImageBrowser: $showImageBrowser,
-                                selectionRepo: $selectionRepo) { cache, callBack in
-                requestAllRepo(cache) {
-                    callBack()
-                }
-            }
-        }
-        .onAppear(perform: {
-            
-        })
-    }
-    
-    @Environment(\.colorScheme) private var colorScheme
-    
-    @State private var reposGroups: [RepoModel] = [RepoModel]()
-    @State private var repoPage = 1
-    @Binding var selectionRepo: RepoModel?
-    
-    @State private var issueGroups = [Issue]()
-    @State private var issuePage = 1
-    @Binding var selectionIssue: Issue?
-    
-    @Binding var commentGroups: [Comment]
-    @State private var commentPage = 1
-    @Binding var selectionComment: Comment?
-    
-    @Binding var showImageBrowser: Bool?
-    
-    @State private var showReposView: Bool = false
-    
-    @State private var isLoaded: Bool = false
-    
-//    var body: some View {
-//        ZStack {
-//            VStack (spacing: 0) {
-//                NoteCommentsHeaderView(selectionIssue: $selectionIssue) { callBack in
-//                    requestAllComment(false) {
-//                        callBack()
-//                    }
-//                } createCallBack: { comment, finishCallBack in
-//                    CacheManager.insertComments(comments: [comment]) {
-//                        CacheManager.fetchComments { localList in
-//                            let select = localList.first(where: {$0.id == comment.id})
-//                            DispatchQueue.main.async(execute: {
-//                                commentGroups = localList
-//                                selectionComment = select
-//                                finishCallBack()
-//                            })
-//                        }
-//                    }
-//                }
-//                NoteCommentsView(commentGroups: $commentGroups,
-//                                 selectionComment: $selectionComment,
-//                                 selectionIssue: $selectionIssue)
-//                Spacer()
-//                NoteIssuesHeaderView() { callBack in
-//                    requestAllIssue(false) {
-//                        callBack()
-//                    }
-//                } createIssueCallBack: { issue in
-//                    CacheManager.insertIssues(issues: [issue]) {
-//                        CacheManager.fetchIssues { localList in
-//                            DispatchQueue.main.async {
-//                                issueGroups = localList
-//                                selectionIssue = localList.first(where: {$0.id == issue.id})
-//                            }
-//                        }
-//                    }
-//                }
-//                NoteIssuesView(issueGroups: $issueGroups,
-//                               selectionIssue: $selectionIssue,
-//                               selectionRepo: $selectionRepo,
-//                               showReposView: $showReposView) { issue in
-//                    guard let issue = issue else {
-//                        commentGroups.removeAll()
-//                        return
-//                    }
-//                    CacheManager.shared.currentIssue = issue
-//                    requestAllComment {}
-//                }
-//            }
-//#if !MOBILE
-//            .frame(minWidth: 200)
-//#endif
-//            .onChange(of: selectionRepo) { oldValue, newValue in
-//                if oldValue != newValue {
-//                    CacheManager.shared.currentRepo = selectionRepo
-//                    requestAllIssue(true) {
-//                        selectionComment = nil
-//                    }
-//                }
-//            }
-//            .onAppear {
-//                if !isLoaded {
-//                    requestAllRepo {}
-//                    isLoaded = true
-//                }
-//            }
-//            if showReposView {
-////                NoteReposView(reposGroups: $reposGroups, selectionRepo: $selectionRepo) {
-////                    requestAllRepo {}
-////                }
-//                
-//                NoteReposView()
-//            }
-//        }
-//#if MOBILE
-//        .background(colorScheme == .dark ? Color.init(hex: "#1C1C1E") : Color.init(hex: "#F2F2F7"))
-//#endif
-//        .safeAreaInset(edge: .bottom) {
+            NoteSidebarToolView()
 //            NoteSidebarToolView(showReposView: $showReposView,
 //                                showImageBrowser: $showImageBrowser,
 //                                selectionRepo: $selectionRepo) { cache, callBack in
@@ -223,8 +123,11 @@ struct NoteSidebarView: ConnectedView {
 //                    callBack()
 //                }
 //            }
-//        }
-//    }
+        }
+        .onAppear(perform: {
+            
+        })
+    }
 }
 
 extension NoteSidebarView {
@@ -314,7 +217,6 @@ extension NoteSidebarView {
                 "#request# issue all cache \(list.count)".logI()
                 issueGroups = list
                 selectionIssue = list.first
-                CacheManager.shared.currentIssue = selectionIssue
                 completion()
             }
             return
