@@ -18,13 +18,8 @@ struct NoteSidebarToolView: ConnectedView {
     
     @State private var isSyncRepos: Bool = false
     @State private var isCreateRepos: Bool = false
-    @State private var repoTitle: String = "Select Repo"
-    
-    @State private var degreesValue: Double = 0
     
     @EnvironmentObject var repoStore: RepoModelStore
-    
-//    var requestAllRepoCallBack: (_ cache: Bool, _ callBack: @escaping CommonCallBack) -> Void
     
     func map(state: AppState, dispatch: @escaping DispatchFunction) -> Props {
         let isReposVisible = state.sideStates.isReposVisible
@@ -71,10 +66,6 @@ struct NoteSidebarToolView: ConnectedView {
                             .frame(width: 20, height: 15)
                     } else {
                         Button {
-//                            isSyncRepos = true
-//                            requestAllRepoCallBack(false, {
-//                                isSyncRepos = false
-//                            })
                             isSyncRepos = true
                             repoStore.listener.loadPage(false, {_ in 
                                 isSyncRepos = false
@@ -94,10 +85,6 @@ struct NoteSidebarToolView: ConnectedView {
                             .frame(width: 15, height: 15)
                     } else {
                         Button {
-//                            isCreateRepos = true
-//                            createRepo { success in
-//                                isCreateRepos = false
-//                            }
                             isCreateRepos = true
                             repoStore.listener.create { finish in
                                 repoStore.listener.loadPage(true, {_ in
@@ -124,31 +111,6 @@ struct NoteSidebarToolView: ConnectedView {
                 })
                 .buttonStyle(.plain)
                 .padding(EdgeInsets(top: 5, leading: 5, bottom: 16, trailing: 16))
-            }
-        }
-    }
-}
-
-extension NoteSidebarToolView {
-    
-    func createRepo(_ completion: @escaping CommonTCallBack<Bool>) -> Void {
-        
-        let noteRepoName = AppConst.noteRepo
-        
-        Networking<RepoModel>().request(API.createRepo(repoName: noteRepoName), parseHandler: ModelGenerator(snakeCase: true)) { (data, _, _) in
-            
-            guard let list = data, let item = list.first else {
-                "#request# createRepo error".logE()
-                completion(false)
-                return
-            }
-            
-            "#request# createRepo \(noteRepoName)".logI()
-            
-            CacheManager.insertRepos(repos: [item]) {
-//                self.requestAllRepoCallBack(true, {
-//                    completion(true)
-//                })
             }
         }
     }

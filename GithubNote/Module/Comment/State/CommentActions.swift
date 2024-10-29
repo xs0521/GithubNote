@@ -127,7 +127,34 @@ struct CommentActions {
         }
     }
     
+    struct Delete: AsyncAction {
+        
+        let item: Comment
+        let completion: CommonTCallBack<Bool>?
+        
+        func execute(state: SwiftUIFlux.FluxState?, dispatch: @escaping SwiftUIFlux.DispatchFunction) {
+            deleteComment(item) { finish in
+                completion?(finish)
+            }
+        }
+        
+        private func deleteComment(_ comment: Comment, completion: @escaping CommonTCallBack<Bool>) -> Void {
+            guard let commentId = comment.id else { return }
+            Networking<Comment>().request(API.deleteComment(commentId: commentId)) { data, cache, code in
+                if MessageCode.finish.rawValue != code {
+                    completion(false)
+                    return
+                }
+                CacheManager.deleteComment([commentId]) {
+                    completion(true)
+                }
+            }
+        }
+    }
     
+    struct WillDeleteAction: Action {
+        let item: Comment?
+    }
     
     struct SetList: Action {
         let list: [Comment]

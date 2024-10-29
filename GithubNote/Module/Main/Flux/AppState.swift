@@ -51,9 +51,9 @@ func IssuesStateReducer(state: IssuesState, action: Action) -> IssuesState {
     case let action as IssuesActions.SetList:
         state.items = action.list
     case let action as IssuesActions.WillEditAction:
-        state.editItem = action.issue
+        state.editItem = action.item
     case let action as IssuesActions.WillDeleteAction:
-        state.deleteItem = action.issue
+        state.deleteItem = action.item
     default:
         break
     }
@@ -67,8 +67,8 @@ func CommentStateReducer(state: CommentState, action: Action) -> CommentState {
         state.items = action.list
 //    case let action as IssuesActions.WillEditAction:
 //        state.editItem = action.issue
-//    case let action as IssuesActions.WillDeleteAction:
-//        state.deleteItem = action.issue
+    case let action as CommentActions.WillDeleteAction:
+        state.deleteItem = action.item
     default:
         break
     }

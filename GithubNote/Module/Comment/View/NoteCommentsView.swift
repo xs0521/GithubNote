@@ -52,6 +52,12 @@ struct NoteCommentsView: ConnectedView {
                                 "delete \(selection.body?.toTitle() ?? "")".logI()
 //                                deleteComment = selection
 //                                deleteComment(selection)
+                                store.dispatch(action: CommentActions.WillDeleteAction(item: selection))
+                                store.dispatch(action: CommentActions.Delete(item: selection, completion: { finish in
+                                    store.dispatch(action: CommentActions.FetchList(readCache: true, completion: { _  in
+                                        store.dispatch(action: CommentActions.WillDeleteAction(item: nil))
+                                    }))
+                                }))
                             }
                         }
                     }

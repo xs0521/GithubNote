@@ -124,12 +124,12 @@ struct IssuesActions {
     
     struct Edit: AsyncAction {
         
-        let issue: Issue
+        let item: Issue
         let title: String
         let completion: CommonTCallBack<Bool>?
         
         func execute(state: SwiftUIFlux.FluxState?, dispatch: @escaping SwiftUIFlux.DispatchFunction) {
-            updateIssueTitle(issue, title) { finish in
+            updateIssueTitle(item, title) { finish in
                 completion?(finish)
             }
         }
@@ -161,35 +161,35 @@ struct IssuesActions {
     
     struct Delete: AsyncAction {
         
-        let issue: Issue
+        let item: Issue
         let completion: CommonTCallBack<Bool>?
         
         func execute(state: SwiftUIFlux.FluxState?, dispatch: @escaping SwiftUIFlux.DispatchFunction) {
-            deleteIssue(issue) { finish in
+            deleteIssue(item) { finish in
                 completion?(finish)
             }
         }
         
         private func deleteIssue(_ issue: Issue, completion: @escaping CommonTCallBack<Bool>) -> Void {
-                guard let number = issue.number, let title = issue.title, let body = issue.body else { return }
-                Networking<Issue>().request(API.updateIssue(issueId: number, state: .closed, title: title, body: body)) { data, cache, _ in
-                    if data != nil {
-                        guard let issueId = issue.id else { return }
-                        CacheManager.deleteIssue([issueId]) {
-                            guard let tableName = CacheManager.shared.manager?.commentTableName(issueId), let url = issue.url else {
-                                completion(true)
-                                return
-                            }
-                            CacheManager.deleteComment(url, tableName) {
-                                completion(true)
-                            }
+            guard let number = issue.number, let title = issue.title, let body = issue.body else { return }
+            Networking<Issue>().request(API.updateIssue(issueId: number, state: .closed, title: title, body: body)) { data, cache, _ in
+                if data != nil {
+                    guard let issueId = issue.id else { return }
+                    CacheManager.deleteIssue([issueId]) {
+                        guard let tableName = CacheManager.shared.manager?.commentTableName(issueId), let url = issue.url else {
+                            completion(true)
+                            return
                         }
-                    } else {
-                        ToastManager.shared.showFail("fail")
-                        completion(false)
+                        CacheManager.deleteComment(url, tableName) {
+                            completion(true)
+                        }
                     }
+                } else {
+                    ToastManager.shared.showFail("fail")
+                    completion(false)
                 }
             }
+        }
     }
     
     struct SetList: Action {
@@ -197,10 +197,10 @@ struct IssuesActions {
     }
     
     struct WillEditAction: Action {
-        let issue: Issue?
+        let item: Issue?
     }
     
     struct WillDeleteAction: Action {
-        let issue: Issue?
+        let item: Issue?
     }
 }

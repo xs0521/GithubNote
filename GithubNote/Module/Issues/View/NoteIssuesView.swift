@@ -72,11 +72,11 @@ struct NoteIssuesView: ConnectedView {
                                     Button {
                                         guard let editIssue = props.editIssue else { return }
                                         isEditIssueTitleSending = true
-                                        store.dispatch(action: IssuesActions.Edit(issue: editIssue, title: issueStore.editText, completion: { finish in
+                                        store.dispatch(action: IssuesActions.Edit(item: editIssue, title: issueStore.editText, completion: { finish in
                                             store.dispatch(action: IssuesActions.FetchList(readCache: true, completion: { _  in
                                                 isEditIssueTitleSending = false
                                                 focusedField = nil
-                                                store.dispatch(action: IssuesActions.WillEditAction(issue: nil))
+                                                store.dispatch(action: IssuesActions.WillEditAction(item: nil))
                                             }))
                                         }))
                                     } label: {
@@ -104,10 +104,10 @@ struct NoteIssuesView: ConnectedView {
                             .contextMenu {
                                 Button("Delete", role: .destructive) {
                                     "delete \(selection.title ?? "")".logI()
-                                    store.dispatch(action: IssuesActions.WillDeleteAction(issue: selection))
-                                    store.dispatch(action: IssuesActions.Delete(issue: selection, completion: { finish in
+                                    store.dispatch(action: IssuesActions.WillDeleteAction(item: selection))
+                                    store.dispatch(action: IssuesActions.Delete(item: selection, completion: { finish in
                                         store.dispatch(action: IssuesActions.FetchList(readCache: true, completion: { _  in
-                                            store.dispatch(action: IssuesActions.WillDeleteAction(issue: nil))
+                                            store.dispatch(action: IssuesActions.WillDeleteAction(item: nil))
                                         }))
                                     }))
                                 }
@@ -115,7 +115,7 @@ struct NoteIssuesView: ConnectedView {
                                     "edit \(selection.title ?? "")".logI()
                                     focusedField = .title
                                     issueStore.editText = selection.title ?? ""
-                                    store.dispatch(action: IssuesActions.WillEditAction(issue: selection))
+                                    store.dispatch(action: IssuesActions.WillEditAction(item: selection))
                                 }
                             }
                             .frame(height: AppConst.sideItemHeight)

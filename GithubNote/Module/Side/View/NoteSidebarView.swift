@@ -19,15 +19,12 @@ struct NoteSidebarView: ConnectedView {
     
     @Environment(\.colorScheme) private var colorScheme
     
-    
     struct Props {
         let isReposVisible: Bool
-        var selectionRepo: RepoModel?
     }
     
     func map(state: AppState, dispatch: @escaping DispatchFunction) -> Props {
-        return Props(isReposVisible: state.sideStates.isReposVisible,
-                     selectionRepo: state.sideStates.selectionRepo)
+        return Props(isReposVisible: state.sideStates.isReposVisible)
     }
     
     func body(props: Props) -> some View {
