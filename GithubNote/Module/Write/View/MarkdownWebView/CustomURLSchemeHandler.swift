@@ -10,6 +10,9 @@ import SDWebImage
 import UniformTypeIdentifiers
 
 class CustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
+    
+    let cache = SDDiskCache(cachePath: "github.note.cache", config: .default)
+    
     func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
         
         guard var url = urlSchemeTask.request.url?.absoluteString else { return }
@@ -38,8 +41,16 @@ class CustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
         
         if url.isImage() {
             "#web# img is image \(url)".logI()
-            SDWebImageDownloader.shared.downloadImage(with: Url) { _, data, error, finish in
+            
+            if let data = cache?.data(forKey: url.MD5()) {
+                "#web# img load cache \(url)".logI()
+                callBack(data)
+                return
+            }
+            
+            SDWebImageDownloader.shared.downloadImage(with: Url) { [weak self] _, data, error, finish in
                 if let data = data, error == nil {
+                    self?.cache?.setData(data, forKey: url.MD5())
                     callBack(data)
                     "#web# img sccess \(url)".logI()
                 } else {
@@ -48,7 +59,7 @@ class CustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
             }
             return
         }
-        // 发起请求
+        
         let session = URLSession.shared
         let task = session.dataTask(with: urlSchemeTask.request) { data, response, error in
             if let data = data, let _ = response {
@@ -85,6 +96,7 @@ class CustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
         }
         return text.replacingOccurrences(of: github, with: replace)
     }
+
 }
 
 func fileMIMETypeWithCAPI(at filePath: String) -> String {

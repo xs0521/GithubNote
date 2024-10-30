@@ -7,31 +7,24 @@
 
 import SwiftUI
 import AlertToast
+import SwiftUIFlux
 
-
-struct NoteContentView: View {
+struct NoteContentView: ConnectedView {
     
     @Environment(\.colorScheme) private var colorScheme
     
-    @State private var selectionRepo: RepoModel?
+    @EnvironmentObject var commentStore: CommentModelStore
+    @EnvironmentObject var appStore: AppModelStore
     
-    @State private var selectionIssue: Issue?
+    struct Props {
+        let isImageBrowserVisible: Bool
+    }
     
-    @State private var commentGroups = [Comment]()
-    @State private var selectionComment: Comment?
+    func map(state: AppState, dispatch: @escaping DispatchFunction) -> Props {
+        return Props(isImageBrowserVisible: state.imagesState.isImageBrowserVisible)
+    }
     
-    @State private var showImageBrowser: Bool? = false
-    
-    @State private var showLoading: Bool = false
-    
-    @State private var showToast: Bool = false
-    @State private var toastMessage: String = ""
-    @State private var toastItem: ToastItem?
-    
-    
-    
-    
-    var body: some View {
+    func body(props: Props) -> some View {
         ZStack {
 #if MOBILE
             VStack {
@@ -49,25 +42,24 @@ struct NoteContentView: View {
             } detail: {
                 writePannelView()
             }
-            .blur(radius: (showImageBrowser ?? false) ? 5 : 0, opaque: true)
+            .blur(radius: props.isImageBrowserVisible ? 5 : 0, opaque: true)
             .onAppear(perform: {
                 ToastManager.shared.homeCallBack = { (item) in
-                    toastItem = item
-                    showToast = true
+                    appStore.item = item
+                    appStore.isToastVisible = true
                 }
             })
-            .toast(isPresenting: $showToast, duration: 2.0, tapToDismiss: true){
-                AlertToast(displayMode: toastItem?.mode ?? .hud, type: toastItem?.type ?? .regular, title: toastItem?.title ?? "")
+            .toast(isPresenting: $appStore.isToastVisible, duration: 2.0, tapToDismiss: true){
+                AlertToast(displayMode: appStore.item?.mode ?? .hud,
+                           type: appStore.item?.type ?? .regular,
+                           title: appStore.item?.title ?? "")
             }
-            .toast(isPresenting: $showLoading){
+            .toast(isPresenting: $appStore.isLoadingVisible){
                 AlertToast(type: .loading, title: nil, subTitle: nil)
             }
 #endif
-            if showImageBrowser! {
-                NoteImageBrowserView(showImageBrowser: $showImageBrowser,
-                                     showToast: $showToast,
-                                     toastMessage: $toastMessage,
-                                     showLoading: $showLoading)
+            if props.isImageBrowserVisible {
+                NoteImageBrowserView()
             }
             
         }
@@ -75,14 +67,8 @@ struct NoteContentView: View {
     
     private func writePannelView() -> some View {
         ZStack {
-            NoteWritePannelView(commentGroups: $commentGroups,
-                                selectionRepo: $selectionRepo,
-                               selectionIssue: $selectionIssue,
-                             selectionComment: $selectionComment,
-                                        issue: $selectionIssue,
-                             showImageBrowser: $showImageBrowser,
-                                  showLoading: $showLoading)
-            if selectionComment == nil {
+            NoteWritePannelView()
+            if commentStore.select == nil {
                 NoteEmptyView()
                     .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
             }

@@ -8,43 +8,46 @@
 import SwiftUI
 import SDWebImageSwiftUI
 import AlertToast
+import SwiftUIFlux
 
-struct NoteImageBrowserImagesView: View {
-    
-    static let size = CGSizeMake(100, 100)
-    
-    @Binding var showImageBrowser: Bool?
-    
-    @Binding var showToast: Bool
-    @Binding var toastMessage: String
-    @Binding var showLoading: Bool
-    
-    @State var showPreview: Bool = false
-    @State var url: String = ""
-    
-    @State private var data: [GithubImage] = []
-    
-    @State private var currentIndex: Int = 0
+struct NoteImageBrowserImagesView: ConnectedView {
     
     @Environment(\.colorScheme) var colorScheme
+    
+    @EnvironmentObject var appStore: AppModelStore
+    @EnvironmentObject var imagesStore: ImagesModelStore
+    
+    static let size = CGSizeMake(100, 100)
     
     let adaptiveColumn = [
         GridItem(.adaptive(minimum: NoteImageBrowserImagesView.size.width, maximum: NoteImageBrowserImagesView.size.width))
     ]
     
-    var body: some View {
+    struct Props {
+        let isImageBrowserVisible: Bool?
+        let isPreview: Bool
+        let list: [GithubImage]
+    }
+    
+    func map(state: AppState, dispatch: @escaping DispatchFunction) -> Props {
+        return Props(isImageBrowserVisible: state.imagesState.isImageBrowserVisible,
+                     isPreview: state.imagesState.isPreview,
+                     list: state.imagesState.list)
+    }
+    
+    func body(props: Props) -> some View {
         ZStack {
             ScrollView (showsIndicators: false) {
-                if data.isEmpty {
+                if props.list.isEmpty {
                     NoteEmptyView()
                         .padding(.top, 100)
                 } else {
                     LazyVGrid(columns: adaptiveColumn, spacing: 8) {
-                        ForEach(data, id: \.self) { item in
+                        ForEach(props.list, id: \.self) { item in
                             Button(action: {
-                                url = item.imageUrl()
-                                currentIndex = data.firstIndex(of: item) ?? 0
-                                showPreview = true
+                                imagesStore.currentUrl = item.imageUrl()
+                                imagesStore.currentIndex = props.list.firstIndex(of: item) ?? 0
+                                store.dispatch(action: ImagesActions.Preview(on: true))
                             }, label: {
                                 ZStack {
                                     Color.init(hex: "#D2D2D3")
@@ -87,95 +90,89 @@ struct NoteImageBrowserImagesView: View {
             .padding(.horizontal, 80)
             .background(Color.clear)
             .frame(minWidth: 220, maxWidth: .infinity, minHeight: 120, maxHeight: .infinity)
-            if showPreview {
-                NoteImageBrowserPreViewImagesView(imageUrls: $data,
-                                                  showPreview: $showPreview,
-                                                  selectedImageIndex: currentIndex, copyCallBackAction: { url in
-                    copyAction(url)
-                })
+            if props.isPreview {
+                NoteImageBrowserPreViewImagesView()
             }
         }
+        .onAppear(perform: {
+            store.dispatch(action: ImagesActions.FetchList(readCache: true, completion: { _ in
+                
+            }))
+        })
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name.syncNetImagesNotification), perform: { _ in
-            showLoading = true
-            requestImagesData(false, completion: {
-                showLoading = false
-            })
+            appStore.isLoadingVisible = true
+            store.dispatch(action: ImagesActions.FetchList(readCache: false, completion: { finish in
+                appStore.isLoadingVisible = false
+            }))
         })
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name.appendImagesNotification), perform: { notification in
             if let item = notification.object as? GithubImage {
-                data.insert(item, at: 0)
+//                props.images.insert(item, at: 0)
             }
         })
-        .onAppear(perform: {
-            showLoading = true
-            requestImagesData {
-                showLoading = false
-            }
-        })
-        
     }
 }
 
 extension NoteImageBrowserImagesView {
     
-    fileprivate func requestImagesData(_ readCache: Bool = true, completion: @escaping CommonCallBack) -> Void {
-        
-        if readCache {
-            CacheManager.fetchGithubImages { images in
-                self.data = images
-                showLoading = false
-                completion()
-            }
-            return
-        }
-        
-        Networking<GithubImage>().request(API.repoImages) { data, cache, code in
-            if code == MessageCode.notFound.rawValue {
-                self.data.removeAll()
-                requestCreateImageDir(completion: {
-                    completion()
-                })
-                return
-            }
-            
-            if let list = data, !list.isEmpty {
-                let images = list.filter({$0.path.isImage()})
-                CacheManager.insertGithubImages(images: images, deleteNoFound: true) {
-                    CacheManager.fetchGithubImages { localImages in
-                        self.data = localImages
-                        completion()
-                    }
-                }
-            } else {
-                self.data.removeAll()
-                completion()
-            }
-            
-        }
-    }
-    
-    fileprivate func requestCreateImageDir(completion: @escaping CommonCallBack) -> Void {
-        
-        Networking<PushCommitModel>().request(API.createImagesDirectory) { data, cache, code in
-            completion()
-            if code != MessageCode.createSuccess.rawValue {
-                return
-            }
-            "ImageDir success".logI()
-        }
-        
-    }
+//    fileprivate func requestImagesData(_ readCache: Bool = true, completion: @escaping CommonCallBack) -> Void {
+//        
+//        if readCache {
+//            CacheManager.fetchGithubImages { images in
+////                self.data = images
+//                appStore.isLoadingVisible = false
+//                completion()
+//            }
+//            return
+//        }
+//        
+//        Networking<GithubImage>().request(API.repoImages) { data, cache, code in
+//            if code == MessageCode.notFound.rawValue {
+////                self.data.removeAll()
+//                requestCreateImageDir(completion: {
+//                    completion()
+//                })
+//                return
+//            }
+//            
+//            if let list = data, !list.isEmpty {
+//                let images = list.filter({$0.path.isImage()})
+//                CacheManager.insertGithubImages(images: images, deleteNoFound: true) {
+//                    CacheManager.fetchGithubImages { localImages in
+////                        self.data = localImages
+//                        completion()
+//                    }
+//                }
+//            } else {
+////                self.data.removeAll()
+//                completion()
+//            }
+//            
+//        }
+//    }
+//    
+//    fileprivate func requestCreateImageDir(completion: @escaping CommonCallBack) -> Void {
+//        
+//        Networking<PushCommitModel>().request(API.createImagesDirectory) { data, cache, code in
+//            completion()
+//            if code != MessageCode.createSuccess.rawValue {
+//                return
+//            }
+//            "ImageDir success".logI()
+//        }
+//        
+//    }
     
     fileprivate func deleteFile(_ item: GithubImage) -> Void {
-        self.showLoading = true
+        appStore.isLoadingVisible = true
         Networking<PushCommitModel>().request(API.deleteImage(filePath: item.path, sha: item.sha)) { _, cache, code in
             if code == MessageCode.success.rawValue {
-                data = data.filter({$0.identifier != item.identifier})
+//                data = data.filter({$0.identifier != item.identifier})
                 CacheManager.deleteGithubImage(item.url) {
-                    self.showLoading = false
+                    appStore.isLoadingVisible = false
                 }
             } else {
-                self.showLoading = false
+                appStore.isLoadingVisible = false
             }
         }
     }

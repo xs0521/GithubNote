@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum UploadType {
+enum UploadType: Codable {
     
     case normal
     case sending

@@ -15,6 +15,9 @@ let store = Store<AppState>(reducer: appStateReducer,
 let repoStore = RepoModelStore(select: AppUserDefaults.repo)
 let issueStore = IssueModelStore(select: AppUserDefaults.issue)
 let commentStore = CommentModelStore(select: AppUserDefaults.comment)
+let writeStore = WriteModelStore()
+let appStore = AppModelStore()
+let imagesStore = ImagesModelStore()
 
 @main
 struct GithubNoteApp: App {
@@ -47,6 +50,9 @@ struct GithubNoteApp: App {
                                 .environmentObject(repoStore)
                                 .environmentObject(issueStore)
                                 .environmentObject(commentStore)
+                                .environmentObject(writeStore)
+                                .environmentObject(appStore)
+                                .environmentObject(imagesStore)
                             if willLoginOut {
                                 LoginOutView(cancelCallBack: {
                                     willLoginOut = false

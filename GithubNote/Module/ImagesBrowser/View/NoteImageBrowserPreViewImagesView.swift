@@ -7,42 +7,51 @@
 
 import SwiftUI
 import SDWebImageSwiftUI
+import SwiftUIFlux
 
-struct NoteImageBrowserPreViewImagesView: View {
+struct NoteImageBrowserPreViewImagesView: ConnectedView {
     
-    @Binding var imageUrls: [GithubImage] // 图片URL数组
-    @Binding var showPreview: Bool
-    @State var selectedImageIndex: Int
+    @EnvironmentObject var imagesStore: ImagesModelStore
     
-    var copyCallBackAction: CommonTCallBack<String>
+//    var copyCallBackAction: CommonTCallBack<String>
     
-    @State var isLoading: Bool = false
+    @State private var isLoading: Bool = false
     
-    var body: some View {
+    struct Props {
+        let isPreview: Bool?
+        let list: [GithubImage]
+    }
+    
+    func map(state: AppState, dispatch: @escaping DispatchFunction) -> Props {
+        return Props(isPreview: state.imagesState.isPreview,
+                     list: state.imagesState.list)
+    }
+    
+    func body(props: Props) -> some View {
         VStack {
             ZStack {
                 // 添加 NSViewRepresentable 以捕获键盘事件
 #if !MOBILE
                 KeyCaptureViewRepresentable { event in
-                    handleKeyDown(event: event)
+                    handleKeyDown(event: event, props: props)
                 }
                 .frame(width: 0, height: 0)
 #endif
-                TabView(selection: $selectedImageIndex) {
-                    ForEach(0..<imageUrls.count, id: \.self) { index in
-                        WebImage(url: URL(string: imageUrls[index].imageUrl()))
+                TabView(selection: $imagesStore.currentIndex) {
+                    ForEach(0..<props.list.count, id: \.self) { index in
+                        WebImage(url: URL(string: props.list[index].imageUrl()))
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .contextMenu {
                                 Button(action: {
-                                    copyImage(url: imageUrls[index].imageUrl())
+                                    copyImage(url: props.list[index].imageUrl())
                                 }) {
                                     Text("Copy Image")
                                     Image(systemName: "doc.on.doc.fill")
                                 }
                                 Button(action: {
-                                    saveImage(url: imageUrls[index].imageUrl())
+                                    saveImage(url: props.list[index].imageUrl())
                                 }) {
                                     Text("Save Image")
                                     Image(systemName: "square.and.arrow.down")
@@ -56,9 +65,9 @@ struct NoteImageBrowserPreViewImagesView: View {
                 .background(Color.gray)
                 HStack {
                     Button(action: {
-                        if selectedImageIndex > 0 {
+                        if imagesStore.currentIndex > 0 {
                             withAnimation {
-                                selectedImageIndex -= 1
+                                imagesStore.currentIndex -= 1
                             }
                         }
                     }) {
@@ -69,9 +78,9 @@ struct NoteImageBrowserPreViewImagesView: View {
                     Spacer()
                     
                     Button(action: {
-                        if selectedImageIndex < imageUrls.count - 1 {
+                        if imagesStore.currentIndex < props.list.count - 1 {
                             withAnimation {
-                                selectedImageIndex += 1
+                                imagesStore.currentIndex += 1
                             }
                         }
                     }) {
@@ -96,7 +105,7 @@ struct NoteImageBrowserPreViewImagesView: View {
             }
         }
         .onTapGesture {
-            showPreview = false
+            store.dispatch(action: ImagesActions.Preview(on: false))
         }
     }
     
@@ -110,15 +119,15 @@ struct NoteImageBrowserPreViewImagesView: View {
     
 #if !MOBILE
     // 键盘事件处理
-    func handleKeyDown(event: NSEvent) {
+    func handleKeyDown(event: NSEvent, props: Props) {
         switch event.keyCode {
         case 123: // 左箭头键
-            if selectedImageIndex > 0 {
-                selectedImageIndex -= 1
+            if imagesStore.currentIndex > 0 {
+                imagesStore.currentIndex -= 1
             }
         case 124: // 右箭头键
-            if selectedImageIndex < imageUrls.count - 1 {
-                selectedImageIndex += 1
+            if imagesStore.currentIndex < props.list.count - 1 {
+                imagesStore.currentIndex += 1
             }
         default:
             break
@@ -127,7 +136,7 @@ struct NoteImageBrowserPreViewImagesView: View {
 #endif
     
     func copyImage(url: String) {
-        copyCallBackAction(url)
+//        copyCallBackAction(url)
     }
     
     // 保存图片方法

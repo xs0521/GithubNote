@@ -17,6 +17,7 @@ final class CommentModelStore: ObservableObject {
         didSet {
             AppUserDefaults.comment = select
 //            store.dispatch(action: IssuesActions.WillEditAction(issue: nil))
+            writeStore.markdownString = select?.body
         }
     }
     

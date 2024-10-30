@@ -11,30 +11,22 @@ import AlertToast
 
 struct NoteImageBrowserView: View {
     
-    @State var animated = false
-    
-    @Binding var showImageBrowser: Bool?
-    @Binding var showToast: Bool
-    @Binding var toastMessage: String
-    @Binding var showLoading: Bool
-    
     @Environment(\.colorScheme) var colorScheme
+    
+    @EnvironmentObject var appStore: AppModelStore
     
     var body: some View {
         ZStack {
-            NoteImageBrowserImagesView(showImageBrowser: $showImageBrowser,
-                                       showToast: $showToast,
-                                       toastMessage: $toastMessage,
-                                       showLoading: $showLoading)
+            NoteImageBrowserImagesView()
             .background(colorScheme == .dark ? Color.init(hex: "#292929") : Color.init(hex: "#ECECEB"))
             .onTapGesture {
-                showImageBrowser = false
+                store.dispatch(action: ImagesActions.isImageBrowserVisible(on: false))
             }
         }
-        .toast(isPresenting: $showToast, duration: 2.0, tapToDismiss: true){
-            AlertToast(displayMode: .hud, type: .systemImage("party.popper", .primary), title: toastMessage)
+        .toast(isPresenting: $appStore.isToastVisible, duration: 2.0, tapToDismiss: true){
+            AlertToast(displayMode: .hud, type: .systemImage("party.popper", .primary), title: appStore.toastMessage)
         }
-        .toast(isPresenting: $showLoading){
+        .toast(isPresenting: $appStore.isLoadingVisible){
             AlertToast(type: .loading, title: nil, subTitle: nil)
         }
     }

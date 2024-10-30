@@ -128,74 +128,7 @@ struct NoteIssuesView: ConnectedView {
         .onAppear {
             issueStore.listener.loadPage()
         }
-//        .onChange(of: selectionRepo) { oldValue, newValue in
-//            if oldValue != newValue {
-//                guard let repoName = newValue?.name else { return }
-////                AppUserDefaults.repo = repoName
-////                showReposView = false
-//                store.dispatch(action: SideActions.ReposViewState(visible: false))
-//            }
-//            endEdit()
-//        }
-//        .onChange(of: selectionIssue) { oldValue, newValue in
-//            if oldValue != newValue {
-//                requestComments?(newValue)
-//            }
-//            endEdit()
-//        }
     }
-}
-
-extension NoteIssuesView {
-    
-//    func updateIssueTitle(_ issue: Issue?, _ title: String) -> Void {
-//        
-//        guard let issue = issue else { return }
-//        
-//        "#issue# update title \(title)".logI()
-//        
-//        isEditIssueTitleSending = true
-//        let body = issue.body ?? ""
-//        guard let issueId = issue.number else { return }
-//        Networking<Issue>().request(API.updateIssue(issueId: issueId, state: .open, title: title, body: body)) { data, cache, _ in
-//            if data != nil {
-//                "#issue# update success".logI()
-//                var issue = issue
-//                issue.title = title
-//                CacheManager.updateIssues([issue]) {
-//                    CacheManager.fetchIssues { localList in
-//                        issueGroups = localList
-//                        isEditIssueTitleSending = false
-//                        endEdit()
-//                    }
-//                }
-//            } else {
-//                "#issue# update fail".logI()
-//                ToastManager.shared.showFail("fail")
-//                isEditIssueTitleSending = false
-//                endEdit()
-//            }
-//        }
-//    }
-    
-//    func closeIssue(_ issue: Issue) -> Void {
-//        guard let number = issue.number, let title = issue.title, let body = issue.body else { return }
-//        Networking<Issue>().request(API.updateIssue(issueId: number, state: .closed, title: title, body: body)) { data, cache, _ in
-//            if data != nil {
-//                guard let issueId = issue.id else { return }
-//                CacheManager.deleteIssue([issueId]) {
-//                    guard let tableName = CacheManager.shared.manager?.commentTableName(issueId), let url = issue.url else {
-//                        return
-//                    }
-//                    CacheManager.deleteComment(url, tableName) { }
-//                    issueGroups.removeAll(where: {$0.id == issueId})
-//                    selectionIssue = issueGroups.first
-//                }
-//            } else {
-//                ToastManager.shared.showFail("fail")
-//            }
-//        }
-//    }
 }
 
 //#Preview {

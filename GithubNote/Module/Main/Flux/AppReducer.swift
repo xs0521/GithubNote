@@ -14,5 +14,7 @@ func appStateReducer(state: AppState, action: Action) -> AppState {
     state.sideStates = SideStateReducer(state: state.sideStates, action: action)
     state.issuesStates = IssuesStateReducer(state: state.issuesStates, action: action)
     state.commentStates = CommentStateReducer(state: state.commentStates, action: action)
+    state.writeStates = WriteStateReducer(state: state.writeStates, action: action)
+    state.imagesState = ImagesStateReducer(state: state.imagesState, action: action)
     return state
 }

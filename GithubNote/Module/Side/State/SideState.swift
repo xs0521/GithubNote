@@ -12,5 +12,4 @@ struct SideState: FluxState, Codable {
     
     var isReposVisible: Bool = false
     var selectionRepo: RepoModel? = AppUserDefaults.repo
-    var isImageBrowserVisible: Bool = false
 }

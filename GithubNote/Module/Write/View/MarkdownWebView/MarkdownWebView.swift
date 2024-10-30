@@ -61,18 +61,18 @@ struct MarkdownWebView: AppViewRepresentable {
         
         if !context.coordinator.isLoaded {
             "#MD# isLoaded \(context.coordinator.isLoaded)".logI()
+            context.coordinator.isLoaded = true
             // Load local HTML file from the app bundle
             if let htmlPath = Bundle.main.path(forResource: "index/index", ofType: "html") {
                 let htmlUrl = URL(fileURLWithPath: htmlPath)
                 let request = URLRequest(url: htmlUrl)
                 webView.load(request)
             }
-            context.coordinator.isLoaded = true
             return
         }
         
         if !context.coordinator.isDidFinish {
-            "#MD# no isDidFinished".logW()
+            "#MD# did not Finished".logW()
             return
         }
         
@@ -130,7 +130,12 @@ struct MarkdownWebView: AppViewRepresentable {
         
         // Called when the WKWebView finishes loading content
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            "#MD# didFinish".logI()
             isDidFinish = true
+        }
+        
+        func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+            "#MD# error \(error.localizedDescription)".logE()
         }
     }
     

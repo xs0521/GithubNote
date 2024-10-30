@@ -23,7 +23,7 @@ struct NoteSidebarToolView: ConnectedView {
     
     func map(state: AppState, dispatch: @escaping DispatchFunction) -> Props {
         let isReposVisible = state.sideStates.isReposVisible
-        let isImageBrowserVisible = state.sideStates.isImageBrowserVisible
+        let isImageBrowserVisible = state.imagesState.isImageBrowserVisible
         let selectionRepo = state.sideStates.selectionRepo
         
         return Props(isReposVisible: isReposVisible,
@@ -105,7 +105,7 @@ struct NoteSidebarToolView: ConnectedView {
                         ToastManager.shared.show("Please select a code repository")
                         return
                     }
-                    store.dispatch(action: SideActions.ImagesViewState(visible: true))
+                    store.dispatch(action: ImagesActions.isImageBrowserVisible(on: true))
                 }, label: {
                     Image(systemName: AppConst.photoIcon)
                 })

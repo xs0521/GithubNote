@@ -50,8 +50,6 @@ struct NoteCommentsView: ConnectedView {
                         .contextMenu {
                             Button("Delete", role: .destructive) {
                                 "delete \(selection.body?.toTitle() ?? "")".logI()
-//                                deleteComment = selection
-//                                deleteComment(selection)
                                 store.dispatch(action: CommentActions.WillDeleteAction(item: selection))
                                 store.dispatch(action: CommentActions.Delete(item: selection, completion: { finish in
                                     store.dispatch(action: CommentActions.FetchList(readCache: true, completion: { _  in
@@ -69,20 +67,6 @@ struct NoteCommentsView: ConnectedView {
             commentStore.listener.loadPage()
         }
     }
-}
-
-extension NoteCommentsView {
-    
-//    private func deleteComment(_ comment: Comment) -> Void {
-//        guard let commentId = comment.id else { return }
-//        Networking<Comment>().request(API.deleteComment(commentId: commentId)) { data, cache, code in
-//            if MessageCode.finish.rawValue != code {
-//                return
-//            }
-//            commentGroups.removeAll(where: {$0.id == commentId})
-//            CacheManager.deleteComment([commentId]) { }
-//        }
-//    }
 }
 
 //#Preview {

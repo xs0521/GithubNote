@@ -7,29 +7,26 @@
 
 import Foundation
 import SwiftUI
+import SwiftUIFlux
 
-struct NoteWritePannelView: View {
+struct NoteWritePannelView: ConnectedView {
     
     @Environment(\.colorScheme) private var colorScheme
     
-    @Binding var commentGroups: [Comment]
+    @EnvironmentObject var writeStore: WriteModelStore
+    @EnvironmentObject var commentStore: CommentModelStore
+    @EnvironmentObject var appStore: AppModelStore
     
-    @Binding var selectionRepo: RepoModel?
-    @Binding var selectionIssue: Issue?
+    struct Props {
+        let editIsShown: Bool
+        let isImageBrowserVisible: Bool?
+        let uploadState: UploadType
+    }
     
-    @Binding var selectionComment: Comment?
-    @Binding var issue: Issue?
-    @Binding var showImageBrowser: Bool?
     
-    @State var isPresented: Bool = false
+//    @Binding var showLoading: Bool
     
-    @State var markdownString: String?
-    @State var editIsShown: Bool = false
-    
-    @State var uploadState: UploadType = .normal
-    
-    @Binding var showLoading: Bool
-    
+    @State private var isPresented: Bool = false
     @State private var workItem: DispatchWorkItem?
     @State private var cache: String = ""
     @State private var cacheUpdate: Int = 0
@@ -40,33 +37,38 @@ struct NoteWritePannelView: View {
     }
 #endif
     
-    var body: some View {
+    func map(state: AppState, dispatch: @escaping DispatchFunction) -> Props {
+        return Props(editIsShown: state.writeStates.editIsShown,
+                     isImageBrowserVisible: state.imagesState.isImageBrowserVisible,
+                     uploadState: state.writeStates.uploadState)
+    }
+    
+    func body(props: Props) -> some View {
         VStack {
             VStack (spacing: 0) {
                 ZStack {
-                    MarkdownWebView(markdownText: $markdownString.toUnwrapped(defaultValue: ""))
+                    MarkdownWebView(markdownText: $writeStore.markdownString.toUnwrapped(defaultValue: ""))
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    if editIsShown {
-                        TextEditor(text: $markdownString.toUnwrapped(defaultValue: ""))
+                    if props.editIsShown {
+                        TextEditor(text: $writeStore.markdownString.toUnwrapped(defaultValue: ""))
                             .transparentScrolling()
                             .font(.system(size: 14))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
                     }
-                    if !cache.isEmpty && editIsShown {
+                    if !cache.isEmpty && props.editIsShown {
                         cacheItemView()
                     }
                 }
 #if !MOBILE
-                .onChange(of: editIsShown, { _, newValue in
+                .onChange(of: props.editIsShown, { _, newValue in
                     if !newValue {
-                        ///When editing again, attempting to undo causes a crash.
                         undoManager?.removeAllActions()
                     }
                 })
 #endif
                 .padding(EdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10))
-                if let value = selectionComment?.updatedAt?.localTime(), !value.isEmpty {
+                if let value = commentStore.select?.updatedAt?.localTime(), !value.isEmpty {
                     bottomTimeView()
                 }
                 
@@ -74,32 +76,32 @@ struct NoteWritePannelView: View {
             .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
             .toolbar {
                 ToolbarItemGroup {
-                    if selectionComment != nil {
-                        NoteWritePannelTitleView(showImageBrowser: $showImageBrowser,
-                                                 selectionRepo: $selectionRepo,
-                                                 selectionIssue: $selectionIssue,
-                                                 selectionComment: $selectionComment)
+                    if commentStore.select != nil {
+//                        NoteWritePannelTitleView(showImageBrowser: showImageBrowser,
+//                                                 selectionRepo: $selectionRepo,
+//                                                 selectionIssue: $selectionIssue,
+//                                                 selectionComment: $selectionComment)
                         
                         Spacer()
-                        operationViews()
+                        operationViews(props: props)
                     }
                 }
                 
             }
-            .onChange(of: selectionComment) { oldValue, newValue in
-                if oldValue?.identifier != newValue?.identifier {
-                    editIsShown = false
-                    cache = ""
-                    markdownString = newValue?.body
-                    checkCacheData()
-                }
-            }
-            .onChange(of: markdownString) { oldValue, newValue in
-                if oldValue != newValue && editIsShown {
-                    cache = ""
-                    debounceUpdateCacheText()
-                }
-            }
+//            .onChange(of: selectionComment) { oldValue, newValue in
+//                if oldValue?.identifier != newValue?.identifier {
+//                    editIsShown = false
+//                    cache = ""
+//                    markdownString = newValue?.body
+//                    checkCacheData()
+//                }
+//            }
+//            .onChange(of: markdownString) { oldValue, newValue in
+//                if oldValue != newValue && editIsShown {
+//                    cache = ""
+//                    debounceUpdateCacheText()
+//                }
+//            }
         }
     }
 }
@@ -114,7 +116,7 @@ extension NoteWritePannelView {
                     Image(systemName: "network")
                         .font(.system(size: 10))
                         .padding(.trailing, 5)
-                    Text(selectionComment?.updatedAt?.localTime() ?? "")
+                    Text(commentStore.select?.updatedAt?.localTime() ?? "")
                         .font(.system(size: 10))
                         .foregroundColor(colorScheme == .dark ? Color(hex: "#DDDDDD") : Color(hex: "#444443"))
                 }
@@ -134,7 +136,7 @@ extension NoteWritePannelView {
             HStack {
                 Spacer()
                 Button {
-                    markdownString = cache
+                    writeStore.markdownString = cache
                     cache = ""
                 } label: {
                     Image(systemName: "timer")
@@ -156,16 +158,17 @@ extension NoteWritePannelView {
 
 extension NoteWritePannelView {
     
-    fileprivate func operationViews() -> some View {
+    fileprivate func operationViews(props: Props) -> some View {
         
         HStack {
-            if showImageBrowser! {
+            if props.isImageBrowserVisible! {
                 HStack {
                     Button(action: {
                         isPresented = true
                     }, label: {
                         Image(systemName: AppConst.plusIcon)
                     })
+                    .buttonStyle(.plain)
                     .fileImporter(
                         isPresented: $isPresented,
                         allowedContentTypes: [.image],
@@ -173,9 +176,9 @@ extension NoteWritePannelView {
                     ) { result in
                         switch result {
                         case .success(let urls):
-                            showLoading = true
+                            appStore.isLoadingVisible = true
                             ImageUploader.shared.uploadImages(urls: urls, completion: { _ in
-                                showLoading = false
+                                appStore.isLoadingVisible = false
                             })
                         case .failure(let error):
                             print(error.localizedDescription)
@@ -186,42 +189,45 @@ extension NoteWritePannelView {
                     } label: {
                         Image(systemName: AppConst.downloadIcon)
                     }
+                    .buttonStyle(.plain)
                     Button {
-                        showImageBrowser = false
+                        store.dispatch(action: ImagesActions.isImageBrowserVisible(on: false))
                     } label: {
                         Image(systemName: AppConst.closeIcon)
                     }
+                    .buttonStyle(.plain)
                 }
             }
-            if editIsShown && !showImageBrowser! {
+            if props.editIsShown && !props.isImageBrowserVisible! {
                 ZStack {
-                    if uploadState == .sending {
+                    if props.uploadState == .sending {
                         ProgressView()
                             .controlSize(.mini)
                     } else {
                         Button {
-                            if uploadState != .normal {
+                            if props.uploadState != .normal {
                                 return
                             }
                             updateContent()
                         } label: {
-                            Label("Show inspector", systemImage: uploadState.imageName)
+                            Label("Show inspector", systemImage: props.uploadState.imageName)
                         }
-                        .disabled(!editIsShown)
+                        .buttonStyle(.plain)
+                        .disabled(!props.editIsShown)
                     }
                 }
                 .frame(width: 30, height: 40)
             }
-            if !(showImageBrowser ?? false) {
+            if !(props.isImageBrowserVisible ?? false) {
                 Button {
-                    editIsShown.toggle()
+                    store.dispatch(action: WriteActions.edit(editIsShown: !props.editIsShown))
                 } label: {
-                    Label("Show inspector", systemImage: editIsShown ? AppConst.closeIcon : AppConst.pencilIcon)
-                        .if(!editIsShown) { view in
+                    Label("Show inspector", systemImage: props.editIsShown ? AppConst.closeIcon : AppConst.pencilIcon)
+                        .if(!props.editIsShown) { view in
                             view.font(.system(size: 18))
                         }
                 }
-                
+                .buttonStyle(.plain)
             }
         }
     }
@@ -230,13 +236,14 @@ extension NoteWritePannelView {
 extension NoteWritePannelView {
     
     fileprivate func updateContent() -> Void {
-        guard let body = markdownString, let commentid = selectionComment?.id else { return }
-        uploadState = .sending
+        guard let body = writeStore.markdownString, let commentid = commentStore.select?.id else { return }
+        
+        store.dispatch(action: WriteActions.upload(state: .sending))
         
         Networking<Comment>().request(API.updateComment(commentId: commentid, body: body), parseHandler: ModelGenerator(snakeCase: true)) { data, cache, _ in
             
             guard let comment = data?.first else {
-                uploadState = .fail
+                store.dispatch(action: WriteActions.upload(state: .fail))
                 normal()
                 return
             }
@@ -245,20 +252,20 @@ extension NoteWritePannelView {
             }
             func normal() -> Void {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    uploadState = .normal
+                    store.dispatch(action: WriteActions.upload(state: .normal))
                 }
             }
         }
     }
     
     fileprivate func updateCommentData(_ comment: Comment, _ completion: @escaping CommonCallBack) -> Void {
-        CacheManager.updateComments([comment]) {
-            CacheManager.fetchComments { localList in
-                commentGroups = localList
-                selectionComment = localList.first(where: {$0.id == comment.id})
-                completion()
-            }
-        }
+//        CacheManager.updateComments([comment]) {
+//            CacheManager.fetchComments { localList in
+//                commentGroups = localList
+//                selectionComment = localList.first(where: {$0.id == comment.id})
+//                completion()
+//            }
+//        }
     }
     
     fileprivate func debounceUpdateCacheText() {
@@ -272,14 +279,14 @@ extension NoteWritePannelView {
     }
     
     fileprivate func updateCacheText() {
-        guard var comment = selectionComment else { return }
-        comment.cache = markdownString
-        selectionComment = comment
+        guard var comment = commentStore.select else { return }
+        comment.cache = writeStore.markdownString
+        commentStore.select = comment
         CacheManager.updateCommentCache(comment) {}
     }
     
     fileprivate func checkCacheData() -> Void {
-        guard let commentId = selectionComment?.id else { return }
+        guard let commentId = commentStore.select?.id else { return }
         CacheManager.fetchComment(commentId) { comment in
             cache = comment?.cache ?? ""
             cacheUpdate = comment?.cacheUpdate ?? 0

@@ -34,7 +34,6 @@ struct NoteCommentsHeaderView: View {
                         }))
                         
                     } label: {
-                        
                         Image(systemName: AppConst.downloadIcon)
                     }
                     .buttonStyle(.plain)

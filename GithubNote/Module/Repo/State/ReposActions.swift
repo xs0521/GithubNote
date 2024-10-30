@@ -34,9 +34,6 @@ struct ReposActions {
                 CacheManager.fetchRepos { list in
                     "#request# Repo all cache \(list.count)".logI()
                     config.list = list
-//                    if let repo = list.first(where: {$0.name == AppUserDefaults.repo?.name}) {
-//                        config.select = repo
-//                    }
                     completion(true)
                 }
                 return
@@ -49,12 +46,6 @@ struct ReposActions {
                 CacheManager.insertRepos(repos: netList, deleteNoFound: true) {
                     CacheManager.fetchRepos { list in
                         config.list = list
-                        let container = config.list.contains { item in
-                            item.name == AppUserDefaults.repo?.name
-                        }
-//                        if !container {
-//                            config.select = list.first
-//                        }
                         completion(true)
                     }
                 }
@@ -76,11 +67,6 @@ struct ReposActions {
                 }
                 
                 "#request# Repo page \(page) \(list.count)".logI()
-                
-//                if let repo = list.first(where: {$0.name == AppUserDefaults.repo?.name}) {
-//                    config.select = repo
-//                }
-                
                 repos.append(contentsOf: list)
                 
                 if next {
