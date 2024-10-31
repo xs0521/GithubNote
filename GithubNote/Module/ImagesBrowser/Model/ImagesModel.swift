@@ -16,6 +16,8 @@ struct SDWebImageDownloaderSetup: Setupable {
     static func setup() {
         "#image# accessToken length \(AppUserDefaults.accessToken.count)".logI()
         SDWebImageDownloader.shared.setValue("Bearer \(AppUserDefaults.accessToken)", forHTTPHeaderField: "Authorization")
+        
+        SDWebImageManager.defaultImageCache = SDImageCache(namespace: "github.note.cache")
     }
 }
 

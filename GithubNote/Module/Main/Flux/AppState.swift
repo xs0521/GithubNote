@@ -82,8 +82,8 @@ func WriteStateReducer(state: WriteState, action: Action) -> WriteState {
     switch action {
     case let action as WriteActions.edit:
         state.editIsShown = action.editIsShown
-    case let action as WriteActions.upload:
-        state.uploadState = action.state
+    case let action as WriteActions.uploadState:
+        state.uploadState = action.value
     default:
         break
     }

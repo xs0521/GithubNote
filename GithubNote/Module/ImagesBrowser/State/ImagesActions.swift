@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUIFlux
+import SwiftUI
 
 struct ImagesActions {
     
@@ -73,6 +74,53 @@ struct ImagesActions {
                 }
                 "ImageDir success".logI()
             }
+            
+        }
+    }
+    
+    struct Delete: AsyncAction {
+        
+        let item: GithubImage
+        let completion: CommonTCallBack<Bool>
+        
+        func execute(state: SwiftUIFlux.FluxState?, dispatch: @escaping SwiftUIFlux.DispatchFunction) {
+            deleteFile(item, completion)
+        }
+        
+        private func deleteFile(_ item: GithubImage, _ completion: @escaping CommonTCallBack<Bool>) -> Void {
+            
+            Networking<PushCommitModel>().request(API.deleteImage(filePath: item.path, sha: item.sha)) { _, cache, code in
+                if code == MessageCode.success.rawValue {
+                    CacheManager.deleteGithubImage(item.url) {
+                        completion(true)
+                    }
+                } else {
+                    completion(false)
+                }
+            }
+        }
+    }
+    
+    struct Copy: Action {
+        
+        let url: String
+        
+        init(url: String) {
+            self.url = url
+            copyAction(url)
+        }
+        
+        fileprivate func copyAction(_ url: String) -> Void {
+            let content = """
+            <img src="\(url)" alt="alt text" width="300" height="200">
+            """
+            
+    #if MOBILE
+    #else
+            let pasteBoard = NSPasteboard.general
+            pasteBoard.clearContents()
+            pasteBoard.setString(content, forType: .string)
+    #endif
             
         }
     }

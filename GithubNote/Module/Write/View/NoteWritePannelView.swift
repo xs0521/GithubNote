@@ -23,13 +23,7 @@ struct NoteWritePannelView: ConnectedView {
         let uploadState: UploadType
     }
     
-    
-//    @Binding var showLoading: Bool
-    
     @State private var isPresented: Bool = false
-    @State private var workItem: DispatchWorkItem?
-    @State private var cache: String = ""
-    @State private var cacheUpdate: Int = 0
     
 #if !MOBILE
     private var undoManager: UndoManager? {
@@ -56,7 +50,7 @@ struct NoteWritePannelView: ConnectedView {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
                     }
-                    if !cache.isEmpty && props.editIsShown {
+                    if !writeStore.cache.isEmpty && props.editIsShown {
                         cacheItemView()
                     }
                 }
@@ -77,31 +71,13 @@ struct NoteWritePannelView: ConnectedView {
             .toolbar {
                 ToolbarItemGroup {
                     if commentStore.select != nil {
-//                        NoteWritePannelTitleView(showImageBrowser: showImageBrowser,
-//                                                 selectionRepo: $selectionRepo,
-//                                                 selectionIssue: $selectionIssue,
-//                                                 selectionComment: $selectionComment)
-                        
+                        NoteWritePannelTitleView()
                         Spacer()
                         operationViews(props: props)
                     }
                 }
                 
             }
-//            .onChange(of: selectionComment) { oldValue, newValue in
-//                if oldValue?.identifier != newValue?.identifier {
-//                    editIsShown = false
-//                    cache = ""
-//                    markdownString = newValue?.body
-//                    checkCacheData()
-//                }
-//            }
-//            .onChange(of: markdownString) { oldValue, newValue in
-//                if oldValue != newValue && editIsShown {
-//                    cache = ""
-//                    debounceUpdateCacheText()
-//                }
-//            }
         }
     }
 }
@@ -136,11 +112,11 @@ extension NoteWritePannelView {
             HStack {
                 Spacer()
                 Button {
-                    writeStore.markdownString = cache
-                    cache = ""
+                    writeStore.markdownString = writeStore.cache
+                    writeStore.cache = ""
                 } label: {
                     Image(systemName: "timer")
-                    Text(cacheUpdate.localTime())
+                    Text(writeStore.cacheUpdate.localTime())
                 }
                 .font(.system(size: 8))
                 .foregroundColor(Color.white)
@@ -208,7 +184,19 @@ extension NoteWritePannelView {
                             if props.uploadState != .normal {
                                 return
                             }
-                            updateContent()
+                            store.dispatch(action: WriteActions.uploadState(value: .sending))
+                            store.dispatch(action: WriteActions.upload(completion: { success in
+                                if success {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                        store.dispatch(action: WriteActions.uploadState(value: .normal))
+                                    }
+                                } else {
+                                    store.dispatch(action: WriteActions.uploadState(value: .fail))
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                        store.dispatch(action: WriteActions.uploadState(value: .normal))
+                                    }
+                                }
+                            }))
                         } label: {
                             Label("Show inspector", systemImage: props.uploadState.imageName)
                         }
@@ -229,67 +217,6 @@ extension NoteWritePannelView {
                 }
                 .buttonStyle(.plain)
             }
-        }
-    }
-}
-
-extension NoteWritePannelView {
-    
-    fileprivate func updateContent() -> Void {
-        guard let body = writeStore.markdownString, let commentid = commentStore.select?.id else { return }
-        
-        store.dispatch(action: WriteActions.upload(state: .sending))
-        
-        Networking<Comment>().request(API.updateComment(commentId: commentid, body: body), parseHandler: ModelGenerator(snakeCase: true)) { data, cache, _ in
-            
-            guard let comment = data?.first else {
-                store.dispatch(action: WriteActions.upload(state: .fail))
-                normal()
-                return
-            }
-            updateCommentData(comment) {
-                normal()
-            }
-            func normal() -> Void {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    store.dispatch(action: WriteActions.upload(state: .normal))
-                }
-            }
-        }
-    }
-    
-    fileprivate func updateCommentData(_ comment: Comment, _ completion: @escaping CommonCallBack) -> Void {
-//        CacheManager.updateComments([comment]) {
-//            CacheManager.fetchComments { localList in
-//                commentGroups = localList
-//                selectionComment = localList.first(where: {$0.id == comment.id})
-//                completion()
-//            }
-//        }
-    }
-    
-    fileprivate func debounceUpdateCacheText() {
-        workItem?.cancel()
-        workItem = DispatchWorkItem {
-            updateCacheText()
-        }
-        if let workItem = workItem {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: workItem)
-        }
-    }
-    
-    fileprivate func updateCacheText() {
-        guard var comment = commentStore.select else { return }
-        comment.cache = writeStore.markdownString
-        commentStore.select = comment
-        CacheManager.updateCommentCache(comment) {}
-    }
-    
-    fileprivate func checkCacheData() -> Void {
-        guard let commentId = commentStore.select?.id else { return }
-        CacheManager.fetchComment(commentId) { comment in
-            cache = comment?.cache ?? ""
-            cacheUpdate = comment?.cacheUpdate ?? 0
         }
     }
 }

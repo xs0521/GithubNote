@@ -13,8 +13,6 @@ struct NoteImageBrowserPreViewImagesView: ConnectedView {
     
     @EnvironmentObject var imagesStore: ImagesModelStore
     
-//    var copyCallBackAction: CommonTCallBack<String>
-    
     @State private var isLoading: Bool = false
     
     struct Props {
@@ -30,7 +28,6 @@ struct NoteImageBrowserPreViewImagesView: ConnectedView {
     func body(props: Props) -> some View {
         VStack {
             ZStack {
-                // 添加 NSViewRepresentable 以捕获键盘事件
 #if !MOBILE
                 KeyCaptureViewRepresentable { event in
                     handleKeyDown(event: event, props: props)
@@ -45,7 +42,8 @@ struct NoteImageBrowserPreViewImagesView: ConnectedView {
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .contextMenu {
                                 Button(action: {
-                                    copyImage(url: props.list[index].imageUrl())
+                                    let url = props.list[index].imageUrl()
+                                    store.dispatch(action: ImagesActions.Copy(url: url))
                                 }) {
                                     Text("Copy Image")
                                     Image(systemName: "doc.on.doc.fill")
@@ -134,10 +132,6 @@ struct NoteImageBrowserPreViewImagesView: ConnectedView {
         }
     }
 #endif
-    
-    func copyImage(url: String) {
-//        copyCallBackAction(url)
-    }
     
     // 保存图片方法
     func saveImage(url: String) {

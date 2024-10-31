@@ -54,7 +54,7 @@ struct NoteImageBrowserImagesView: ConnectedView {
                                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                                         .opacity(0.3)
                                     WebImage(url: URL(string: item.imageUrl())) { image in
-                                            image.resizable() // Control layout like SwiftUI.AsyncImage, you must use this modifier or the view will use the image bitmap size
+                                            image.resizable()
                                         } placeholder: {
                                             Rectangle().foregroundColor(.gray)
                                         }
@@ -70,13 +70,20 @@ struct NoteImageBrowserImagesView: ConnectedView {
                             .buttonStyle(.plain)
                             .contextMenu {
                                 Button(action: {
-                                    copyAction(item.imageUrl())
+                                    store.dispatch(action: ImagesActions.Copy(url: item.imageUrl()))
                                 }) {
                                     Text("Copy Image")
                                     Image(systemName: "doc.on.doc.fill")
                                 }
                                 Button(action: {
-                                    deleteFile(item)
+                                    appStore.isLoadingVisible = true
+                                    store.dispatch(action: ImagesActions.Delete(item: item, completion: { success in
+                                        appStore.isLoadingVisible = false
+                                        if success {
+                                            let list = props.list.filter({$0.identifier != item.identifier})
+                                            store.dispatch(action:ImagesActions.SetList(list: list))
+                                        }
+                                    }))
                                 }) {
                                     Text("Delete Image")
                                     Image(systemName: "xmark.bin.circle.fill")
@@ -107,87 +114,10 @@ struct NoteImageBrowserImagesView: ConnectedView {
         })
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name.appendImagesNotification), perform: { notification in
             if let item = notification.object as? GithubImage {
-//                props.images.insert(item, at: 0)
+                var list = props.list
+                list.insert(item, at: 0)
+                store.dispatch(action:ImagesActions.SetList(list: list))
             }
         })
-    }
-}
-
-extension NoteImageBrowserImagesView {
-    
-//    fileprivate func requestImagesData(_ readCache: Bool = true, completion: @escaping CommonCallBack) -> Void {
-//        
-//        if readCache {
-//            CacheManager.fetchGithubImages { images in
-////                self.data = images
-//                appStore.isLoadingVisible = false
-//                completion()
-//            }
-//            return
-//        }
-//        
-//        Networking<GithubImage>().request(API.repoImages) { data, cache, code in
-//            if code == MessageCode.notFound.rawValue {
-////                self.data.removeAll()
-//                requestCreateImageDir(completion: {
-//                    completion()
-//                })
-//                return
-//            }
-//            
-//            if let list = data, !list.isEmpty {
-//                let images = list.filter({$0.path.isImage()})
-//                CacheManager.insertGithubImages(images: images, deleteNoFound: true) {
-//                    CacheManager.fetchGithubImages { localImages in
-////                        self.data = localImages
-//                        completion()
-//                    }
-//                }
-//            } else {
-////                self.data.removeAll()
-//                completion()
-//            }
-//            
-//        }
-//    }
-//    
-//    fileprivate func requestCreateImageDir(completion: @escaping CommonCallBack) -> Void {
-//        
-//        Networking<PushCommitModel>().request(API.createImagesDirectory) { data, cache, code in
-//            completion()
-//            if code != MessageCode.createSuccess.rawValue {
-//                return
-//            }
-//            "ImageDir success".logI()
-//        }
-//        
-//    }
-    
-    fileprivate func deleteFile(_ item: GithubImage) -> Void {
-        appStore.isLoadingVisible = true
-        Networking<PushCommitModel>().request(API.deleteImage(filePath: item.path, sha: item.sha)) { _, cache, code in
-            if code == MessageCode.success.rawValue {
-//                data = data.filter({$0.identifier != item.identifier})
-                CacheManager.deleteGithubImage(item.url) {
-                    appStore.isLoadingVisible = false
-                }
-            } else {
-                appStore.isLoadingVisible = false
-            }
-        }
-    }
-    
-    fileprivate func copyAction(_ url: String) -> Void {
-        let content = """
-        <img src="\(url)" alt="alt text" width="300" height="200">
-        """
-        
-#if MOBILE
-#else
-        let pasteBoard = NSPasteboard.general
-        pasteBoard.clearContents()
-        pasteBoard.setString(content, forType: .string)
-#endif
-        
     }
 }

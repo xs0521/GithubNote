@@ -12,10 +12,6 @@ struct NoteCommentsHeaderView: View {
     @State private var isCommentRefreshing: Bool = false
     @State private var isNewCommentSending: Bool = false
     
-    var refreshCallBack: CommonTCallBack<CommonCallBack>?
-    var createCallBack: ((_ comment: Comment, _ callBack: @escaping CommonCallBack) ->())?
-    
-    
     var body: some View {
         HStack {
             Text("Note")
