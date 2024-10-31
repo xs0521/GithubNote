@@ -37,9 +37,9 @@ struct CommentActions {
             }
             
             if readCache {
-                CacheManager.fetchComments { list in
+                CacheManager.fetchList { list in
+                    config.list = list as [Comment]
                     "#request# comment all cache \(list.count)".logI()
-                    config.list = list
                     completion(true)
                 }
                 return
@@ -50,7 +50,7 @@ struct CommentActions {
             commentsData(config.page, allComment, readCache, true) { list, success, more in
                 "#request# comment all \(list.count)".logI()
                 config.list = list
-                CacheManager.insertComments(comments: list, deleteNoFound: true)
+                CacheManager.insert(items: list, deleteNoFound: true)
                 completion(true)
             }
         }
@@ -99,7 +99,7 @@ struct CommentActions {
                     completion?(false)
                     return
                 }
-                CacheManager.insertComments(comments: [comment]) {
+                CacheManager.insert(items: [comment]) {
                     commentStore.select = comment
                     completion?(true)
                 }
@@ -145,7 +145,7 @@ struct CommentActions {
                     completion(false)
                     return
                 }
-                CacheManager.deleteComment([commentId]) {
+                CacheManager.delete([comment]) {
                     completion(true)
                 }
             }

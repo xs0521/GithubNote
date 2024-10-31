@@ -10,7 +10,7 @@ import FMDB
 
 struct Comment: APIModelable, Identifiable, Hashable, Equatable {
     
-    var id: NSInteger?
+    var id: Int?
     var url, htmlUrl, issueUrl: String?
     var nodeId: String?
     var createdAt, updatedAt: String?
@@ -34,6 +34,14 @@ struct Comment: APIModelable, Identifiable, Hashable, Equatable {
 }
 
 extension Comment: SQLModelable {
+    
+    static var fetchWhere: String? {
+        CacheManager.shared.currentIssue?.url ?? ""
+    }
+    
+    static func insertPreAction() {
+        CacheManager.shared.manager?.createCommentTable()
+    }
     
     static var fetchSql: String {
         let tableName = CacheManager.shared.manager?.commentTableName() ?? ""

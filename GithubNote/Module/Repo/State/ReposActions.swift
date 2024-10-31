@@ -31,23 +31,22 @@ struct ReposActions {
         private func requestAllRepo(_ readCache: Bool = true, _ completion: @escaping CommonTCallBack<Bool>) -> Void {
             
             if readCache {
-                CacheManager.fetchRepos { list in
-                    "#request# Repo all cache \(list.count)".logI()
-                    config.list = list
-                    completion(true)
-                }
+                fetchLocalList()
                 return
             }
-            
             config.page = 1
             let allRepos: [RepoModel] = []
             requestRepo(config.page, allRepos, readCache, true) { netList, success, more in
                 "#request# Repo all \(netList.count)".logI()
-                CacheManager.insertRepos(repos: netList, deleteNoFound: true) {
-                    CacheManager.fetchRepos { list in
-                        config.list = list
-                        completion(true)
-                    }
+                CacheManager.insert(items: netList, deleteNoFound: true) {
+                    fetchLocalList()
+                }
+            }
+            
+            func fetchLocalList() {
+                CacheManager.fetchList { list in
+                    config.list = list
+                    completion(true)
                 }
             }
         }
@@ -93,7 +92,7 @@ struct ReposActions {
                     completion?(false)
                     return
                 }
-                CacheManager.insertRepos(repos: [item]) {
+                CacheManager.insert(items: [item]) {
                     completion?(true)
                 }
             }

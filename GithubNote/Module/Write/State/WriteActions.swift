@@ -44,8 +44,8 @@ struct WriteActions {
         }
         
         private func updateCommentData(_ comment: Comment, _ completion: @escaping CommonCallBack) -> Void {
-            CacheManager.updateComments([comment]) {
-                CacheManager.fetchComments { localList in
+            CacheManager.update([comment]) {
+                CacheManager.fetchList { localList in
                     store.dispatch(action: CommentActions.SetList(list: localList))
                     completion()
                 }

@@ -32,6 +32,12 @@ struct RepoModel: APIModelable, Identifiable, Hashable, Equatable {
 
 extension RepoModel: SQLModelable {
     
+    static var fetchWhere: String? {
+        nil
+    }
+    
+    static func insertPreAction() { }
+    
     static var fetchSql: String {
         "SELECT * FROM \(tableName) ORDER BY sort;"
     }

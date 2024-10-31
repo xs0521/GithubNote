@@ -44,6 +44,14 @@ struct Issue: APIModelable, Identifiable, Hashable, Equatable {
 
 extension Issue: SQLModelable {
     
+    static func insertPreAction() {
+        CacheManager.shared.manager?.createIssueTable()
+    }
+
+    static var fetchWhere: String? {
+        CacheManager.shared.currentRepo?.url ?? ""
+    }
+    
     static var fetchSql: String {
         let tableName = CacheManager.shared.manager?.issueTableName() ?? ""
         return "SELECT * FROM \(tableName) WHERE repositoryUrl = ? ORDER BY sort;"

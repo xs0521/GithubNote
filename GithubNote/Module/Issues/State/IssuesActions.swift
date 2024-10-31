@@ -37,9 +37,9 @@ struct IssuesActions {
             }
             
             if readCache {
-                CacheManager.fetchIssues { list in
+                CacheManager.fetchList { list in
+                    config.list = list as [Issue]
                     "#request# issue all cache \(list.count)".logI()
-                    config.list = list
                     completion(true)
                 }
                 return
@@ -49,9 +49,9 @@ struct IssuesActions {
             let allIssue: [Issue] = []
             requestIssue(config.page, allIssue, false, true) { loadList, success, more in
                 "#request# issue all \(loadList.count)".logI()
-                CacheManager.insertIssues(issues: loadList, deleteNoFound: true) {
-                    CacheManager.fetchIssues { list in
-                        config.list = list
+                CacheManager.insert(items: loadList, deleteNoFound: true) {
+                    CacheManager.fetchList { list in
+                        config.list = list as [Issue]
                         completion(true)
                     }
                 }
@@ -101,7 +101,7 @@ struct IssuesActions {
                     completion?(false)
                     return
                 }
-                CacheManager.insertIssues(issues: [issue]) {
+                CacheManager.insert(items: [issue]) {
                     issueStore.select = issue
                     completion?(true)
                 }
@@ -147,7 +147,7 @@ struct IssuesActions {
                     "#issue# update success".logI()
                     var issue = issue
                     issue.title = title
-                    CacheManager.updateIssues([issue]) {
+                    CacheManager.update([issue]) {
                         completion(true)
                     }
                 } else {
@@ -175,7 +175,7 @@ struct IssuesActions {
             Networking<Issue>().request(API.updateIssue(issueId: number, state: .closed, title: title, body: body)) { data, cache, _ in
                 if data != nil {
                     guard let issueId = issue.id else { return }
-                    CacheManager.deleteIssue([issueId]) {
+                    CacheManager.delete([issue]) {
                         guard let tableName = CacheManager.shared.manager?.commentTableName(issueId), let url = issue.url else {
                             completion(true)
                             return

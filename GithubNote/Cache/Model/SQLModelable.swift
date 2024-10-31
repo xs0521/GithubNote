@@ -12,7 +12,13 @@ protocol SQLModelable {
     
     static var tableName: String { get }
     
+    var id: Int? { get }
+    
     func maxIndex(_ database: FMDatabase) -> Int
+    
+    static var fetchWhere: String? { get }
+    
+    static func insertPreAction() -> Void
     
     var insertSql: String { get }
     func insertValues(_ index: Int) -> [Any]
