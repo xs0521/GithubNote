@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SDWebImage
 
 class ImageUploader {
     
@@ -37,9 +38,9 @@ class ImageUploader {
     
     func uploadImage(filePath: URL, completion: @escaping CommonTCallBack<Bool>) -> Void {
         
-        let data = try? Data(contentsOf: filePath)
-        guard let data = data, !data.isEmpty else { return }
-        let imageBase64 = data.base64EncodedString()
+        let imageData = try? Data(contentsOf: filePath)
+        guard let imageData = imageData, !imageData.isEmpty else { return }
+        let imageBase64 = imageData.base64EncodedString()
         
         let pathExtension = filePath.pathExtension
         let fileName = self.fileName() + ".\(pathExtension)"
@@ -64,11 +65,14 @@ class ImageUploader {
             do {
                 let data = try encoder.encode(content)
                 let item = try decoder.decode(GithubImage.self, from: data)
-                CacheManager.insertGithubImages(images: [item]) {
-                    NotificationCenter.default.post(name: NSNotification.Name.appendImagesNotification, object: item)
-                    completion(true)
-                }
-                
+                let cache = SDWebImageManager.defaultImageCache as! SDImageCache
+                "#image# save \(item.imageUrl())".logI()
+                cache.storeImageData(imageData, forKey: item.imageUrl(), completion: {
+                    CacheManager.insertGithubImages(images: [item]) {
+                        NotificationCenter.default.post(name: NSNotification.Name.appendImagesNotification, object: item)
+                        completion(true)
+                    }
+                })
             } catch let err {
                 completion(false)
                 print(err)
