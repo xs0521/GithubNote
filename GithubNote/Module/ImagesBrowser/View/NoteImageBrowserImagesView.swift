@@ -24,14 +24,13 @@ struct NoteImageBrowserImagesView: ConnectedView {
     ]
     
     struct Props {
-        let isImageBrowserVisible: Bool?
         let isPreview: Bool
         let list: [GithubImage]
     }
     
     func map(state: AppState, dispatch: @escaping DispatchFunction) -> Props {
-        return Props(isImageBrowserVisible: state.imagesState.isImageBrowserVisible,
-                     isPreview: state.imagesState.isPreview,
+        "#ImageBrowser# map isPreview \(state.imagesState.isPreview) list \(state.imagesState.list.count)".logI()
+        return Props(isPreview: state.imagesState.isPreview,
                      list: state.imagesState.list)
     }
     

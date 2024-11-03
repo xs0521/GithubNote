@@ -10,6 +10,10 @@ import SwiftUIFlux
 
 struct ImagesState: FluxState, Codable {
     var isPreview = false
-    var isImageBrowserVisible: Bool = false
+    var isImageBrowserVisible: Bool = false {
+        didSet {
+            list.removeAll()
+        }
+    }
     var list: [GithubImage] = []
 }
