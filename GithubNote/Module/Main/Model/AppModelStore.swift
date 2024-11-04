@@ -15,10 +15,4 @@ final class AppModelStore: ObservableObject {
     @Published var isLoadingVisible: Bool = false
     @Published var toastMessage: String = ""
     @Published var item: ToastItem?
-    
-    @Published var markdownString: String? {
-        didSet {
-            
-        }
-    }
 }

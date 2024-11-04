@@ -18,6 +18,7 @@ final class RepoModelStore: ObservableObject {
             if AppUserDefaults.repo != select && select != nil {
                 store.dispatch(action: SideActions.ReposViewState(visible: false))
                 store.dispatch(action: IssuesActions.FetchList(readCache: true, completion: nil))
+                store.dispatch(action: CommentActions.SetList(list: []))
             }
             AppUserDefaults.repo = select
         }
