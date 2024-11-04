@@ -11,8 +11,6 @@ import UniformTypeIdentifiers
 
 class CustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
     
-    let cache = SDImageCache(namespace: "github.note.cache")
-    
     func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
         
         guard var url = urlSchemeTask.request.url?.absoluteString else { return }
@@ -41,7 +39,9 @@ class CustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
         
         if url.isImage() {
             "#web# img is image \(url)".logI()
-            let key = url.MD5()
+            let key = url
+            
+            let cache = SDWebImageManager.defaultImageCache as! SDImageCache
             
             if let data = cache.diskImageData(forKey: key) {
                 "#web# img load cache \(url)".logI()
@@ -49,9 +49,9 @@ class CustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
                 return
             }
             
-            SDWebImageDownloader.shared.downloadImage(with: Url) { [weak self] _, data, error, finish in
+            SDWebImageDownloader.shared.downloadImage(with: Url) { _, data, error, finish in
                 if let data = data, error == nil {
-                    self?.cache.storeImageData(toDisk: data, forKey: key)
+                    cache.storeImageData(toDisk: data, forKey: key)
                     callBack(data)
                     "#web# img sccess \(url)".logI()
                 } else {

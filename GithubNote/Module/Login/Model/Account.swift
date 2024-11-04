@@ -10,11 +10,12 @@ import Foundation
 class UserManager {
     
     static let shared = UserManager()
+    private let loginFileName = "login.json"
     
     var user: UserModel?
     
     init() {
-        let fileURL = path().appendingPathComponent("userResponse.json")
+        let fileURL = path().appendingPathComponent(loginFileName)
         do {
             let data = try Data.init(contentsOf: fileURL)
             save(data)
@@ -24,7 +25,7 @@ class UserManager {
     }
     
     func save(_ data: Data?) -> Void {
-        let fileURL = path().appendingPathComponent("userResponse.json")
+        let fileURL = path().appendingPathComponent(loginFileName)
         if data == nil {
             do {
                 self.user = nil

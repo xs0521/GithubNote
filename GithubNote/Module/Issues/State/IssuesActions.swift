@@ -180,7 +180,7 @@ struct IssuesActions {
                             completion(true)
                             return
                         }
-                        CacheManager.deleteComment(url, tableName) {
+                        CacheManager.deleteComment(byUrl: url, tableName) {
                             completion(true)
                         }
                     }

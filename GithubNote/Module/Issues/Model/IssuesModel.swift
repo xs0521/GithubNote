@@ -53,8 +53,7 @@ extension Issue: SQLModelable {
     }
     
     static var fetchSql: String {
-        let tableName = CacheManager.shared.manager?.issueTableName() ?? ""
-        return "SELECT * FROM \(tableName) WHERE repositoryUrl = ? ORDER BY sort;"
+        return "SELECT * FROM \(Self.tableName) WHERE repositoryUrl = ? ORDER BY sort;"
     }
     
     static func item(_ resultSet: FMResultSet) -> Issue {

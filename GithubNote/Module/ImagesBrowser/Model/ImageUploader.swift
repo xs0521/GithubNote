@@ -68,7 +68,7 @@ class ImageUploader {
                 let cache = SDWebImageManager.defaultImageCache as! SDImageCache
                 "#image# save \(item.imageUrl())".logI()
                 cache.storeImageData(imageData, forKey: item.imageUrl(), completion: {
-                    CacheManager.insertGithubImages(images: [item]) {
+                    CacheManager.insert(items: [item]) {
                         NotificationCenter.default.post(name: NSNotification.Name.appendImagesNotification, object: item)
                         completion(true)
                     }

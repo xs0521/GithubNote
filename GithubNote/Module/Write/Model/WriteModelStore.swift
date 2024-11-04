@@ -38,12 +38,12 @@ final class WriteModelStore: ObservableObject {
             return
         }
         comment.cache = writeStore.markdownString
-        CacheManager.updateCommentCache(comment) {}
+        CacheManager.updateCommentCache(byComment: comment) {}
     }
     
     func checkCacheData() -> Void {
         guard let commentId = AppUserDefaults.comment?.id else { return }
-        CacheManager.fetchComment(commentId) { comment in
+        CacheManager.fetchComment(byId: commentId) { comment in
             writeStore.cache = comment?.cache ?? ""
             writeStore.cacheUpdate = comment?.cacheUpdate ?? 0
         }

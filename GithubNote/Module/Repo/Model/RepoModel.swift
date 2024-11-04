@@ -60,6 +60,10 @@ extension RepoModel: SQLModelable {
         "Repo"
     }
     
+    static var oneTable: Bool {
+        return true
+    }
+    
     var insertSql: String {
         let insertOrUpdateSQL = """
         INSERT OR REPLACE INTO \(Self.tableName) (id, sort, name, fullName, url, createdAt, updatedAt, pushedAt, private)

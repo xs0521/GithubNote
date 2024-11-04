@@ -10,8 +10,6 @@ import FMDB
 
 private let dbName = "note.db"
 
-
-
 class SQLManager {
     
     private lazy var dbURL: URL = {
@@ -318,6 +316,38 @@ extension SQLManager {
             "Items deleted successfully".logI()
         } else {
             "Failed to open database".logE()
+        }
+        database.close()
+    }
+    
+    func deleteItems(in tableName: String, byUrls urls: [String], database: FMDatabase) {
+        
+        let deleteSQL = "DELETE FROM \(tableName) WHERE url = ?;"
+        
+        if database.open() {
+            urls.forEach { url in
+                do {
+                    try database.executeUpdate(deleteSQL, values: [url])
+                } catch {
+                    "Failed to delete GithubImage: \(error.localizedDescription)".logE()
+                }
+            }
+            "GithubImage deleted successfully".logI()
+        }
+        database.close()
+    }
+    
+    func deleteAllItems(from tableName: String?, database: FMDatabase) {
+        
+        guard let tableName = tableName else {
+            assert(false, "tableName error")
+            return
+        }
+        
+        let deleteSQL = "DELETE FROM \(tableName);"
+        
+        if database.open() {
+            database.executeUpdate(deleteSQL, withArgumentsIn: [])
         }
         database.close()
     }

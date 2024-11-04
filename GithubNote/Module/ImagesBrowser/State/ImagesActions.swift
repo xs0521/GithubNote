@@ -31,14 +31,14 @@ struct ImagesActions {
         func execute(state: SwiftUIFlux.FluxState?, dispatch: @escaping SwiftUIFlux.DispatchFunction) {
             requestImagesData(readCache) { images in
                 store.dispatch(action: SetList(list: images))
+                completion(true)
             }
         }
         
         private func requestImagesData(_ readCache: Bool = true, completion: @escaping CommonTCallBack<[GithubImage]>) -> Void {
             
             if readCache {
-                CacheManager.fetchGithubImages { images in
-                    appStore.isLoadingVisible = false
+                CacheManager.fetchList { images in
                     completion(images)
                 }
                 return
@@ -54,8 +54,8 @@ struct ImagesActions {
                 
                 if let list = data, !list.isEmpty {
                     let images = list.filter({$0.path.isImage()})
-                    CacheManager.insertGithubImages(images: images, deleteNoFound: true) {
-                        CacheManager.fetchGithubImages { localImages in
+                    CacheManager.insert(items: images, deleteNoFound: true) {
+                        CacheManager.fetchList { localImages in
                             completion(localImages)
                         }
                     }
@@ -91,7 +91,7 @@ struct ImagesActions {
             
             Networking<PushCommitModel>().request(API.deleteImage(filePath: item.path, sha: item.sha)) { _, cache, code in
                 if code == MessageCode.success.rawValue {
-                    CacheManager.deleteGithubImage(item.url) {
+                    CacheManager.deleteGithubImage(byUrl: item.url) {
                         completion(true)
                     }
                 } else {

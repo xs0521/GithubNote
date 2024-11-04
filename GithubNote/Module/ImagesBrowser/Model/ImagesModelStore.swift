@@ -12,10 +12,5 @@ import SwiftUI
 final class ImagesModelStore: ObservableObject {
     
     @Published var currentUrl: String = ""
-    
-    @Published var currentIndex: Int = 0 {
-        didSet {
-            
-        }
-    }
+    @Published var currentIndex: Int = 0
 }

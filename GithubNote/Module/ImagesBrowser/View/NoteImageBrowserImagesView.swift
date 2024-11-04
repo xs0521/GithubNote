@@ -80,7 +80,7 @@ struct NoteImageBrowserImagesView: ConnectedView {
                                         appStore.isLoadingVisible = false
                                         if success {
                                             let list = props.list.filter({$0.identifier != item.identifier})
-                                            store.dispatch(action:ImagesActions.SetList(list: list))
+                                            store.dispatch(action: ImagesActions.SetList(list: list))
                                         }
                                     }))
                                 }) {

@@ -11,6 +11,7 @@ import FMDB
 protocol SQLModelable {
     
     static var tableName: String { get }
+    static var oneTable: Bool { get }
     
     var id: Int? { get }
     
@@ -35,4 +36,6 @@ extension SQLModelable {
     func maxIndex(_ database: FMDatabase) -> Int {
         CacheManager.shared.manager?.getMaxIndex(Self.tableName, from: database) ?? 0
     }
+    
+    static var oneTable: Bool { false }
 }
