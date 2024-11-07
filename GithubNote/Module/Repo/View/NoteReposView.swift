@@ -16,6 +16,7 @@ struct NoteReposView: ConnectedView {
     }
     
     @EnvironmentObject var repoStore: RepoModelStore
+    @State private var isTapEmptyLoading: Bool = false
 
     func map(state: AppState, dispatch: @escaping DispatchFunction) -> Props {
         return Props(list: state.reposStates.items)
@@ -24,8 +25,24 @@ struct NoteReposView: ConnectedView {
     func body(props: Props) -> some View {
         VStack {
             if props.list.isEmpty {
-                NoteEmptyView()
+                if isTapEmptyLoading {
+                    ZStack {
+                        ProgressView()
+                            .controlSize(.mini)
+                            .frame(width: 25, height: 25)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(Color.background)
+                } else {
+                    NoteEmptyView(tapCallBack: {
+                        isTapEmptyLoading = true
+                        store.dispatch(action: ReposActions.FetchList(readCache: false, completion: { finish in
+                            isTapEmptyLoading = false
+                        }))
+                    })
+                    .background(Color.background)
+                }
+                
             } else {
                 List(selection: $repoStore.select) {
                     ForEach(props.list) { selection in

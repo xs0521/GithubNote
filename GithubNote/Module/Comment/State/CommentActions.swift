@@ -18,6 +18,7 @@ struct CommentActions {
     struct FetchList: AsyncAction {
         
         let readCache: Bool
+        var showTip: Bool = false
         let config = Config()
         let completion: CommonTCallBack<Bool>?
         
@@ -31,7 +32,9 @@ struct CommentActions {
         private func requestAllComment(_ readCache: Bool = true, _ completion: @escaping CommonTCallBack<Bool>) -> Void {
             
             if AppUserDefaults.issue == nil {
-                ToastManager.shared.showFail("Please select a NoteBook")
+                if showTip {
+                    ToastManager.shared.showFail("Please select a NoteBook")
+                }
                 completion(false)
                 return
             }

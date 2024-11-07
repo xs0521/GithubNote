@@ -71,7 +71,7 @@ struct GithubNoteApp: App {
         #if !MOBILE
                             NSWindow.allowsAutomaticWindowTabbing = false
         #endif
-                            
+                            store.dispatch(action: ReposActions.FetchList(readCache: true, completion: nil))
                         }
                     } else {
                         GitHubLoginView(loginCallBack: {

@@ -13,6 +13,8 @@ struct NoteCommentsView: ConnectedView {
     @EnvironmentObject var issueStore: IssueModelStore
     @EnvironmentObject var commentStore: CommentModelStore
     
+    @State private var isTapEmptyLoading: Bool = false
+    
     struct Props {
         let editComment: Comment?
         let deleteComment: Comment?
@@ -30,7 +32,21 @@ struct NoteCommentsView: ConnectedView {
     func body(props: Props) -> some View {
         VStack {
             if props.list.isEmpty {
-                NoteEmptyView()
+                if isTapEmptyLoading {
+                    ZStack {
+                        ProgressView()
+                            .controlSize(.mini)
+                            .frame(width: 25, height: 25)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    NoteEmptyView(tapCallBack: {
+                        isTapEmptyLoading = true
+                        store.dispatch(action: CommentActions.FetchList(readCache: false, showTip: true, completion: { finish in
+                            isTapEmptyLoading = false
+                        }))
+                    })
+                }
             } else {
                 List(selection: $commentStore.select) {
                     ForEach(props.list) { selection in

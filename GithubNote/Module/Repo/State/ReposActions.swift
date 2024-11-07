@@ -23,6 +23,11 @@ struct ReposActions {
         
         func execute(state: SwiftUIFlux.FluxState?, dispatch: @escaping SwiftUIFlux.DispatchFunction) {
             requestAllRepo(readCache) { value in
+                if config.list.isEmpty {
+                    AppUserDefaults.repo = nil
+                    let visible = store.state.sideStates.isReposVisible
+                    store.dispatch(action: SideActions.ReposViewState(visible: visible))
+                }
                 dispatch(SetList(list: config.list))
                 completion?(value)
             }

@@ -25,7 +25,7 @@ struct NoteCommentsHeaderView: View {
                 } else {
                     Button {
                         isCommentRefreshing = true
-                        store.dispatch(action: CommentActions.FetchList(readCache: false, completion: { finish in
+                        store.dispatch(action: CommentActions.FetchList(readCache: false, showTip: true, completion: { finish in
                             isCommentRefreshing = false
                         }))
                         

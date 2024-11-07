@@ -17,6 +17,8 @@ struct NoteImageBrowserImagesView: ConnectedView {
     @EnvironmentObject var appStore: AppModelStore
     @EnvironmentObject var imagesStore: ImagesModelStore
     
+    @State private var isTapEmptyLoading: Bool = false
+    
     static let size = CGSizeMake(100, 100)
     
     let adaptiveColumn = [
@@ -38,8 +40,19 @@ struct NoteImageBrowserImagesView: ConnectedView {
         ZStack {
             ScrollView (showsIndicators: false) {
                 if props.list.isEmpty {
-                    NoteEmptyView()
+                    if isTapEmptyLoading {
+                        ProgressView()
+                            .controlSize(.mini)
+                            .frame(width: 25, height: 25)
+                    } else {
+                        NoteEmptyView(tapCallBack: {
+                            isTapEmptyLoading = true
+                            store.dispatch(action: ImagesActions.FetchList(readCache: false, completion: { finish in
+                                isTapEmptyLoading = false
+                            }))
+                        })
                         .padding(.top, 100)
+                    }
                 } else {
                     LazyVGrid(columns: adaptiveColumn, spacing: 8) {
                         ForEach(props.list, id: \.self) { item in

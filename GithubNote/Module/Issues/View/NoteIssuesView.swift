@@ -32,6 +32,7 @@ struct NoteIssuesView: ConnectedView {
     }
     
     @State private var isEditIssueTitleSending: Bool = false
+    @State private var isTapEmptyLoading: Bool = false
     @FocusState private var focusedField: Field?
     
     var requestComments: CommonTCallBack<Issue?>?
@@ -46,7 +47,19 @@ struct NoteIssuesView: ConnectedView {
     func body(props: Props) -> some View {
         VStack {
             if props.issueGroups.isEmpty {
-                NoteEmptyView()
+                if isTapEmptyLoading {
+                    ProgressView()
+                        .controlSize(.mini)
+                        .frame(width: 25, height: 25)
+                } else {
+                    NoteEmptyView(tapCallBack: {
+                        isTapEmptyLoading = true
+                        store.dispatch(action: IssuesActions.FetchList(readCache: false, completion: { finish in
+                            isTapEmptyLoading = false
+                        }))
+                    })
+                }
+                
             } else {
                 List(selection: $issueStore.select) {
                     ForEach(props.issueGroups) { selection in

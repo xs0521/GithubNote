@@ -69,8 +69,10 @@ struct NoteContentView: ConnectedView {
         ZStack {
             NoteWritePannelView()
             if commentStore.select == nil {
-                NoteEmptyView()
-                    .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
+                NoteEmptyView(type: .coffee) {
+                    
+                }
+                .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
             }
         }
         .background(Color.white)
