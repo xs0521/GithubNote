@@ -30,7 +30,7 @@ struct NoteCommentsHeaderView: View {
                         }))
                         
                     } label: {
-                        Image(systemName: AppConst.downloadIcon)
+                        CustomImage(systemName: AppConst.downloadIcon)
                     }
                     .buttonStyle(.plain)
                     .padding(.trailing, 5)
@@ -48,7 +48,7 @@ struct NoteCommentsHeaderView: View {
                             }))
                         }))
                     } label: {
-                        Image(systemName: AppConst.plusIcon)
+                        CustomImage(systemName: AppConst.plusIcon)
                     }
                     .buttonStyle(.plain)
                     .frame(width: 20, height: 30)

@@ -69,9 +69,10 @@ struct NoteWritePannelView: ConnectedView {
             }
             .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
             .toolbar {
-                ToolbarItemGroup {
+                ToolbarItemGroup () {
                     if commentStore.select != nil {
                         NoteWritePannelTitleView()
+                            .padding(.leading, 10)
                         Spacer()
                         operationViews(props: props)
                     }
@@ -89,7 +90,7 @@ extension NoteWritePannelView {
         HStack {
             HStack {
                 HStack (spacing: 0) {
-                    Image(systemName: "network")
+                    CustomImage(systemName: "network")
                         .font(.system(size: 10))
                         .padding(.trailing, 5)
                     Text(commentStore.select?.updatedAt?.localTime() ?? "")
@@ -115,7 +116,7 @@ extension NoteWritePannelView {
                     writeStore.markdownString = writeStore.cache
                     writeStore.cache = ""
                 } label: {
-                    Image(systemName: "timer")
+                    CustomImage(systemName: "timer")
                     Text(writeStore.cacheUpdate.localTime())
                 }
                 .font(.system(size: 8))
@@ -142,7 +143,7 @@ extension NoteWritePannelView {
                     Button(action: {
                         isPresented = true
                     }, label: {
-                        Image(systemName: AppConst.plusIcon)
+                        CustomImage(systemName: AppConst.plusIcon)
                     })
                     .buttonStyle(.plain)
                     .fileImporter(
@@ -163,13 +164,13 @@ extension NoteWritePannelView {
                     Button {
                         NotificationCenter.default.post(name: NSNotification.Name.syncNetImagesNotification, object: nil)
                     } label: {
-                        Image(systemName: AppConst.downloadIcon)
+                        CustomImage(systemName: AppConst.downloadIcon)
                     }
                     .buttonStyle(.plain)
                     Button {
                         store.dispatch(action: ImagesActions.isImageBrowserVisible(on: false))
                     } label: {
-                        Image(systemName: AppConst.closeIcon)
+                        CustomImage(systemName: AppConst.closeIcon)
                     }
                     .buttonStyle(.plain)
                 }
@@ -198,7 +199,7 @@ extension NoteWritePannelView {
                                 }
                             }))
                         } label: {
-                            Label("Show inspector", systemImage: props.uploadState.imageName)
+                            CustomImage(systemName: props.uploadState.imageName)
                         }
                         .buttonStyle(.plain)
                         .disabled(!props.editIsShown)
@@ -210,10 +211,13 @@ extension NoteWritePannelView {
                 Button {
                     store.dispatch(action: WriteActions.edit(editIsShown: !props.editIsShown))
                 } label: {
-                    Label("Show inspector", systemImage: props.editIsShown ? AppConst.closeIcon : AppConst.pencilIcon)
-                        .if(!props.editIsShown) { view in
-                            view.font(.system(size: 18))
-                        }
+                    
+                    CustomImage(systemName: props.editIsShown ? AppConst.closeIcon : AppConst.pencilIcon)
+                    
+//                    Label("Show inspector", systemImage: props.editIsShown ? AppConst.closeIcon : AppConst.pencilIcon)
+//                        .if(!props.editIsShown) { view in
+//                            view.font(.system(size: 18))
+//                        }
                 }
                 .buttonStyle(.plain)
             }

@@ -20,7 +20,7 @@ struct NoteContentHeaderView: View {
                 WebImage(url: URL(string: url)) { image in
                         image.resizable()
                     } placeholder: {
-                        Image(systemName: "person.circle.fill")
+                        CustomImage(systemName: "person.circle.fill")
                             .font(.system(size: 30))
                     }
                     .indicator(.activity) // Activity Indicator
@@ -32,7 +32,7 @@ struct NoteContentHeaderView: View {
                 Button(action: {
                     
                 }, label: {
-                    Image(systemName: "ellipsis")
+                    CustomImage(systemName: "ellipsis")
                         .font(.system(size: 20))
                         .foregroundColor(.primary)
                 })

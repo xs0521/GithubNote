@@ -52,14 +52,14 @@ struct NoteIssuesView: ConnectedView {
                     ForEach(props.issueGroups) { selection in
                         if selection == props.editIssue {
                             HStack {
-                                Image(systemName: "menucard")
+                                CustomImage(systemName: "menucard")
                                     .foregroundStyle(Color.primary)
                                     .padding(.leading, 3)
                                 HStack {
                                     TextField("", text: $issueStore.editText)
                                         .focused($focusedField, equals: .title)
                                         .frame(height: 18)
-                                        .font(.system(size: 13))
+                                        .font(.system(size: 12))
                                         .padding(EdgeInsets(top: 0, leading: 2, bottom: 0, trailing: 2))
                                 }
                                 .background(Color.white)
@@ -80,7 +80,7 @@ struct NoteIssuesView: ConnectedView {
                                             }))
                                         }))
                                     } label: {
-                                        Image(systemName: "checkmark.circle.fill")
+                                        CustomImage(systemName: "checkmark.circle.fill")
                                     }
                                     .buttonStyle(.plain)
                                     .frame(width: 20, height: 20)
@@ -90,13 +90,14 @@ struct NoteIssuesView: ConnectedView {
                         } else {
                             Label(title: {
                                 Text(selection.title ?? "unknow")
+                                    .font(.system(size: 12))
                             }, icon: {
                                 if props.deleteIssue?.id == selection.id {
                                     ProgressView()
                                         .controlSize(.mini)
                                         .frame(width: 20, height: 20)
                                 } else {
-                                    Image(systemName: "menucard")
+                                    CustomImage(systemName: "menucard")
                                         .foregroundStyle(Color.primary)
                                 }
                             })

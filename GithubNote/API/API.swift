@@ -15,6 +15,7 @@ enum API {
     case user(_ userName: String)
     case repos(page: Int)
     case createRepo(repoName: String)
+    case updateRepoName(repoName: String)
     case repoIssues(repoName: String, page: Int)
     case comments(issueId: Int, page: Int)
     case newComment(issueId: Int, body: String)
@@ -47,6 +48,8 @@ extension API: TargetType {
             return accessToken.isEmpty ? "/users/\(owner)/repos" : "/user/repos"
         case .createRepo:
             return "/user/repos"
+        case .updateRepoName(let repoName):
+            return "/repos/\(owner)/\(repoName)"
         case .repoIssues(let repoName, _):
             return "/repos/\(owner)/\(repoName)/issues"
         case .comments(let issueId, _), .newComment(let issueId, _):

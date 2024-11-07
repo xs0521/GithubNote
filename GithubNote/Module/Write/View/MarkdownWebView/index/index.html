@@ -22,22 +22,21 @@
                 margin: 0;
                 padding: 10px;
             }
-            pre {
-                padding: 2px;
-                background: #ffffff;
-                border-radius: 4px;
-                overflow-x: auto;
-                box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+            
+            .hljs {
+                background: #F9F8F9; /* 代码块背景色 */
+                color: #abb2bf; /* 代码文本颜色 */
             }
+            
             /* 夜间模式样式 */
             @media (prefers-color-scheme: dark) {
                 body {
-                    background-color: #282828; /* 背景色 */
+                    background-color: #2B2B2E; /* 背景色 */
                     color: #e0e0e0; /* 文字颜色 */
                 }
                 
                 #content {
-                    background-color: #282828; /* 内容区域背景色 */
+                    background-color: #2B2B2E; /* 内容区域背景色 */
                     box-shadow: none; /* 去掉阴影 */
                 }
                 
@@ -48,7 +47,7 @@
                 }
                 
                 .hljs {
-                    background: #22252b; /* 代码块背景色 */
+                    background: #232420; /* 代码块背景色 */
                     color: #abb2bf; /* 代码文本颜色 */
                 }
                 
@@ -92,6 +91,8 @@
             function renderMarkdown(data) {
                 markdown = data.content
                 document.getElementById("content").innerHTML = marked.parse(markdown);
+                // 将页面内容放大 0.8 倍
+                document.documentElement.style.fontSize = '80%';
                 // After rendering, apply syntax highlighting
                 document.querySelectorAll("pre code").forEach((block) => {
                     hljs.highlightElement(block);

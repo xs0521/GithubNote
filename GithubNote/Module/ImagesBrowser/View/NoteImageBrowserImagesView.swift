@@ -72,7 +72,7 @@ struct NoteImageBrowserImagesView: ConnectedView {
                                     store.dispatch(action: ImagesActions.Copy(url: item.imageUrl()))
                                 }) {
                                     Text("Copy Image")
-                                    Image(systemName: "doc.on.doc.fill")
+                                    CustomImage(systemName: "doc.on.doc.fill")
                                 }
                                 Button(action: {
                                     appStore.isLoadingVisible = true
@@ -85,7 +85,7 @@ struct NoteImageBrowserImagesView: ConnectedView {
                                     }))
                                 }) {
                                     Text("Delete Image")
-                                    Image(systemName: "xmark.bin.circle.fill")
+                                    CustomImage(systemName: "xmark.bin.circle.fill")
                                 }
                             }
                         }

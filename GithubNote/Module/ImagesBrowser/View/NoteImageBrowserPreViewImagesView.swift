@@ -46,13 +46,13 @@ struct NoteImageBrowserPreViewImagesView: ConnectedView {
                                     store.dispatch(action: ImagesActions.Copy(url: url))
                                 }) {
                                     Text("Copy Image")
-                                    Image(systemName: "doc.on.doc.fill")
+                                    CustomImage(systemName: "doc.on.doc.fill")
                                 }
                                 Button(action: {
                                     saveImage(url: props.list[index].imageUrl())
                                 }) {
                                     Text("Save Image")
-                                    Image(systemName: "square.and.arrow.down")
+                                    CustomImage(systemName: "square.and.arrow.down")
                                 }
                             }
                             .tag(index)
@@ -69,7 +69,7 @@ struct NoteImageBrowserPreViewImagesView: ConnectedView {
                             }
                         }
                     }) {
-                        Image(systemName: "arrow.left.circle.fill")
+                        CustomImage(systemName: "arrow.left.circle.fill")
                             .shadow(color: .black.opacity(0.5), radius: 10, x: 5, y: 5)
                     }
                     
@@ -82,7 +82,7 @@ struct NoteImageBrowserPreViewImagesView: ConnectedView {
                             }
                         }
                     }) {
-                        Image(systemName: "arrow.right.circle.fill")
+                        CustomImage(systemName: "arrow.right.circle.fill")
                             .shadow(color: .black.opacity(0.5), radius: 10, x: 5, y: 5)
                     }
                 }

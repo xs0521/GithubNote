@@ -32,12 +32,13 @@ struct NoteReposView: ConnectedView {
                         Label(title: {
                             HStack {
                                 Text(selection.name ?? "unknow")
+                                    .font(.system(size: 12))
                                 if selection.private == true {
                                     PrivateTagView()
                                 }
                             }
                         }, icon: {
-                            Image(systemName: "square.stack.3d.up")
+                            CustomImage(systemName: "square.stack.3d.up")
                                 .foregroundStyle(Color.primary)
                         })
                         .tag(selection)

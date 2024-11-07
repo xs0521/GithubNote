@@ -36,13 +36,14 @@ struct NoteCommentsView: ConnectedView {
                     ForEach(props.list) { selection in
                         Label(title: {
                             Text(selection.body?.toTitle() ?? "")
+                                .font(.system(size: 12))
                         }, icon: {
                             if props.deleteComment?.id == selection.id {
                                 ProgressView()
                                     .controlSize(.mini)
                                     .frame(width: 20, height: 20)
                             } else {
-                                Image(systemName: "note")
+                                CustomImage(systemName: "note")
                                     .foregroundStyle(Color.primary)
                             }
                         })

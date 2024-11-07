@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NoteEmptyView: View {
     var body: some View {
-        Image(systemName: "cup.and.saucer")
+        CustomImage(systemName: "cup.and.saucer")
             .font(.system(size: 25))
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

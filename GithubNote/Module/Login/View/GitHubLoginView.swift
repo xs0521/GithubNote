@@ -30,7 +30,7 @@ struct GitHubLoginView: View {
                     startGitHubLogin()
                 }) {
                     HStack {
-                        Image(systemName: "person.fill")
+                        CustomImage(systemName: "person.fill")
                         Text("Login with GitHub")
                     }
                     .padding()

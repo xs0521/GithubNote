@@ -31,9 +31,9 @@ struct NoteWritePannelTitleView: ConnectedView {
             if props.isImageBrowserVisible == true {
                 Text("")
             } else {
-                itemView(title: UserManager.shared.user?.login ?? "", icon: "star.fill", isFirst: true)
+//                itemView(title: UserManager.shared.user?.login ?? "", icon: "star.fill", isFirst: true)
                 if let repoName = repoStore.select?.name {
-                    itemView(title: repoName, icon: "square.stack.3d.up.fill")
+                    itemView(title: repoName, icon: "square.stack.3d.up.fill", isFirst: true)
                 }
                 if let issueName = issueStore.select?.title {
                     itemView(title: issueName, icon: "menucard.fill")
@@ -44,17 +44,19 @@ struct NoteWritePannelTitleView: ConnectedView {
             }
         }
         .font(.system(size: 12))
-        .foregroundColor(colorScheme == .dark ? Color(hex: "#DDDDDD") : Color(hex: "#444443"))
+        .monospacedDigit()
+        .foregroundColor(colorScheme == .dark ? Color(hex: "#DDDDDD") : Color(hex: "#838382"))
     }
     
     func itemView(title: String, icon: String, isFirst: Bool = false) -> some View {
-        HStack (spacing: 3) {
+        HStack (spacing: 0) {
             if !isFirst {
-                Text("/")
+                CustomImage(systemName: "chevron.right")
+                    .font(.system(size: 8))
                     .padding(.horizontal, 5)
             }
-            Image(systemName: icon)
             Text(title)
+                .monospacedDigit()
         }
     }
 }

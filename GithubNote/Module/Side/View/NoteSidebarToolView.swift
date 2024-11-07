@@ -46,7 +46,7 @@ struct NoteSidebarToolView: ConnectedView {
                         }
                     }
                 } icon: {
-                    Image(systemName: "arrowtriangle.right.fill")
+                    CustomImage(systemName: "arrowtriangle.right.fill")
                         .rotationEffect(.degrees(props.isReposVisible ? -90 : 0))
                 }
                 .foregroundStyle(Color.primary)
@@ -72,7 +72,7 @@ struct NoteSidebarToolView: ConnectedView {
                             })
                             
                         } label: {
-                            Image(systemName: AppConst.downloadIcon)
+                            CustomImage(systemName: AppConst.downloadIcon)
                         }
                         .buttonStyle(.plain)
                         .padding(.trailing, 5)
@@ -92,7 +92,7 @@ struct NoteSidebarToolView: ConnectedView {
                                 })
                             }
                         } label: {
-                            Image(systemName: AppConst.plusIcon)
+                            CustomImage(systemName: AppConst.plusIcon)
                         }
                         .buttonStyle(.plain)
                     }
@@ -107,7 +107,7 @@ struct NoteSidebarToolView: ConnectedView {
                     }
                     store.dispatch(action: ImagesActions.isImageBrowserVisible(on: true))
                 }, label: {
-                    Image(systemName: AppConst.photoIcon)
+                    CustomImage(systemName: AppConst.photoIcon)
                 })
                 .buttonStyle(.plain)
                 .padding(EdgeInsets(top: 5, leading: 5, bottom: 16, trailing: 16))

@@ -30,7 +30,7 @@ struct NoteContentTableView: View {
     
     func tabbarItem(text: String, image: String) -> some View {
         VStack {
-            Image(systemName: image)
+            CustomImage(systemName: image)
                 .imageScale(.small)
             Text(text)
         }
