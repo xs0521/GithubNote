@@ -54,31 +54,6 @@ struct NoteWritePannelView: ConnectedView {
                                 writeStore.editMarkdownString = writeStore.markdownString
                             })
                     }
-                    if commentStore.select != nil {
-//                        VStack {
-//                            HStack {
-//                                
-//                            }
-//                            .frame(height: 100)
-//                            .frame(maxWidth: .infinity)
-//                            .background(Color.clear)
-//                            .onHover { isHovering in
-//                                if props.isImageBrowserVisible! {
-//                                    return
-//                                }
-//                                if isHovering {
-//                                    if props.uploadState == .no {
-//                                        store.dispatch(action: WriteActions.uploadState(value: .normal))
-//                                    }
-//                                } else {
-//                                    if props.uploadState == .normal {
-//                                        store.dispatch(action: WriteActions.uploadState(value: .no))
-//                                    }
-//                                }
-//                            }
-//                            Spacer()
-//                        }
-                    }
                     if !writeStore.cache.isEmpty {
                         cacheItemView()
                     }
@@ -159,7 +134,7 @@ extension NoteWritePannelView {
                         .padding(.trailing, 5)
                     Text(commentStore.select?.updatedAt?.localTime() ?? "")
                         .font(.system(size: 10))
-                        .foregroundColor(colorScheme == .dark ? Color(hex: "#DDDDDD") : Color(hex: "#444443"))
+                        .foregroundColor(colorScheme == .dark ? Color(hex: "#DDDDDD") : Color(hex: "#8C919E"))
                 }
             }
             .padding(EdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10))
