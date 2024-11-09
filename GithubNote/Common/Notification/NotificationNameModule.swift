@@ -14,4 +14,5 @@ extension Notification.Name {
     static let logoutForceNotification = Notification.Name(rawValue: "app.github.logout.force")
     static let logNotification = Notification.Name(rawValue: "app.github.log")
     static let keyboard = Notification.Name(rawValue: "app.github.keyboard")
+    static let mouse = Notification.Name(rawValue: "app.github.mouse")
 }

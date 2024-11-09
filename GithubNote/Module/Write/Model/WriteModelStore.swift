@@ -14,7 +14,7 @@ final class WriteModelStore: ObservableObject {
     @Published var markdownString: String?
     @Published var editMarkdownString: String? {
         didSet {
-            if let text = editMarkdownString {
+            if let text = editMarkdownString, text != oldValue {
                 debounceUpdateCacheText(text)
             }
         }

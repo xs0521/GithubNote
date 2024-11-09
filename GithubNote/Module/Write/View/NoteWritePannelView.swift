@@ -50,32 +50,34 @@ struct NoteWritePannelView: ConnectedView {
                             .font(.system(size: 14))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
+                            .onAppear(perform: {
+                                writeStore.editMarkdownString = writeStore.markdownString
+                            })
                     }
                     if commentStore.select != nil {
-                        VStack {
-                            HStack {
-                                
-                            }
-                            .frame(height: 100)
-                            .frame(maxWidth: .infinity)
-                            .background(colorScheme == .dark ? Color.init(hex: "#282828") : Color.white)
-                            .opacity(0.1)
-                            .onHover { isHovering in
-                                if props.isImageBrowserVisible! {
-                                    return
-                                }
-                                if isHovering {
-                                    if props.uploadState == .no {
-                                        store.dispatch(action: WriteActions.uploadState(value: .normal))
-                                    }
-                                } else {
-                                    if props.uploadState == .normal {
-                                        store.dispatch(action: WriteActions.uploadState(value: .no))
-                                    }
-                                }
-                            }
-                            Spacer()
-                        }
+//                        VStack {
+//                            HStack {
+//                                
+//                            }
+//                            .frame(height: 100)
+//                            .frame(maxWidth: .infinity)
+//                            .background(Color.clear)
+//                            .onHover { isHovering in
+//                                if props.isImageBrowserVisible! {
+//                                    return
+//                                }
+//                                if isHovering {
+//                                    if props.uploadState == .no {
+//                                        store.dispatch(action: WriteActions.uploadState(value: .normal))
+//                                    }
+//                                } else {
+//                                    if props.uploadState == .normal {
+//                                        store.dispatch(action: WriteActions.uploadState(value: .no))
+//                                    }
+//                                }
+//                            }
+//                            Spacer()
+//                        }
                     }
                     if !writeStore.cache.isEmpty {
                         cacheItemView()
@@ -93,6 +95,7 @@ struct NoteWritePannelView: ConnectedView {
                             writeStore.markdownString = editText
                         }
                     }
+                    NSApp.keyWindow?.makeFirstResponder(nil)
                 })
 #endif
                 .padding(EdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10))
@@ -104,11 +107,11 @@ struct NoteWritePannelView: ConnectedView {
             .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
             .toolbar {
                 ToolbarItemGroup () {
-                    if commentStore.select != nil {
+                    if commentStore.select != nil && !props.isImageBrowserVisible! {
                         NoteWritePannelTitleView()
                             .padding(.leading, 10)
                         Spacer()
-                        operationViews(props: props)
+                        uploadingActionViews(props: props)
                     }
                 }
             }
@@ -116,6 +119,19 @@ struct NoteWritePannelView: ConnectedView {
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name.keyboard), perform: { notification in
             if let event = notification.object as? NSEvent {
                 handleKeyDown(event: event, props: props)
+            }
+        })
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name.mouse), perform: { notification in
+            if let enter = notification.object as? Bool {
+                if enter {
+                    if props.uploadState == .no {
+                        store.dispatch(action: WriteActions.uploadState(value: .normal))
+                    }
+                } else {
+                    if props.uploadState == .normal {
+                        store.dispatch(action: WriteActions.uploadState(value: .no))
+                    }
+                }
             }
         })
     }
@@ -184,76 +200,32 @@ extension NoteWritePannelView {
 
 extension NoteWritePannelView {
     
-    fileprivate func operationViews(props: Props) -> some View {
-        
-        HStack {
-            if props.isImageBrowserVisible! {
-                HStack {
-                    Button(action: {
-                        isPresented = true
-                    }, label: {
-                        CustomImage(systemName: AppConst.plusIcon)
-                    })
-                    .buttonStyle(.plain)
-                    .fileImporter(
-                        isPresented: $isPresented,
-                        allowedContentTypes: [.image],
-                        allowsMultipleSelection: true
-                    ) { result in
-                        switch result {
-                        case .success(let urls):
-                            appStore.isLoadingVisible = true
-                            ImageUploader.shared.uploadImages(urls: urls, completion: { _ in
-                                appStore.isLoadingVisible = false
-                            })
-                        case .failure(let error):
-                            print(error.localizedDescription)
-                        }
-                    }
-                    Button {
-                        NotificationCenter.default.post(name: NSNotification.Name.syncNetImagesNotification, object: nil)
-                    } label: {
-                        CustomImage(systemName: AppConst.downloadIcon)
-                    }
-                    .buttonStyle(.plain)
-                    Button {
-                        store.dispatch(action: ImagesActions.isImageBrowserVisible(on: false))
-                    } label: {
-                        CustomImage(systemName: AppConst.closeIcon)
-                    }
-                    .buttonStyle(.plain)
-                }
+    fileprivate func uploadingActionViews(props: Props) -> some View {
+        ZStack {
+            if props.uploadState == .sending {
+                ProgressView()
+                    .controlSize(.mini)
             } else {
-                ZStack {
-                    if props.uploadState == .sending {
-                        ProgressView()
-                            .controlSize(.mini)
-                    } else {
-                        Button {
-                            if props.uploadState == .no {
-                                return
+                Button {
+                    store.dispatch(action: WriteActions.uploadState(value: .sending))
+                    store.dispatch(action: WriteActions.upload(completion: { success in
+                        if success {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                store.dispatch(action: WriteActions.uploadState(value: .normal))
                             }
-                            store.dispatch(action: WriteActions.uploadState(value: .sending))
-                            store.dispatch(action: WriteActions.upload(completion: { success in
-                                if success {
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                        store.dispatch(action: WriteActions.uploadState(value: .normal))
-                                    }
-                                } else {
-                                    store.dispatch(action: WriteActions.uploadState(value: .fail))
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                        store.dispatch(action: WriteActions.uploadState(value: .normal))
-                                    }
-                                }
-                            }))
-                        } label: {
-                            CustomImage(systemName: props.uploadState.imageName)
+                        } else {
+                            store.dispatch(action: WriteActions.uploadState(value: .fail))
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                store.dispatch(action: WriteActions.uploadState(value: .normal))
+                            }
                         }
-                        .buttonStyle(.plain)
-                    }
+                    }))
+                } label: {
+                    CustomImage(systemName: props.uploadState.imageName)
                 }
-                .frame(width: 30, height: 40)
+                .buttonStyle(.plain)
             }
         }
+        .frame(width: 30, height: 40)
     }
 }

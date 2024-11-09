@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import SwiftUIFlux
 
-struct NoteWritePannelTitleView: ConnectedView {
+struct NoteWritePannelTitleView: View {
     
     @Environment(\.colorScheme) private var colorScheme
     
@@ -17,35 +17,21 @@ struct NoteWritePannelTitleView: ConnectedView {
     @EnvironmentObject var repoStore: RepoModelStore
     @EnvironmentObject var issueStore: IssueModelStore
     
-    struct Props {
-        let isImageBrowserVisible: Bool
-    }
-    
-    func map(state: AppState, dispatch: @escaping DispatchFunction) -> Props {
-        return Props(isImageBrowserVisible: state.imagesState.isImageBrowserVisible)
-    }
-    
-    func body(props: Props) -> some View {
-        
+    var body: some View {
         HStack (spacing: 0) {
-            if props.isImageBrowserVisible == true {
-                Text("")
-            } else {
-//                itemView(title: UserManager.shared.user?.login ?? "", icon: "star.fill", isFirst: true)
-                if let repoName = repoStore.select?.name {
-                    itemView(title: repoName, icon: "square.stack.3d.up.fill", isFirst: true)
-                }
-                if let issueName = issueStore.select?.title {
-                    itemView(title: issueName, icon: "menucard.fill")
-                }
-                if let commentName = commentStore.select?.body?.toTitle() {
-                    itemView(title: commentName, icon: "note.text")
-                }
+            if let repoName = repoStore.select?.name {
+                itemView(title: repoName, icon: "square.stack.3d.up.fill", isFirst: true)
+            }
+            if let issueName = issueStore.select?.title {
+                itemView(title: issueName, icon: "menucard.fill")
+            }
+            if let commentName = commentStore.select?.body?.toTitle() {
+                itemView(title: commentName, icon: "note.text")
             }
         }
         .font(.system(size: 12))
         .monospacedDigit()
-        .foregroundColor(colorScheme == .dark ? Color(hex: "#DDDDDD") : Color(hex: "#838382"))
+        .foregroundColor(colorScheme == .dark ? Color(hex: "#DDDDDD") : Color(hex: "#8C919E"))
     }
     
     func itemView(title: String, icon: String, isFirst: Bool = false) -> some View {
