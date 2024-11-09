@@ -137,12 +137,12 @@ extension NoteWritePannelView {
                     Text(writeStore.cacheUpdate.localTime())
                 }
                 .font(.system(size: 8))
-                .foregroundColor(Color.white)
+                .foregroundColor(colorScheme == .dark ? Color.init(hex: "#D4D4D4") : Color.init(hex: "#737372"))
                 .buttonStyle(.plain)
                 .padding(EdgeInsets(top: 5, leading: 8, bottom: 5, trailing: 8))
                 .background {
                     Capsule()
-                        .foregroundColor(colorScheme == .dark ? Color.init(hex: "#41403F") : Color.init(hex: "#737373"))
+                        .foregroundColor(colorScheme == .dark ? Color.init(hex: "#41403F") : Color.init(hex: "#F7F7F7"))
                 }
             }
             Spacer()

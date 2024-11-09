@@ -1,0 +1,144 @@
+/*
+ * ------------------------------------
+ * Prism.js dark theme
+ */
+
+/* Background and font color for dark theme */
+
+/* dark */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --theme-color: rgb(52 199 89 / 100%);
+    --highlight-color: rgb(52 199 89 / 40%);
+    --selection-color: rgb(45 170 219 / 50%);
+    --editor-color: rgb(255 255 255 / 80%);
+    --editor-color-80: rgb(255 255 255 / 80%);
+    --editor-color-50: rgb(255 255 255 / 50%);
+    --editor-color-30: rgb(255 255 255 / 30%);
+    --editor-color-10: rgb(255 255 255 / 10%);
+    --editor-color-04: rgb(255 255 255 / 4%);
+    --editor-bg-color: rgb(34 34 34 / 100%);
+    --delete-color: #ff6969;
+    --icon-color: #c0c0c0;
+    --code-block-bg-color: rgb(255 255 255 / 5%);
+    --table-border-color: rgb(255 255 255 / 15%);
+    --input-bg-color: rgb(255 255 255 / 10%);
+    --button-font-color: var(--editor-color);
+    --button-bg-color: rgb(50 50 50 / 100%);
+    --button-border: 1px solid rgb(100 100 100 / 50%);
+    --button-bg-color-hover: linear-gradient(rgb(70 70 70), rgb(60 60 60));
+    --button-border-hover: var(--button-border);
+    --float-bg-color: rgb(50 50 50 / 100%);
+    --float-hover-color: rgb(255 255 255 / 5%);
+    --float-border-color: rgb(255 255 255 / 10%);
+    --float-shadow: rgb(0 0 0 / 50%) 0 0 0 1px, rgb(0 0 0 / 30%) 0 3px 6px,
+      rgb(0 0 0 / 20%) 0 9px 24px;
+  }
+}
+
+body {
+  background-color: #282828;
+  color: #f1f6fc;
+}
+
+/* Inline Code */
+:not(pre) > code {
+  padding: 0.1em;
+  background: #3c3c3c;
+  color: #f8f8f2;
+  white-space: normal;
+  border-radius: 0.3em;
+}
+
+pre.mu-code-block code,
+pre.mu-code-block {
+  background: #2d2d2d;
+  color: #f8f8f2;
+  white-space: pre;
+  text-align: left;
+  word-wrap: normal;
+  word-break: normal;
+  word-spacing: normal;
+  tab-size: 4;
+  hyphens: none;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #8a8a8a;
+}
+
+.token.punctuation {
+  color: #d4d4d4;
+}
+
+.namespace {
+  opacity: 0.7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol {
+  color: #d19a66;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin {
+  color: #98c379;
+}
+
+.token.inserted {
+  color: #b5f4a5;
+  background: #005a00;
+}
+
+.token.deleted {
+  color: #e06c75;
+  background: #571d1f;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #d7ba7d;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #c678dd;
+}
+
+.token.function,
+.token.class-name {
+  color: #61afef;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: #e5c07b;
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}

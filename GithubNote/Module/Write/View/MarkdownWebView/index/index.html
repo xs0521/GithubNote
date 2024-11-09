@@ -7,6 +7,7 @@
   <title>Muya Example</title>
   <script type="module" src="./assets/index-IuSL2sv8.js"></script>
   <link rel="stylesheet" href="./assets/index-a7H3TyBd.css">
+  <link rel="stylesheet" href="dark.css" media="(prefers-color-scheme: dark)">
   <style>
       .mu-front-menu li .icon-wrapper i.icon>i[class^=icon-] {
             left: 0px !important;
@@ -65,10 +66,10 @@
       Muya.use(MuyaCore.PreviewToolBar)
       // 挂载示例
       muya = new Muya(editorContainer, {
-          markdown: '' // 默认渲染内容
+          markdown: '', // 默认渲染内容
       })
       // 设置语言
-      muya.locale(MuyaCore.zh)
+      // muya.locale(MuyaCore.en)
       muya.init()
       muya.on('json-change', (_changes) => {
           // 输入变化
