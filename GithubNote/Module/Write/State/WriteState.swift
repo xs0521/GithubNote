@@ -11,5 +11,5 @@ import SwiftUIFlux
 struct WriteState: FluxState, Codable {
     var editIsShown: Bool = false
     var showImageBrowser: Bool = false
-    var uploadState: UploadType = .normal
+    var uploadState: UploadType = .no
 }

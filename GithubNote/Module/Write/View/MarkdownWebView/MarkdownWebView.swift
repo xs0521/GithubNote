@@ -27,7 +27,7 @@ struct MarkdownWebView: AppViewRepresentable {
 #if MOBILE
     typealias UIViewType = WKWebView
 #endif
-    @Binding var markdownText: String
+    var markdownText: String
 #if MOBILE
     func makeUIView(context: Context) -> WKWebView {
         return makeView(context: context)
@@ -96,9 +96,9 @@ struct MarkdownWebView: AppViewRepresentable {
             context.coordinator.currentText = markdownText
             "#MD# title \(markdownText.prefix(20))".logI()
             
-//            let handleImageMarkdownText = CustomURLSchemeHandler.handleImageText(markdownText)
+            let handleImageMarkdownText = CustomURLSchemeHandler.handleImageText(markdownText)
     
-            let dictionary: [String: Any] = ["content": markdownText]
+            let dictionary: [String: Any] = ["content": handleImageMarkdownText]
             guard let jsonData = try? JSONSerialization.data(withJSONObject: dictionary, options: []) else { return }
             guard let sendContent = String(data: jsonData, encoding: .utf8) else { return }
             

@@ -9,6 +9,7 @@ import Foundation
 
 enum UploadType: Codable {
     
+    case no
     case normal
     case sending
     case success
@@ -16,6 +17,8 @@ enum UploadType: Codable {
     
     var imageName: String {
         switch self {
+        case .no:
+            return ""
         case .normal:
             return "arrow.up.square.fill"
         case .sending:

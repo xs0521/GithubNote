@@ -42,7 +42,7 @@ struct NoteWritePannelView: ConnectedView {
         VStack {
             VStack (spacing: 0) {
                 ZStack {
-                    MarkdownWebView(markdownText: $writeStore.markdownString.toUnwrapped(defaultValue: ""))
+                    MarkdownWebView(markdownText: writeStore.markdownString ?? "")
                         .frame(maxWidth: .infinity, alignment: .leading)
                     if props.editIsShown {
                         TextEditor(text: $writeStore.editMarkdownString.toUnwrapped(defaultValue: ""))
@@ -50,6 +50,32 @@ struct NoteWritePannelView: ConnectedView {
                             .font(.system(size: 14))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
+                    }
+                    if commentStore.select != nil {
+                        VStack {
+                            HStack {
+                                
+                            }
+                            .frame(height: 100)
+                            .frame(maxWidth: .infinity)
+                            .background(colorScheme == .dark ? Color.init(hex: "#282828") : Color.white)
+                            .opacity(0.1)
+                            .onHover { isHovering in
+                                if props.isImageBrowserVisible! {
+                                    return
+                                }
+                                if isHovering {
+                                    if props.uploadState == .no {
+                                        store.dispatch(action: WriteActions.uploadState(value: .normal))
+                                    }
+                                } else {
+                                    if props.uploadState == .normal {
+                                        store.dispatch(action: WriteActions.uploadState(value: .no))
+                                    }
+                                }
+                            }
+                            Spacer()
+                        }
                     }
                     if !writeStore.cache.isEmpty {
                         cacheItemView()
@@ -59,9 +85,13 @@ struct NoteWritePannelView: ConnectedView {
                 .onChange(of: props.editIsShown, { _, newValue in
                     if !newValue {
                         undoManager?.removeAllActions()
-                        writeStore.markdownString = writeStore.editMarkdownString
+                        if let editText = writeStore.editMarkdownString {
+                            writeStore.markdownString = editText
+                        }
                     } else {
-                        writeStore.editMarkdownString = writeStore.markdownString
+                        if let editText = writeStore.editMarkdownString {
+                            writeStore.markdownString = editText
+                        }
                     }
                 })
 #endif
@@ -105,6 +135,7 @@ extension NoteWritePannelView {
     fileprivate func bottomTimeView() -> some View {
         
         HStack {
+            Spacer()
             HStack {
                 HStack (spacing: 0) {
                     CustomImage(systemName: "network")
@@ -116,7 +147,6 @@ extension NoteWritePannelView {
                 }
             }
             .padding(EdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10))
-            Spacer()
         }
     }
     
@@ -143,7 +173,9 @@ extension NoteWritePannelView {
                 .background {
                     Capsule()
                         .foregroundColor(colorScheme == .dark ? Color.init(hex: "#41403F") : Color.init(hex: "#F7F7F7"))
+                        .shadow(color: colorScheme == .dark ? Color.white.opacity(0.2) : Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
                 }
+                .padding(.trailing, 20)
             }
             Spacer()
         }
@@ -191,15 +223,14 @@ extension NoteWritePannelView {
                     }
                     .buttonStyle(.plain)
                 }
-            }
-            if props.editIsShown && !props.isImageBrowserVisible! {
+            } else {
                 ZStack {
                     if props.uploadState == .sending {
                         ProgressView()
                             .controlSize(.mini)
                     } else {
                         Button {
-                            if props.uploadState != .normal {
+                            if props.uploadState == .no {
                                 return
                             }
                             store.dispatch(action: WriteActions.uploadState(value: .sending))
@@ -219,24 +250,9 @@ extension NoteWritePannelView {
                             CustomImage(systemName: props.uploadState.imageName)
                         }
                         .buttonStyle(.plain)
-                        .disabled(!props.editIsShown)
                     }
                 }
                 .frame(width: 30, height: 40)
-            }
-            if !(props.isImageBrowserVisible ?? false) {
-                Button {
-                    store.dispatch(action: WriteActions.edit(editIsShown: !props.editIsShown))
-                } label: {
-                    
-                    CustomImage(systemName: props.editIsShown ? AppConst.closeIcon : AppConst.pencilIcon)
-                    
-//                    Label("Show inspector", systemImage: props.editIsShown ? AppConst.closeIcon : AppConst.pencilIcon)
-//                        .if(!props.editIsShown) { view in
-//                            view.font(.system(size: 18))
-//                        }
-                }
-                .buttonStyle(.plain)
             }
         }
     }

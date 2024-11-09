@@ -11,35 +11,35 @@ import SwiftUI
 
 final class WriteModelStore: ObservableObject {
     
-    @Published var markdownString: String? {
+    @Published var markdownString: String?
+    @Published var editMarkdownString: String? {
         didSet {
-            debounceUpdateCacheText()
+            if let text = editMarkdownString {
+                debounceUpdateCacheText(text)
+            }
         }
     }
-    
-    @Published var editMarkdownString: String?
-    
     @Published var cache: String = ""
     @Published var cacheUpdate: Int = 0
     
-    var workItem: DispatchWorkItem?
+    private var workItem: DispatchWorkItem?
     
-    func debounceUpdateCacheText() {
+    func debounceUpdateCacheText(_ text: String) {
         workItem?.cancel()
         workItem = DispatchWorkItem { [weak self] in
-            self?.updateCacheText()
+            self?.updateCacheText(text)
         }
         if let workItem = workItem {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: workItem)
         }
     }
     
-    fileprivate func updateCacheText() {
+    fileprivate func updateCacheText(_ text: String) {
         guard var comment = commentStore.select else { return }
-        if writeStore.markdownString == comment.cache {
+        if comment.cache == text {
             return
         }
-        comment.cache = writeStore.markdownString
+        comment.cache = text
         CacheManager.updateCommentCache(byComment: comment) {}
     }
     

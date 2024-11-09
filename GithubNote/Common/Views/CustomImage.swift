@@ -10,7 +10,9 @@ import SwiftUI
 struct CustomImage: View {
     let systemName: String
     var body: some View {
-        Image(systemName: systemName)
-            .opacity(0.7)
+        if !systemName.isEmpty {
+            Image(systemName: systemName)
+                .opacity(0.7)
+        }
     }
 }
