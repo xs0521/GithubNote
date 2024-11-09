@@ -1,108 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Markdown Viewer</title>
-        <script src="js/marked.min.js"></script>
-        <!-- Highlight.js (CSS and JS) -->
-        <link
-        rel="stylesheet"
-        href="js/github.min.css"
-        />
-        <script src="js/highlight.min.js"></script>
-        <script src="js/vconsole.min.js"></script>
-        <style>
-            body::-webkit-scrollbar {
-                display: none; /* 隐藏滚动条 */
-            }
-            body {
-                background-color: #ffffff; /* 设置背景色为浅灰色 */
-                font-family: Arial, sans-serif;
-                margin: 0;
-                padding: 10px;
-            }
-            
-            .hljs {
-                background: #F9F8F9; /* 代码块背景色 */
-                color: #abb2bf; /* 代码文本颜色 */
-            }
-            
-            /* 夜间模式样式 */
-            @media (prefers-color-scheme: dark) {
-                body {
-                    background-color: #2B2B2E; /* 背景色 */
-                    color: #e0e0e0; /* 文字颜色 */
-                }
-                
-                #content {
-                    background-color: #2B2B2E; /* 内容区域背景色 */
-                    box-shadow: none; /* 去掉阴影 */
-                }
-                
-                pre {
-                    background: #22252b; /* 代码块背景色 */
-                    color: #e0e0e0; /* 代码块文本颜色 */
-                    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.2);
-                }
-                
-                .hljs {
-                    background: #232420; /* 代码块背景色 */
-                    color: #abb2bf; /* 代码文本颜色 */
-                }
-                
-                .hljs-keyword {
-                    color: #c678dd; /* 关键字颜色 */
-                }
-                
-                .hljs-string {
-                    color: #98c379; /* 字符串颜色 */
-                }
-                
-                .hljs-comment {
-                    color: #5c6370; /* 注释颜色 */
-                }
-                
-                .hljs-function {
-                    color: #61afef; /* 函数颜色 */
-                }
-                
-                .hljs-variable {
-                    color: #d19a66; /* 变量颜色 */
-                }
-            }
-        </style>
-    </head>
-    <body>
-        <div id="content"></div>
-        
-        <script>
-            // Configure Marked.js to use highlight.js for code blocks
-            marked.setOptions({
-                highlight: function (code, lang) {
-                    if (hljs.getLanguage(lang)) {
-                        return hljs.highlight(code, { language: lang }).value;
-                    } else {
-                        return hljs.highlightAuto(code).value;
-                    }
-                },
-            });
-            
-            function renderMarkdown(data) {
-                markdown = data.content
-                document.getElementById("content").innerHTML = marked.parse(markdown);
-                // 将页面内容放大 0.8 倍
-                document.documentElement.style.fontSize = '80%';
-                // After rendering, apply syntax highlighting
-                document.querySelectorAll("pre code").forEach((block) => {
-                    hljs.highlightElement(block);
-                });
-            }
-            
-            function debugExecute() {
-                var vConsole = new window.VConsole();
-            }
-            
-        </script>
-    </body>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/logo.jpg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Muya Example</title>
+  <script type="module" src="./assets/index-IuSL2sv8.js"></script>
+  <link rel="stylesheet" href="./assets/index-a7H3TyBd.css">
+  <style>
+      .mu-front-menu li .icon-wrapper i.icon>i[class^=icon-] {
+            left: 0px !important;
+          }
+          .mu-image-toolbar li.item .icon-wrapper i.icon>i[class^=icon-] {
+            left: 0px !important;
+          }
+
+    </style>
+</head>
+<body>
+  <div class="editor-container">
+    <div id="editor"></div>
+  </div>
+  <script>
+      
+      let muya;
+      
+      function renderMarkdown(data) {
+        const markdownContent = data.content;
+        muya.setContent(markdownContent)
+        console.log('renderMarkdown call back')
+      }
+      
+      // 定义用于回调的函数，将内容传递到 iOS
+      function sendContentToNative(content) {
+        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.nativeBridge) {
+          window.webkit.messageHandlers.nativeBridge.postMessage(content);
+        } else {
+          console.warn("iOS 回调接口不可用");
+        }
+      }
+      
+    window.onload = function() {
+      const editorContainer = document.getElementById('editor');
+      // 设置缩放比例，比如 0.8 表示缩小为原来的 80%
+      const scale = 0.9;
+      editorContainer.style.transform = `scale(${scale})`;
+      editorContainer.style.transformOrigin = 'top left';
+      // 注册编辑器功能
+      Muya.use(MuyaCore.EmojiSelector);
+      Muya.use(MuyaCore.InlineFormatToolbar);
+      Muya.use(MuyaCore.ImageEditTool, {
+          imagePathPicker,
+          imageAction,
+      });
+      Muya.use(MuyaCore.ImageToolBar)
+      Muya.use(MuyaCore.ImageResizeBar)
+      Muya.use(MuyaCore.CodeBlockLanguageSelector)
+      Muya.use(MuyaCore.ParagraphFrontButton)
+      Muya.use(MuyaCore.ParagraphFrontMenu)
+      Muya.use(MuyaCore.TableColumnToolbar)
+      Muya.use(MuyaCore.ParagraphQuickInsertMenu)
+      Muya.use(MuyaCore.TableDragBar)
+      Muya.use(MuyaCore.TableRowColumMenu)
+      Muya.use(MuyaCore.PreviewToolBar)
+      // 挂载示例
+      muya = new Muya(editorContainer, {
+          markdown: '' // 默认渲染内容
+      })
+      // 设置语言
+      muya.locale(MuyaCore.zh)
+      muya.init()
+      muya.on('json-change', (_changes) => {
+          // 输入变化
+          // console.log(JSON.stringify(muya.getState(), null, 2))
+          // console.log(muya.getMarkdown())
+          const content = muya.getMarkdown();
+          sendContentToNative(content);
+          // console.log(JSON.stringify(_changes, null, 2));
+      })
+      
+      async function imagePathPicker() {
+          return 'https://pics.ettoday.net/images/2253/d2253152.jpg';
+      }
+      async function imageAction() {
+          return new Promise((resolve) => {
+              setTimeout(() => {
+                  resolve(
+                      'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
+                  );
+              }, 3000);
+          });
+      }
+    }
+  </script>
+</body>
 </html>

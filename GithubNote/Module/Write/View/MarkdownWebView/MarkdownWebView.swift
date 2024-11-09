@@ -21,6 +21,8 @@ typealias AppViewRepresentable = NSViewRepresentable
 
 // WKWebView Wrapper for SwiftUI
 
+private let kBridgeName = "nativeBridge"
+
 struct MarkdownWebView: AppViewRepresentable {
 #if MOBILE
     typealias UIViewType = WKWebView
@@ -47,8 +49,14 @@ struct MarkdownWebView: AppViewRepresentable {
     private func makeView(context: Context) -> WKWebView {
         
         let schemeHandler = CustomURLSchemeHandler()
+        
+        let contentController = WKUserContentController()
+        contentController.add(context.coordinator, name: kBridgeName)
+        
         let configuration = WKWebViewConfiguration()
+        configuration.setValue(true, forKey: "_allowUniversalAccessFromFileURLs")
         configuration.setURLSchemeHandler(schemeHandler, forURLScheme: AppConst.scheme)
+        configuration.userContentController = contentController
         let webView = WKWebView(frame: .zero, configuration: configuration)
 #if DEBUG
         webView.isInspectable = true
@@ -77,15 +85,6 @@ struct MarkdownWebView: AppViewRepresentable {
         }
         
         if !context.coordinator.isLaunched {
-#if DEBUG
-            let jsCode = "debugExecute()"
-            webView.evaluateJavaScript(jsCode) { (result, error) in
-                if let error = error {
-                    "JavaScript injection error: \(error)".logE()
-                }
-            }
-#endif
-            "#MD# isLaunched".logI()
             context.coordinator.isLaunched = true
         }
         
@@ -97,9 +96,9 @@ struct MarkdownWebView: AppViewRepresentable {
             context.coordinator.currentText = markdownText
             "#MD# title \(markdownText.prefix(20))".logI()
             
-            let handleImageMarkdownText = CustomURLSchemeHandler.handleImageText(markdownText)
+//            let handleImageMarkdownText = CustomURLSchemeHandler.handleImageText(markdownText)
     
-            let dictionary: [String: Any] = ["content": handleImageMarkdownText]
+            let dictionary: [String: Any] = ["content": markdownText]
             guard let jsonData = try? JSONSerialization.data(withJSONObject: dictionary, options: []) else { return }
             guard let sendContent = String(data: jsonData, encoding: .utf8) else { return }
             
@@ -114,7 +113,7 @@ struct MarkdownWebView: AppViewRepresentable {
         }
     }
     
-    class Coordinator: NSObject, WKNavigationDelegate {
+    class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
         
         var isLoaded = false
         var isDidFinish = false
@@ -136,6 +135,13 @@ struct MarkdownWebView: AppViewRepresentable {
         
         func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
             "#MD# error \(error.localizedDescription)".logE()
+        }
+        
+        // 实现消息处理方法
+        func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+            if message.name == kBridgeName {
+                WebJavaScriptBridgeHandler.parse(message.body)
+            }
         }
     }
     

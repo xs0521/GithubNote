@@ -28,12 +28,6 @@ struct NoteImageBrowserPreViewImagesView: ConnectedView {
     func body(props: Props) -> some View {
         VStack {
             ZStack {
-#if !MOBILE
-                KeyCaptureViewRepresentable { event in
-                    handleKeyDown(event: event, props: props)
-                }
-                .frame(width: 0, height: 0)
-#endif
                 TabView(selection: $imagesStore.currentIndex) {
                     ForEach(0..<props.list.count, id: \.self) { index in
                         WebImage(url: URL(string: props.list[index].imageUrl()))
@@ -105,6 +99,11 @@ struct NoteImageBrowserPreViewImagesView: ConnectedView {
         .onTapGesture {
             store.dispatch(action: ImagesActions.Preview(on: false))
         }
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name.keyboard), perform: { notification in
+            if let event = notification.object as? NSEvent {
+                handleKeyDown(event: event, props: props)
+            }
+        })
     }
     
     func tabViewStyleForCurrentPlatform() -> some TabViewStyle {

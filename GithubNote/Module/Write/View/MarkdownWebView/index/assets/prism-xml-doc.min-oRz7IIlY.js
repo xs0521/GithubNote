@@ -1,0 +1,1 @@
+(function(e){function n(g,s){e.languages[g]&&e.languages.insertBefore(g,"comment",{"doc-comment":s})}var a=e.languages.markup.tag,t={pattern:/\/\/\/.*/,greedy:!0,alias:"comment",inside:{tag:a}},r={pattern:/'''.*/,greedy:!0,alias:"comment",inside:{tag:a}};n("csharp",t),n("fsharp",t),n("vbnet",r)})(Prism);

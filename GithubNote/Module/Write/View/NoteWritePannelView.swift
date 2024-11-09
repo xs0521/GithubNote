@@ -25,6 +25,7 @@ struct NoteWritePannelView: ConnectedView {
     
     @State private var isPresented: Bool = false
     
+    
 #if !MOBILE
     private var undoManager: UndoManager? {
         NSApplication.shared.windows.first?.undoManager
@@ -44,13 +45,13 @@ struct NoteWritePannelView: ConnectedView {
                     MarkdownWebView(markdownText: $writeStore.markdownString.toUnwrapped(defaultValue: ""))
                         .frame(maxWidth: .infinity, alignment: .leading)
                     if props.editIsShown {
-                        TextEditor(text: $writeStore.markdownString.toUnwrapped(defaultValue: ""))
+                        TextEditor(text: $writeStore.editMarkdownString.toUnwrapped(defaultValue: ""))
                             .transparentScrolling()
                             .font(.system(size: 14))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
                     }
-                    if !writeStore.cache.isEmpty && props.editIsShown {
+                    if !writeStore.cache.isEmpty {
                         cacheItemView()
                     }
                 }
@@ -58,6 +59,9 @@ struct NoteWritePannelView: ConnectedView {
                 .onChange(of: props.editIsShown, { _, newValue in
                     if !newValue {
                         undoManager?.removeAllActions()
+                        writeStore.markdownString = writeStore.editMarkdownString
+                    } else {
+                        writeStore.editMarkdownString = writeStore.markdownString
                     }
                 })
 #endif
@@ -77,10 +81,23 @@ struct NoteWritePannelView: ConnectedView {
                         operationViews(props: props)
                     }
                 }
-                
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name.keyboard), perform: { notification in
+            if let event = notification.object as? NSEvent {
+                handleKeyDown(event: event, props: props)
+            }
+        })
     }
+    
+#if !MOBILE
+//     键盘事件处理
+    func handleKeyDown(event: NSEvent, props: Props) {
+        if event.modifierFlags.contains(.command) && event.characters == "/" {
+            store.dispatch(action: WriteActions.edit(editIsShown: !props.editIsShown))
+        }
+    }
+#endif
 }
 
 extension NoteWritePannelView {

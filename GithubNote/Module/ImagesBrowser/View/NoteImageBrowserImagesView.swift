@@ -124,12 +124,5 @@ struct NoteImageBrowserImagesView: ConnectedView {
                 appStore.isLoadingVisible = false
             }))
         })
-        .onReceive(NotificationCenter.default.publisher(for: Notification.Name.appendImagesNotification), perform: { notification in
-            if let item = notification.object as? GithubImage {
-                var list = props.list
-                list.insert(item, at: 0)
-                store.dispatch(action:ImagesActions.SetList(list: list))
-            }
-        })
     }
 }

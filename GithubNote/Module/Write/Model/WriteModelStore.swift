@@ -17,6 +17,8 @@ final class WriteModelStore: ObservableObject {
         }
     }
     
+    @Published var editMarkdownString: String?
+    
     @Published var cache: String = ""
     @Published var cacheUpdate: Int = 0
     
