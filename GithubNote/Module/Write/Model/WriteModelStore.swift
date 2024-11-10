@@ -12,17 +12,25 @@ import SwiftUI
 final class WriteModelStore: ObservableObject {
     
     @Published var markdownString: String?
-    @Published var editMarkdownString: String? {
-        didSet {
-            if let text = editMarkdownString, text != oldValue {
-                debounceUpdateCacheText(text)
-            }
-        }
-    }
+    @Published var editMarkdownString: String?
     @Published var cache: String = ""
     @Published var cacheUpdate: Int = 0
     
+    @Published var updateAt: String? = ""
+    
+    var body: String? = ""
+    
     private var workItem: DispatchWorkItem?
+    
+    func updateEditText(_ content: String?, _ updateLocal: Bool) -> Void {
+        if updateLocal {
+            let text = content ?? ""
+            if text != editMarkdownString {
+                debounceUpdateCacheText(text)
+            }
+        }
+        editMarkdownString = content
+    }
     
     func debounceUpdateCacheText(_ text: String) {
         workItem?.cancel()
@@ -46,8 +54,14 @@ final class WriteModelStore: ObservableObject {
     func checkCacheData() -> Void {
         guard let commentId = AppUserDefaults.comment?.id else { return }
         CacheManager.fetchComment(byId: commentId) { comment in
-            writeStore.cache = comment?.cache ?? ""
-            writeStore.cacheUpdate = comment?.cacheUpdate ?? 0
+            self.cache = comment?.cache ?? ""
+            self.cacheUpdate = comment?.cacheUpdate ?? 0
+            self.updateAt = comment?.updatedAt ?? ""
+            
+            let content = comment?.cache ?? comment?.body
+            self.body = comment?.body
+            self.markdownString = content
+            self.updateEditText(content, false)
         }
     }
 }

@@ -17,8 +17,6 @@ final class CommentModelStore: ObservableObject {
         didSet {
             AppUserDefaults.comment = select
 
-            writeStore.markdownString = select?.body
-            writeStore.editMarkdownString = select?.body
             writeStore.cache = ""
             writeStore.checkCacheData()
             store.dispatch(action: WriteActions.edit(editIsShown: false))

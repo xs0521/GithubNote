@@ -43,7 +43,7 @@ struct WebJavaScriptBridgeHandler {
         switch action {
         case .update:
             guard let content = dict["content"] as? String else { return }
-            writeStore.editMarkdownString = content
+            writeStore.updateEditText(content, true)
             "#web# content \(content)".logI()
         }
     }

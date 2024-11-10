@@ -50,12 +50,9 @@ struct NoteWritePannelView: ConnectedView {
                             .font(.system(size: 14))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
-                            .onAppear(perform: {
-                                writeStore.editMarkdownString = writeStore.markdownString
-                            })
                     }
                     if !writeStore.cache.isEmpty {
-                        cacheItemView()
+                        netItemView()
                     }
                 }
 #if !MOBILE
@@ -74,9 +71,9 @@ struct NoteWritePannelView: ConnectedView {
                 })
 #endif
                 .padding(EdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10))
-                if let value = commentStore.select?.updatedAt?.localTime(), !value.isEmpty {
-                    bottomTimeView()
-                }
+//                if let value = commentStore.select?.cacheUpdate?.localTime(), !value.isEmpty {
+//                    bottomTimeView()
+//                }
                 
             }
             .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
@@ -129,10 +126,10 @@ extension NoteWritePannelView {
             Spacer()
             HStack {
                 HStack (spacing: 0) {
-                    CustomImage(systemName: "network")
+                    CustomImage(systemName: "timer")
                         .font(.system(size: 10))
                         .padding(.trailing, 5)
-                    Text(commentStore.select?.updatedAt?.localTime() ?? "")
+                    Text(commentStore.select?.cacheUpdate?.localTime() ?? "")
                         .font(.system(size: 10))
                         .foregroundColor(colorScheme == .dark ? Color(hex: "#DDDDDD") : Color(hex: "#8C919E"))
                 }
@@ -145,17 +142,19 @@ extension NoteWritePannelView {
 
 extension NoteWritePannelView {
     
-    fileprivate func cacheItemView() -> some View {
+    fileprivate func netItemView() -> some View {
         
         VStack {
             HStack {
                 Spacer()
                 Button {
-                    writeStore.markdownString = writeStore.cache
+                    writeStore.markdownString = writeStore.body
+                    writeStore.updateEditText(writeStore.body, true)
                     writeStore.cache = ""
+                    
                 } label: {
-                    CustomImage(systemName: "timer")
-                    Text(writeStore.cacheUpdate.localTime())
+                    CustomImage(systemName: "network")
+                    Text(writeStore.updateAt?.localTime() ?? "")
                 }
                 .font(.system(size: 8))
                 .foregroundColor(colorScheme == .dark ? Color.init(hex: "#D4D4D4") : Color.init(hex: "#737372"))
