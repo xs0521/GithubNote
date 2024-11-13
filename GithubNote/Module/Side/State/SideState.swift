@@ -11,5 +11,6 @@ import SwiftUIFlux
 struct SideState: FluxState, Codable {
     
     var isReposVisible: Bool = false
+    var isIssuesVisible: Bool = false
     var selectionRepo: RepoModel? = AppUserDefaults.repo
 }

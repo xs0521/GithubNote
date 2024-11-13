@@ -13,4 +13,8 @@ struct SideActions {
     struct ReposViewState: Action {
         let visible: Bool
     }
+    
+    struct IssuesViewState: Action {
+        let visible: Bool
+    }
 }

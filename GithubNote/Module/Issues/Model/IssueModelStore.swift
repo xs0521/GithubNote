@@ -15,10 +15,14 @@ final class IssueModelStore: ObservableObject {
     
     @Published var select: Issue? {
         didSet {
+            let preSelect = AppUserDefaults.issue
             AppUserDefaults.issue = select
             commentStore.select = nil
             store.dispatch(action: IssuesActions.WillEditAction(item: nil))
             store.dispatch(action: CommentActions.FetchList(readCache: true, completion: nil))
+            if preSelect != select {
+                store.dispatch(action: SideActions.IssuesViewState(visible: false))
+            }
         }
     }
     

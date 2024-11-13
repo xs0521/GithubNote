@@ -138,7 +138,7 @@ struct NoteIssuesView: ConnectedView {
                 }
             }
         }
-        .frame(maxHeight: 200)
+        .frame(maxHeight: 80)
         .onAppear {
             issueStore.listener.loadPage()
         }

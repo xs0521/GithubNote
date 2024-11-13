@@ -32,7 +32,7 @@ struct NoteSidebarToolView: ConnectedView {
     }
     
     func body(props: Props) -> some View {
-        HStack {
+        HStack (alignment: .center) {
             Button(action: {
                 let visible = !store.state.sideStates.isReposVisible
                 store.dispatch(action: SideActions.ReposViewState(visible: visible))
@@ -53,65 +53,10 @@ struct NoteSidebarToolView: ConnectedView {
             })
             .buttonStyle(.borderless)
             .foregroundColor(.accentColor)
-            .padding(EdgeInsets(top: 5, leading: 16, bottom: 16, trailing: 5))
             .frame(maxWidth: .infinity, alignment: .leading)
-            
-            if props.isReposVisible {
-                HStack {
-                    if isSyncRepos {
-                        ProgressView()
-                            .controlSize(.mini)
-                            .padding()
-                            .padding(.trailing, 5)
-                            .frame(width: 20, height: 15)
-                    } else {
-                        Button {
-                            isSyncRepos = true
-                            repoStore.listener.loadPage(false, {_ in 
-                                isSyncRepos = false
-                            })
-                            
-                        } label: {
-                            CustomImage(systemName: AppConst.downloadIcon)
-                        }
-                        .buttonStyle(.plain)
-                        .padding(.trailing, 5)
-                    }
-                    if isCreateRepos {
-                        ProgressView()
-                            .controlSize(.mini)
-                            .padding()
-                            .padding(.trailing, 5)
-                            .frame(width: 15, height: 15)
-                    } else {
-                        Button {
-                            isCreateRepos = true
-                            repoStore.listener.create { finish in
-                                repoStore.listener.loadPage(true, {_ in
-                                    isCreateRepos = false
-                                })
-                            }
-                        } label: {
-                            CustomImage(systemName: AppConst.plusIcon)
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-                .frame(width: 40)
-                .padding(EdgeInsets(top: 5, leading: 16, bottom: 16, trailing: 10))
-            } else {
-                Button(action: {
-                    if CacheManager.shared.currentRepo == nil {
-                        ToastManager.shared.show("Please select a code repository")
-                        return
-                    }
-                    store.dispatch(action: ImagesActions.isImageBrowserVisible(on: true))
-                }, label: {
-                    CustomImage(systemName: AppConst.photoIcon)
-                })
-                .buttonStyle(.plain)
-                .padding(EdgeInsets(top: 5, leading: 5, bottom: 16, trailing: 16))
-            }
         }
+        
     }
+    
+
 }

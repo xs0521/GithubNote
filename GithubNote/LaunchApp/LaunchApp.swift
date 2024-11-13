@@ -59,7 +59,7 @@ class LaunchApp {
     private func keyUp(with event: NSEvent) {
         let keyCode = event.keyCode    //类型：CUnsignedShort即UInt16
 //        "#keyboard# keyUp-> keyCode:\(keyCode)   event.characters:\(event.characters as Any)".logI()
-        NotificationCenter.default.post(name: NSNotification.Name.keyboard, object: event)
+        NotificationCenter.default.post(name: Notification.Name.keyboard, object: event)
         
     }
     

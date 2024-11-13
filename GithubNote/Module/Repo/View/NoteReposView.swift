@@ -24,6 +24,17 @@ struct NoteReposView: ConnectedView {
     
     func body(props: Props) -> some View {
         VStack {
+            CustomHeaderView(title: "WORKSPACE") { callBack in
+                repoStore.listener.loadPage(false, {_ in
+                    callBack()
+                })
+            } newCallBack: { callBack in
+                repoStore.listener.create { finish in
+                    repoStore.listener.loadPage(true, {_ in
+                        callBack()
+                    })
+                }
+            }
             if props.list.isEmpty {
                 if isTapEmptyLoading {
                     ZStack {
@@ -32,7 +43,6 @@ struct NoteReposView: ConnectedView {
                             .frame(width: 25, height: 25)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color.background)
                 } else {
                     NoteEmptyView(tapCallBack: {
                         isTapEmptyLoading = true
@@ -40,7 +50,6 @@ struct NoteReposView: ConnectedView {
                             isTapEmptyLoading = false
                         }))
                     })
-                    .background(Color.background)
                 }
                 
             } else {
@@ -61,9 +70,9 @@ struct NoteReposView: ConnectedView {
                         .tag(selection)
                     }
                 }
-                .background(Color.background)
             }
         }
+        .background(Color.background)
         .onAppear(perform: {
             repoStore.listener.loadPage()
         })

@@ -43,6 +43,8 @@ func SideStateReducer(state: SideState, action: Action) -> SideState {
     case let action as SideActions.ReposViewState:
         state.isReposVisible = action.visible
         state.selectionRepo = AppUserDefaults.repo
+    case let action as SideActions.IssuesViewState:
+        state.isIssuesVisible = action.visible
     default:
         break
     }
