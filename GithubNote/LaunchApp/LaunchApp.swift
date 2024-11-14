@@ -87,14 +87,14 @@ class LaunchApp {
             }
             isHoverArea = true
             "#mouse# enter".logI()
-            NotificationCenter.default.post(name: NSNotification.Name.mouse, object: true)
+            NotificationCenter.default.post(name: Notification.Name.mouse, object: true)
         } else {
             if !isHoverArea {
                 return
             }
             isHoverArea = false
             "#mouse# level".logI()
-            NotificationCenter.default.post(name: NSNotification.Name.mouse, object: false)
+            NotificationCenter.default.post(name: Notification.Name.mouse, object: false)
         }
     }
 }

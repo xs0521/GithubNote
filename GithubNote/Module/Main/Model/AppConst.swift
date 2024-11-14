@@ -54,12 +54,10 @@ extension AppConst {
 
 extension AppConst {
     
-    static let downloadIcon = "arrow.down.square.fill"
-    static let plusIcon = "plus.circle.fill"
+    static let downloadIcon = "arrow.down.to.line.compact"
+    static let plusIcon = "plus"
     static let photoIcon = "photo.fill"
-    static let closeIcon = "xmark.circle.fill"
-    static let pencilIcon = "square.and.pencil.circle.fill"
-    static let cacheIcon = "arrow.up.bin.fill"
+    static let closeIcon = "xmark"
 }
 
 

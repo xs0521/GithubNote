@@ -12,21 +12,16 @@ enum UploadType: Codable {
     case no
     case normal
     case sending
-    case success
     case fail
     
     var imageName: String {
         switch self {
-        case .no:
+        case .no, .sending:
             return ""
         case .normal:
-            return "arrow.up.square.fill"
-        case .sending:
-            return "arrow.up.square.fill"
-        case .success:
-            return "checkmark.square.fill"
+            return "arrow.up"
         case .fail:
-            return "xmark.square.fill"
+            return "xmark"
         }
     }
     
