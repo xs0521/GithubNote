@@ -9,6 +9,8 @@ import SwiftUI
 
 struct CustomHeaderView: View {
     
+    @Environment(\.colorScheme) private var colorScheme
+    
     var title: String
     var refreshCallBack: CommonTCallBack<CommonCallBack>
     var newCallBack: CommonTCallBack<CommonCallBack>
@@ -20,7 +22,7 @@ struct CustomHeaderView: View {
         HStack {
             Text(title)
                 .fontWeight(.bold)
-                .foregroundColor(Color.init(hex: "#393835"))
+                .foregroundColor(colorScheme == .dark ? Color.init(hex: "#E0E0E0") : Color.init(hex: "#393835"))
             Spacer()
             HStack {
                 if isRefreshing {

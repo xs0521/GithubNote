@@ -13,8 +13,8 @@ struct CustomDivider: View {
     
     var body: some View {
         Rectangle()
-            .fill(colorScheme == .dark ? Color.init(hex: "#000000") : Color.init(hex: "#DCDCDC"))
-            .frame(height: 0.5)
+            .fill(colorScheme == .dark ? Color.init(hex: "#373737") : Color.init(hex: "#DCDCDC"))
+            .frame(height: colorScheme == .dark ? 1.5 : 0.5)
             .edgesIgnoringSafeArea(.horizontal)
     }
 }

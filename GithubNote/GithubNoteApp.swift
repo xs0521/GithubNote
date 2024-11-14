@@ -26,6 +26,7 @@ struct GithubNoteApp: App {
     @State var willLoginOut: Bool = false
     @State private var importing: Bool? = true
     @State var isSetting: Bool = false
+    @State private var isSettingsWindowOpen = false
     
     @Environment(\.openWindow) private var openWindow
     
@@ -95,7 +96,7 @@ struct GithubNoteApp: App {
             CommandGroup(replacing: .appSettings) {
                 Button("Settings") {
                     // 打开设置窗口
-                    openWindow(id: AppConst.settingWindowName)
+                    toggleSettingsWindow()
                 }
                 .keyboardShortcut(",", modifiers: [.command]) // 添加快捷键
             }
@@ -107,11 +108,32 @@ struct GithubNoteApp: App {
                     id: AppConst.settingWindowName,
                     for: String.self) { $value in
             SettingsView(isLogined: $logined)
+                .onAppear {
+                    isSettingsWindowOpen = true
+                }
+                .onDisappear {
+                    isSettingsWindowOpen = false
+                }
         }
                     .windowResizability(.contentSize)
 #if !MOBILE
                     .windowStyle(HiddenTitleBarWindowStyle())
 #endif
+    }
+    
+    private func toggleSettingsWindow() {
+        if isSettingsWindowOpen {
+            bringSettingsWindowToFront()
+        } else {
+            openWindow(id: AppConst.settingWindowName)
+        }
+    }
+    
+    private func bringSettingsWindowToFront() {
+        // 查找包含指定标识符的窗口
+        if let window = NSApp.windows.first(where: { $0.identifier?.rawValue.contains(AppConst.settingWindowName) == true }) {
+            window.orderFrontRegardless() // 强制将窗口显示到最前面
+        }
     }
 }
 

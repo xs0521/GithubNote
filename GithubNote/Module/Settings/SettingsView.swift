@@ -102,6 +102,8 @@ struct RootSettingView: View {
 
 struct SettingsView: View {
     
+    @Environment(\.colorScheme) private var colorScheme
+    
     @Binding var isLogined: Bool
     
     @State var showToast: Bool = false
@@ -127,14 +129,14 @@ struct SettingsView: View {
                                     NotificationCenter.default.post(name: NSNotification.Name.logoutNotification, object: nil)
                                 }
                                 if setting == .feedback {
-                                    if let url = URL(string: "https://github.com/xs0521/GithubNote-MacOS/issues") {
+                                    if let url = URL(string: "https://github.com/xs0521/GithubNote/issues") {
 #if !MOBILE
                                         NSWorkspace.shared.open(url)
 #endif
                                     }
                                 }
                                 if setting == .help {
-                                    if let url = URL(string: "https://github.com/xs0521/GithubNote-MacOS") {
+                                    if let url = URL(string: "https://github.com/xs0521/GithubNote") {
 #if !MOBILE
                                         NSWorkspace.shared.open(url)
 #endif
@@ -151,7 +153,7 @@ struct SettingsView: View {
                             }, label: {
                                 ZStack {
                                     HStack {
-                                        SettingImage(color: Color.init(hex: "#1A1A1A"), imageName: setting.icon)
+                                        SettingImage(color: colorScheme == .dark ? Color.gray : Color.init(hex: "#1A1A1A"), imageName: setting.icon)
                                             .frame(width: 16, height: 16)
                                         Text(setting.title)
                                         Spacer()
@@ -160,14 +162,16 @@ struct SettingsView: View {
                                                 .foregroundStyle(Color.gray)
                                         }
                                     }
-                                    VStack {
-                                        Spacer()
-                                        CustomDivider()
+                                    if setting != settings.last {
+                                        VStack {
+                                            Spacer()
+                                            CustomDivider()
+                                        }
                                     }
                                 }
                             })
                             .frame(height: 44)
-                            .background(Color.init(hex: "EBEBEA"))
+                            .background(Color.background)
                             .buttonStyle(.plain)
                             .disabled(setting == .logout ? (isLogined ? false : true) : false)
                         }
@@ -177,15 +181,15 @@ struct SettingsView: View {
                 }
                 .overlay(
                     RoundedRectangle(cornerRadius: 4, style: .continuous)
-                        .stroke(Color.init(hex: "DADADA"), lineWidth: 0.8)
+                        .stroke(colorScheme == .dark ? Color.init(hex: "#373737") : Color.init(hex: "DADADA"), 
+                                lineWidth: colorScheme == .dark ? 1.5 : 0.5)
                 )
-                .background(Color.init(hex: "EBEBEA"))
                 .padding(.bottom, 30)
                 .padding(.horizontal, 20)
             }
-            .background(Color.init(hex: "#EFEFEE"))
         }
         .frame(width: 500)
+        .background(Color.background)
         .toast(isPresenting: $showToast, duration: 2.0, tapToDismiss: true){
             AlertToast(displayMode: .hud, type: .systemImage("party.popper", .primary), title: toastMessage)
         }
