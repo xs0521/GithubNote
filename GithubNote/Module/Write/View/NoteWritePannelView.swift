@@ -111,7 +111,7 @@ struct NoteWritePannelView: ConnectedView {
 #if !MOBILE
 //     键盘事件处理
     func handleKeyDown(event: NSEvent, props: Props) {
-        if event.modifierFlags.contains(.command) && event.characters == "/" {
+        if event.modifierFlags.contains(.command) && event.characters == KeyboardType.OriginalText.character {
             store.dispatch(action: WriteActions.edit(editIsShown: !props.editIsShown))
         }
     }

@@ -70,7 +70,7 @@ struct NoteSidebarView: ConnectedView {
 #if !MOBILE
     // 键盘事件处理
     func handleKeyDown(event: NSEvent, props: Props) {
-        if event.modifierFlags.contains(.command) && event.characters == "i" {
+        if event.modifierFlags.contains(.command) && event.characters == KeyboardType.insertImage.character {
             if CacheManager.shared.currentRepo == nil {
                 ToastManager.shared.show("Please select a code repository")
                 return
@@ -78,7 +78,7 @@ struct NoteSidebarView: ConnectedView {
             let isImageBrowserVisible = props.isImageBrowserVisible
             store.dispatch(action: ImagesActions.isImageBrowserVisible(on: !isImageBrowserVisible))
         }
-        if event.modifierFlags.contains(.command) && event.characters == "r" {
+        if event.modifierFlags.contains(.command) && event.characters == KeyboardType.WorkSpace.character {
             let visible = !store.state.sideStates.isReposVisible
             store.dispatch(action: SideActions.ReposViewState(visible: visible))
         }

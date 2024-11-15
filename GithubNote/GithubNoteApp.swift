@@ -101,6 +101,16 @@ struct GithubNoteApp: App {
                 .keyboardShortcut(",", modifiers: [.command]) // 添加快捷键
             }
             CommandGroup(replacing: CommandGroupPlacement.newItem) {}
+            // 添加自定义命令到 Edit 菜单中
+            CommandGroup(after: CommandGroupPlacement.pasteboard) {
+                
+                ForEach(KeyboardType.allCases, id: \.self) { keyboardType in
+                    Button(keyboardType.title) {
+                        KeyboardManager.sendKeyPressEvent(characters: keyboardType.character, modifiers: .command)
+                    }
+                    .keyboardShortcut(KeyEquivalent(keyboardType.character.first!), modifiers: [.command])
+                }
+            }
         }
         
         
@@ -135,6 +145,8 @@ struct GithubNoteApp: App {
             window.orderFrontRegardless() // 强制将窗口显示到最前面
         }
     }
+    
+    
 }
 
 

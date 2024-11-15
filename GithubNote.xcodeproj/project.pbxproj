@@ -192,6 +192,8 @@
 		B1F507652CDF06F000F09942 /* WebJavaScriptBridgeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F507632CDF06F000F09942 /* WebJavaScriptBridgeHandler.swift */; };
 		B1F507672CE5003000F09942 /* CustomHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F507662CE5003000F09942 /* CustomHeaderView.swift */; };
 		B1F507682CE5003000F09942 /* CustomHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F507662CE5003000F09942 /* CustomHeaderView.swift */; };
+		B1F5076A2CE79E6900F09942 /* KeyboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F507692CE79E6900F09942 /* KeyboardManager.swift */; };
+		B1F5076B2CE79E6900F09942 /* KeyboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F507692CE79E6900F09942 /* KeyboardManager.swift */; };
 		B1FE674E2C45767600970DA0 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FE674D2C45767600970DA0 /* Common.swift */; };
 		B1FE67502C46B72400970DA0 /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FE674F2C46B72400970DA0 /* View+Extension.swift */; };
 		B1FE67542C480B0200970DA0 /* NoteImageBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FE67532C480B0200970DA0 /* NoteImageBrowserView.swift */; };
@@ -321,6 +323,7 @@
 		B1ED88742C4C057200FD8DEB /* CachePolicyPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachePolicyPlugin.swift; sourceTree = "<group>"; };
 		B1F507632CDF06F000F09942 /* WebJavaScriptBridgeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebJavaScriptBridgeHandler.swift; sourceTree = "<group>"; };
 		B1F507662CE5003000F09942 /* CustomHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomHeaderView.swift; sourceTree = "<group>"; };
+		B1F507692CE79E6900F09942 /* KeyboardManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardManager.swift; sourceTree = "<group>"; };
 		B1FE674D2C45767600970DA0 /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		B1FE674F2C46B72400970DA0 /* View+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
 		B1FE67532C480B0200970DA0 /* NoteImageBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteImageBrowserView.swift; sourceTree = "<group>"; };
@@ -905,6 +908,7 @@
 		B1FE674C2C45766800970DA0 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				B1F507692CE79E6900F09942 /* KeyboardManager.swift */,
 				B1A3FBBF2CC008E900C8ADF7 /* TimeManager.swift */,
 				B1EBBDCB2CB2E718005FB760 /* WebServerManager.swift */,
 				B1FE674D2C45767600970DA0 /* Common.swift */,
@@ -1301,6 +1305,7 @@
 				B14983E32CBB632E00CDAB6F /* ToastManager.swift in Sources */,
 				B14983E42CBB632E00CDAB6F /* NoteImageBrowserImagesView.swift in Sources */,
 				B14983E52CBB632E00CDAB6F /* API.swift in Sources */,
+				B1F5076B2CE79E6900F09942 /* KeyboardManager.swift in Sources */,
 				B18505792CD28E00002007FA /* ImagesState.swift in Sources */,
 				B139AF392CD10E00002F101A /* IssuesState.swift in Sources */,
 				B14983E62CBB632E00CDAB6F /* SQLManager+Comment.swift in Sources */,
@@ -1378,6 +1383,7 @@
 				B139AF382CD10E00002F101A /* IssuesState.swift in Sources */,
 				B18505712CD279B1002007FA /* WriteActions.swift in Sources */,
 				B1ED88752C4C057200FD8DEB /* CachePolicyPlugin.swift in Sources */,
+				B1F5076A2CE79E6900F09942 /* KeyboardManager.swift in Sources */,
 				B1EBBDBA2CA05EEA005FB760 /* NoteReposView.swift in Sources */,
 				B148A5BA2BC1506000B7FBA8 /* LoginOutView.swift in Sources */,
 				B139AF4A2CD12D3F002F101A /* CommentModelStore.swift in Sources */,
