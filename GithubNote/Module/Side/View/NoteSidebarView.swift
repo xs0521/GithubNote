@@ -19,6 +19,8 @@ struct NoteSidebarView: ConnectedView {
     
     @Environment(\.colorScheme) private var colorScheme
     
+    @EnvironmentObject var alertStore: AlertModelStore
+    
     struct Props {
         let isReposVisible: Bool
         let isIssuesVisible: Bool
@@ -72,7 +74,7 @@ struct NoteSidebarView: ConnectedView {
     func handleKeyDown(event: NSEvent, props: Props) {
         if event.modifierFlags.contains(.command) && event.characters == KeyboardType.insertImage.character {
             if CacheManager.shared.currentRepo == nil {
-                ToastManager.shared.show("Please select a code repository")
+                ToastManager.shared.show("Please select a workspace")
                 return
             }
             let isImageBrowserVisible = props.isImageBrowserVisible

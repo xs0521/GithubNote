@@ -49,7 +49,7 @@ struct NoteContentView: ConnectedView {
                     appStore.isToastVisible = true
                 }
             })
-            .toast(isPresenting: $appStore.isToastVisible, duration: 2.0, tapToDismiss: true){
+            .toast(isPresenting: $appStore.isToastVisible, duration: 3.0, tapToDismiss: true){
                 AlertToast(displayMode: appStore.item?.mode ?? .hud,
                            type: appStore.item?.type ?? .regular,
                            title: appStore.item?.title ?? "")

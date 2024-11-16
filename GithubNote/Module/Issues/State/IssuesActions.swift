@@ -31,7 +31,7 @@ struct IssuesActions {
         private func requestAllIssue(_ readCache: Bool = true, _ completion: @escaping CommonTCallBack<Bool>) -> Void {
             
             if AppUserDefaults.repo == nil {
-                ToastManager.shared.show("Please select a code repository")
+                ToastManager.shared.show("Please select a workspace")
                 completion(false)
                 return
             }

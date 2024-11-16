@@ -194,6 +194,14 @@
 		B1F507682CE5003000F09942 /* CustomHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F507662CE5003000F09942 /* CustomHeaderView.swift */; };
 		B1F5076A2CE79E6900F09942 /* KeyboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F507692CE79E6900F09942 /* KeyboardManager.swift */; };
 		B1F5076B2CE79E6900F09942 /* KeyboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F507692CE79E6900F09942 /* KeyboardManager.swift */; };
+		B1F5076D2CE7A2CF00F09942 /* AlertStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F5076C2CE7A2CF00F09942 /* AlertStore.swift */; };
+		B1F5076E2CE7A2CF00F09942 /* AlertStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F5076C2CE7A2CF00F09942 /* AlertStore.swift */; };
+		B1F507702CE7A6D800F09942 /* CustomAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F5076F2CE7A6D800F09942 /* CustomAlert.swift */; };
+		B1F507712CE7A6D800F09942 /* CustomAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F5076F2CE7A6D800F09942 /* CustomAlert.swift */; };
+		B1F507732CE840A200F09942 /* LaunchApp+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F507722CE840A200F09942 /* LaunchApp+Keyboard.swift */; };
+		B1F507742CE840A200F09942 /* LaunchApp+Keyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F507722CE840A200F09942 /* LaunchApp+Keyboard.swift */; };
+		B1F507762CE840DB00F09942 /* LaunchApp+Mouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F507752CE840DB00F09942 /* LaunchApp+Mouse.swift */; };
+		B1F507772CE840DB00F09942 /* LaunchApp+Mouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F507752CE840DB00F09942 /* LaunchApp+Mouse.swift */; };
 		B1FE674E2C45767600970DA0 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FE674D2C45767600970DA0 /* Common.swift */; };
 		B1FE67502C46B72400970DA0 /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FE674F2C46B72400970DA0 /* View+Extension.swift */; };
 		B1FE67542C480B0200970DA0 /* NoteImageBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FE67532C480B0200970DA0 /* NoteImageBrowserView.swift */; };
@@ -324,6 +332,10 @@
 		B1F507632CDF06F000F09942 /* WebJavaScriptBridgeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebJavaScriptBridgeHandler.swift; sourceTree = "<group>"; };
 		B1F507662CE5003000F09942 /* CustomHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomHeaderView.swift; sourceTree = "<group>"; };
 		B1F507692CE79E6900F09942 /* KeyboardManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardManager.swift; sourceTree = "<group>"; };
+		B1F5076C2CE7A2CF00F09942 /* AlertStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertStore.swift; sourceTree = "<group>"; };
+		B1F5076F2CE7A6D800F09942 /* CustomAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlert.swift; sourceTree = "<group>"; };
+		B1F507722CE840A200F09942 /* LaunchApp+Keyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LaunchApp+Keyboard.swift"; sourceTree = "<group>"; };
+		B1F507752CE840DB00F09942 /* LaunchApp+Mouse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LaunchApp+Mouse.swift"; sourceTree = "<group>"; };
 		B1FE674D2C45767600970DA0 /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		B1FE674F2C46B72400970DA0 /* View+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
 		B1FE67532C480B0200970DA0 /* NoteImageBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteImageBrowserView.swift; sourceTree = "<group>"; };
@@ -755,6 +767,7 @@
 				B1EBBD992C9ED695005FB760 /* CustomDivider.swift */,
 				B125C7DF2CDCFB2C00102E02 /* CustomImage.swift */,
 				B1F507662CE5003000F09942 /* CustomHeaderView.swift */,
+				B1F5076F2CE7A6D800F09942 /* CustomAlert.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -771,6 +784,8 @@
 			isa = PBXGroup;
 			children = (
 				B1EBBD9F2C9F0079005FB760 /* LaunchApp.swift */,
+				B1F507722CE840A200F09942 /* LaunchApp+Keyboard.swift */,
+				B1F507752CE840DB00F09942 /* LaunchApp+Mouse.swift */,
 			);
 			path = LaunchApp;
 			sourceTree = "<group>";
@@ -913,6 +928,7 @@
 				B1EBBDCB2CB2E718005FB760 /* WebServerManager.swift */,
 				B1FE674D2C45767600970DA0 /* Common.swift */,
 				B1EBBDA32C9FDB28005FB760 /* ToastManager.swift */,
+				B1F5076C2CE7A2CF00F09942 /* AlertStore.swift */,
 				B1EBBD9B2C9EF50F005FB760 /* Email */,
 				B1EBBD982C9ED683005FB760 /* Views */,
 				B1CE86592C592690002C8335 /* Notification */,
@@ -1259,7 +1275,9 @@
 				B11237492CCAAAC00085F9EB /* SideActions.swift in Sources */,
 				B168824A2CCFE90300E3D8DD /* IssueModelStore.swift in Sources */,
 				B1F507652CDF06F000F09942 /* WebJavaScriptBridgeHandler.swift in Sources */,
+				B1F507712CE7A6D800F09942 /* CustomAlert.swift in Sources */,
 				B1A3FBC42CC0180A00C8ADF7 /* Int+Extension.swift in Sources */,
+				B1F507772CE840DB00F09942 /* LaunchApp+Mouse.swift in Sources */,
 				B14983C72CBB632E00CDAB6F /* NoteWritePannelView.swift in Sources */,
 				B185057C2CD28E0C002007FA /* ImagesActions.swift in Sources */,
 				B14983C82CBB632E00CDAB6F /* NoteImageBrowserView.swift in Sources */,
@@ -1268,6 +1286,7 @@
 				B14983CB2CBB632E00CDAB6F /* Binding+Extension.swift in Sources */,
 				B14983CC2CBB632E00CDAB6F /* ImagesModel.swift in Sources */,
 				B125C7E12CDCFB2C00102E02 /* CustomImage.swift in Sources */,
+				B1F507742CE840A200F09942 /* LaunchApp+Keyboard.swift in Sources */,
 				B14983CD2CBB632E00CDAB6F /* Common.swift in Sources */,
 				B14983CE2CBB632E00CDAB6F /* AppModel.swift in Sources */,
 				B14EA4EC2CC93EEE00F55A4D /* AppUserDefaults.swift in Sources */,
@@ -1308,6 +1327,7 @@
 				B1F5076B2CE79E6900F09942 /* KeyboardManager.swift in Sources */,
 				B18505792CD28E00002007FA /* ImagesState.swift in Sources */,
 				B139AF392CD10E00002F101A /* IssuesState.swift in Sources */,
+				B1F5076E2CE7A2CF00F09942 /* AlertStore.swift in Sources */,
 				B14983E62CBB632E00CDAB6F /* SQLManager+Comment.swift in Sources */,
 				B14983E72CBB632E00CDAB6F /* GitHubLoginView.swift in Sources */,
 				B14983E82CBB632E00CDAB6F /* Modelable.swift in Sources */,
@@ -1364,6 +1384,7 @@
 				B1B55A8B2C515C9000820689 /* AppModel.swift in Sources */,
 				B11237482CCAAAC00085F9EB /* SideActions.swift in Sources */,
 				B1EBBDD12CB3CD7A005FB760 /* NoteSidebarToolView.swift in Sources */,
+				B1F507702CE7A6D800F09942 /* CustomAlert.swift in Sources */,
 				B11237452CCAAA8F0085F9EB /* SideState.swift in Sources */,
 				B1A3FBC02CC008E900C8ADF7 /* TimeManager.swift in Sources */,
 				B139AF472CD12A38002F101A /* CommentActions.swift in Sources */,
@@ -1374,6 +1395,7 @@
 				B1EBBD942C9E886C005FB760 /* LogManager.swift in Sources */,
 				B1B5AAE72CC2AB71003F4E71 /* ImageUploader.swift in Sources */,
 				B1ED886F2C4ACBB900FD8DEB /* RepoModel.swift in Sources */,
+				B1F5076D2CE7A2CF00F09942 /* AlertStore.swift in Sources */,
 				B1EBBDCC2CB2E718005FB760 /* WebServerManager.swift in Sources */,
 				B1ED88672C4AC60000FD8DEB /* NetworkError.swift in Sources */,
 				B1EBBDBC2CA05FA6005FB760 /* NoteIssuesView.swift in Sources */,
@@ -1395,6 +1417,7 @@
 				B1EBBD972C9E93EE005FB760 /* SettingsView.swift in Sources */,
 				B11237412CCAA25B0085F9EB /* RepoModelStore.swift in Sources */,
 				B1EC0DE82BBB8DD4007975D9 /* String+Extension.swift in Sources */,
+				B1F507732CE840A200F09942 /* LaunchApp+Keyboard.swift in Sources */,
 				B11237302CCA91360085F9EB /* ReposState.swift in Sources */,
 				B139AF542CD2613E002F101A /* WriteModelStore.swift in Sources */,
 				B16882492CCFE90300E3D8DD /* IssueModelStore.swift in Sources */,
@@ -1413,6 +1436,7 @@
 				B1DA105D2C9DB6CA0074DA32 /* MarkdownWebView.swift in Sources */,
 				B1F507672CE5003000F09942 /* CustomHeaderView.swift in Sources */,
 				B1EBBDCE2CB2F31A005FB760 /* bool+Extension.swift in Sources */,
+				B1F507762CE840DB00F09942 /* LaunchApp+Mouse.swift in Sources */,
 				B18505742CD28BBA002007FA /* AppModelStore.swift in Sources */,
 				B1EBBDC22CA06CA4005FB760 /* NoteCommentsHeaderView.swift in Sources */,
 				B1FE67502C46B72400970DA0 /* View+Extension.swift in Sources */,

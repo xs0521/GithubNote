@@ -16,6 +16,7 @@ struct NoteWritePannelView: ConnectedView {
     @EnvironmentObject var writeStore: WriteModelStore
     @EnvironmentObject var commentStore: CommentModelStore
     @EnvironmentObject var appStore: AppModelStore
+    @EnvironmentObject var alertStore: AlertModelStore
     
     struct Props {
         let editIsShown: Bool
@@ -148,10 +149,14 @@ extension NoteWritePannelView {
             HStack {
                 Spacer()
                 Button {
-                    writeStore.markdownString = writeStore.body
-                    writeStore.updateEditText(writeStore.body, true)
-                    writeStore.cache = ""
                     
+                    alertStore.show(desc: "Will overwrite local content?") {
+                        writeStore.markdownString = writeStore.body
+                        writeStore.updateEditText(writeStore.body, true)
+                        writeStore.cache = ""
+                    } onCancel: {
+                        
+                    }
                 } label: {
                     CustomImage(systemName: "network")
                     Text(writeStore.updateAt?.localTime() ?? "")

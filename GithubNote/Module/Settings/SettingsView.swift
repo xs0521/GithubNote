@@ -109,6 +109,10 @@ struct SettingsView: View {
     @State var showToast: Bool = false
     @State private var toastMessage: String = ""
     
+    var logoutCallBack: CommonCallBack
+    
+    @StateObject private var alertStore = AlertModelStore()
+    
     var body: some View {
         NavigationStack {
             Form {
@@ -123,10 +127,16 @@ struct SettingsView: View {
                             Button(action: {
                                 "#Setting# tap \(setting.title)".logI()
                                 if setting == .logout {
-                                    #if !MOBILE
-                                    NSApplication.shared.keyWindow?.close()
-                                    #endif
-                                    NotificationCenter.default.post(name: NSNotification.Name.logoutNotification, object: nil)
+
+                                    let account = UserManager.shared.user?.login ?? ""
+                                    alertStore.show(desc: "Coming out \(account)") {
+                                        logoutCallBack()
+#if !MOBILE
+                                        NSApplication.shared.keyWindow?.close()
+#endif
+                                    } onCancel: {
+                                        
+                                    }
                                 }
                                 if setting == .feedback {
                                     if let url = URL(string: "https://github.com/xs0521/GithubNote/issues") {
@@ -187,13 +197,19 @@ struct SettingsView: View {
                 .padding(.bottom, 30)
                 .padding(.horizontal, 20)
             }
+            .customAlert(isVisible: $alertStore.isVisible,
+                         title: alertStore.title,
+                         message: alertStore.message, onConfirm: {
+                alertStore.onConfirm?()
+            }, onCancel: {
+                alertStore.onCancel?()
+            })
         }
         .frame(width: 500)
         .background(Color.background)
         .toast(isPresenting: $showToast, duration: 2.0, tapToDismiss: true){
             AlertToast(displayMode: .hud, type: .systemImage("party.popper", .primary), title: toastMessage)
         }
-        
     }
 }
 

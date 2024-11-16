@@ -23,10 +23,12 @@ let imagesStore = ImagesModelStore()
 struct GithubNoteApp: App {
     
     @State var logined = UserManager.shared.isLogin()
-    @State var willLoginOut: Bool = false
     @State private var importing: Bool? = true
     @State var isSetting: Bool = false
     @State private var isSettingsWindowOpen = false
+    @State private var showAlert = false
+    
+    @StateObject private var alertStore = AlertModelStore()
     
     @Environment(\.openWindow) private var openWindow
     
@@ -38,7 +40,6 @@ struct GithubNoteApp: App {
         AppUserDefaults.reset()
         UserManager.shared.save(nil)
         logined = UserManager.shared.isLogin()
-        willLoginOut = false
     }
     
     var body: some Scene {
@@ -54,17 +55,8 @@ struct GithubNoteApp: App {
                                 .environmentObject(writeStore)
                                 .environmentObject(appStore)
                                 .environmentObject(imagesStore)
-                            if willLoginOut {
-                                LoginOutView(cancelCallBack: {
-                                    willLoginOut = false
-                                }, loginOutCallBack: {
-                                    loginOutAction()
-                                })
-                            }
+                                .environmentObject(alertStore)
                         }
-                        .onReceive(NotificationCenter.default.publisher(for: Notification.Name.logoutNotification), perform: { _ in
-                            willLoginOut = true
-                        })
                         .onReceive(NotificationCenter.default.publisher(for: Notification.Name.logoutForceNotification), perform: { _ in
                             loginOutAction()
                         })
@@ -85,6 +77,13 @@ struct GithubNoteApp: App {
                         }
                     }
                 }
+                .customAlert(isVisible: $alertStore.isVisible, 
+                             title: alertStore.title,
+                             message: alertStore.message, onConfirm: {
+                    alertStore.onConfirm?()
+                }, onCancel: {
+                    alertStore.onCancel?()
+                })
             }
         }
         .defaultSize(width: AppConst.defaultWidth, height: AppConst.defaultHeight)
@@ -113,11 +112,12 @@ struct GithubNoteApp: App {
             }
         }
         
-        
         WindowGroup(AppConst.settingWindowName,
                     id: AppConst.settingWindowName,
                     for: String.self) { $value in
-            SettingsView(isLogined: $logined)
+            SettingsView(isLogined: $logined, logoutCallBack: {
+                loginOutAction()
+            })
                 .onAppear {
                     isSettingsWindowOpen = true
                 }

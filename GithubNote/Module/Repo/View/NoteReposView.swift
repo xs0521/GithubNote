@@ -17,6 +17,9 @@ struct NoteReposView: ConnectedView {
     
     @EnvironmentObject var repoStore: RepoModelStore
     @State private var isTapEmptyLoading: Bool = false
+    
+    @State private var isNewSending: Bool = false
+    @State private var isRefreshing: Bool = false
 
     func map(state: AppState, dispatch: @escaping DispatchFunction) -> Props {
         return Props(list: state.reposStates.items)
@@ -24,14 +27,18 @@ struct NoteReposView: ConnectedView {
     
     func body(props: Props) -> some View {
         VStack {
-            CustomHeaderView(title: "WORKSPACE") { callBack in
+            CustomHeaderView(title: "WORKSPACE",
+                             isNewSending: $isNewSending,
+                             isRefreshing: $isRefreshing) {
+                isRefreshing = true
                 repoStore.listener.loadPage(false, {_ in
-                    callBack()
+                    isRefreshing = false
                 })
-            } newCallBack: { callBack in
+            } newCallBack: {
+                isNewSending = true
                 repoStore.listener.create { finish in
                     repoStore.listener.loadPage(true, {_ in
-                        callBack()
+                        isNewSending = false
                     })
                 }
             }

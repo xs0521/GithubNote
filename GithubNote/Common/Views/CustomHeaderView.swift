@@ -10,13 +10,15 @@ import SwiftUI
 struct CustomHeaderView: View {
     
     @Environment(\.colorScheme) private var colorScheme
+    @EnvironmentObject var alertStore: AlertModelStore
     
     var title: String
-    var refreshCallBack: CommonTCallBack<CommonCallBack>
-    var newCallBack: CommonTCallBack<CommonCallBack>
     
-    @State private var isNewSending: Bool = false
-    @State private var isRefreshing: Bool = false
+    @Binding var isNewSending: Bool
+    @Binding var isRefreshing: Bool
+    
+    var refreshCallBack: CommonCallBack
+    var newCallBack: CommonCallBack
     
     var body: some View {
         HStack {
@@ -31,10 +33,7 @@ struct CustomHeaderView: View {
                         .frame(width: 20, height: 30)
                 } else {
                     Button {
-                        isRefreshing = true
-                        refreshCallBack({
-                            isRefreshing = false
-                        })
+                        refreshCallBack()
                     } label: {
                         CustomImage(systemName: AppConst.downloadIcon)
                     }
@@ -47,10 +46,7 @@ struct CustomHeaderView: View {
                         .frame(width: 20, height: 30)
                 } else {
                     Button {
-                        isNewSending = true
-                        newCallBack({
-                            isNewSending = false
-                        })
+                        newCallBack()
                     } label: {
                         CustomImage(systemName: AppConst.plusIcon)
                     }
