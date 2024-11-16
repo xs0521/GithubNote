@@ -19,36 +19,93 @@ struct GitHubLoginView: View {
     var loginCallBack: CommonCallBack
     
     var body: some View {
-        VStack {
-            Image("app_logo")
-                .resizable()
-                .frame(width: 100, height: 100)
-                .cornerRadius(8)
-                .padding(.bottom, 100)
-            ZStack {
-                Button(action: {
-                    startGitHubLogin()
-                }) {
-                    HStack {
-                        CustomImage(systemName: "person.fill")
-                        Text("Login with GitHub")
+        HStack {
+            VStack {
+                Image("app_logo")
+                    .resizable()
+                    .frame(width: 40, height: 40)
+                    .cornerRadius(8)
+                    .padding(.bottom, 10)
+                Text("WelCome")
+                    .font(.system(.largeTitle, design: .rounded))
+                    .fontWeight(.medium)
+                    .padding(.bottom, 1)
+                Text("Please log in with GitHub")
+                    .foregroundColor(Color.init(hex: "4F4F4F"))
+                    .font(.subheadline)
+                    .padding(.bottom, 30)
+                ZStack {
+                    Button(action: {
+                        startGitHubLogin()
+                    }) {
+                        HStack (spacing: 10) {
+                            Image(systemName: "person.fill")
+                            Text("Login with GitHub")
+                                .font(.system(.body, design: .rounded))
+                        }
+                        .padding()
+                        .frame(width: 268, height: 50)
+                        .background(Color.init(hex: "333333"))
+                        .foregroundColor(.white)
+                        .cornerRadius(4)
                     }
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(4)
-                }
-                .buttonStyle(.plain)
-                .disabled(isLoading)
-                if isLoading {
-                    ProgressView()
-                        .controlSize(.mini)
-                        .frame(width: 20, height: 20)
+                    .buttonStyle(.plain)
+                    .disabled(isLoading)
+                    if isLoading {
+                        ProgressView()
+                            .controlSize(.mini)
+                            .frame(width: 20, height: 20)
+                    }
                 }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            VStack (alignment: .center, spacing: 20) {
+                Text("Tips")
+                    .font(.largeTitle)
+                    .fontWeight(.regular)
+                    .foregroundColor(.white)
+                item("square.stack.3d.up", leftText: "Repository", rightText: "Workspace")
+                item("menucard", leftText: "Issues", rightText: "Notebook")
+                item("note", leftText: "Comments", rightText: "Note")
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(
+                Color.init(hex: "363636")
+//                LinearGradient(
+//                    gradient: Gradient(colors: 
+//                                        [Color.init(hex: "666666"),
+//                                         Color.init(hex: "444444"),
+//                                         Color.init(hex: "333333")]),
+//                        startPoint: .topLeading,
+//                        endPoint: .bottomTrailing
+//                    )
+            )
         }
         .frame(width: 800, height: 400)
-        .padding()
+    }
+    
+    func item(_ icon: String, leftText: String, rightText: String) -> some View {
+        ZStack {
+            HStack {
+                ZStack {
+                    Color.white
+                        .frame(width: 40, height: 40)
+                        .opacity(0.1)
+                        .cornerRadius(3.0)
+                    Image(systemName: icon)
+                }
+                Text(verbatim: leftText)
+                Spacer()
+            }
+            HStack {
+                Image(systemName: "arrow.right")
+                Text(verbatim: rightText)
+                Spacer()
+            }
+            .padding(.leading, 150)
+        }
+        .foregroundColor(.white)
+        .padding(.leading, 80)
     }
     
     private func startGitHubLogin() {
@@ -146,8 +203,10 @@ class GitHubLoginViewController: NSObject, ASWebAuthenticationPresentationContex
     }
 }
 
-//struct GitHubLoginView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        GitHubLoginView()
-//    }
-//}
+struct GitHubLoginView_Previews: PreviewProvider {
+    static var previews: some View {
+        GitHubLoginView(loginCallBack: {
+            
+        })
+    }
+}

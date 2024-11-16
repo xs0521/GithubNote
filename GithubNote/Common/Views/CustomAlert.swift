@@ -59,7 +59,7 @@ struct CustomAlert: View {
                 }
                 .frame(width: 270)
                 .frame(minHeight: 136)
-                .background(Color.init(hex: "#F2F2F2"))
+                .background(Color.background)
                 .cornerRadius(14)
             }
             .transition(.opacity)

@@ -129,7 +129,7 @@ struct SettingsView: View {
                                 if setting == .logout {
 
                                     let account = UserManager.shared.user?.login ?? ""
-                                    alertStore.show(desc: "Coming out \(account)") {
+                                    alertStore.show(desc: "Are you sure you want to log out?") {
                                         logoutCallBack()
 #if !MOBILE
                                         NSApplication.shared.keyWindow?.close()
