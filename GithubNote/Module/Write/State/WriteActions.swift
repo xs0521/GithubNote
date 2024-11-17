@@ -27,7 +27,7 @@ struct WriteActions {
         }
         
         private func updateContent(_ completion: @escaping CommonTCallBack<Bool>) -> Void {
-            guard let body = writeStore.markdownString, let commentid = commentStore.select?.id else { return }
+            guard let body = writeStore.editMarkdownString ?? writeStore.markdownString, let commentid = commentStore.select?.id else { return }
             
             Networking<Comment>().request(API.updateComment(commentId: commentid, body: body), parseHandler: ModelGenerator(snakeCase: true)) { data, cache, _ in
                 

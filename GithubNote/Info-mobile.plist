@@ -15,5 +15,10 @@
 			</array>
 		</dict>
 	</array>
+    <key>CFBundleLocalizations</key>
+    <array>
+        <string>en</string>
+        <string>zh-Hans</string>
+    </array>
 </dict>
 </plist>

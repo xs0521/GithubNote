@@ -19,7 +19,7 @@ final class AlertModelStore: ObservableObject {
     private(set) var onCancel: (() -> Void)?
     private(set) var autoDismiss: Bool = true
     
-    func show(_ title: String = "Alert", desc message: String, _ autoDismiss: Bool = true, onConfirm: @escaping () -> Void, onCancel: @escaping () -> Void) -> Void {
+    func show(_ title: String = "alert".language(), desc message: String, _ autoDismiss: Bool = true, onConfirm: @escaping () -> Void, onCancel: @escaping () -> Void) -> Void {
         self.title = title
         self.message = message
         self.autoDismiss = autoDismiss
