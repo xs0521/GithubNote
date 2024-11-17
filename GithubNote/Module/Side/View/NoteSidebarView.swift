@@ -74,7 +74,7 @@ struct NoteSidebarView: ConnectedView {
     func handleKeyDown(event: NSEvent, props: Props) {
         if event.modifierFlags.contains(.command) && event.characters == KeyboardType.insertImage.character {
             if CacheManager.shared.currentRepo == nil {
-                ToastManager.shared.show("Please select a workspace")
+                ToastManager.shared.show("select_workspace".language())
                 return
             }
             let isImageBrowserVisible = props.isImageBrowserVisible

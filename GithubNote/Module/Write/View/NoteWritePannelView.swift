@@ -150,7 +150,7 @@ extension NoteWritePannelView {
                 Spacer()
                 Button {
                     
-                    alertStore.show(desc: "Will overwrite local content?") {
+                    alertStore.show(desc: "overwrite_local_content".language()) {
                         writeStore.markdownString = writeStore.body
                         writeStore.updateEditText(writeStore.body, true)
                         writeStore.cache = ""

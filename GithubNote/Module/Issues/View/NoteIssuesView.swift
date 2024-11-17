@@ -116,13 +116,13 @@ struct NoteIssuesView: ConnectedView {
                             })
                             .tag(selection)
                             .contextMenu {
-                                Button("Edit", role: .destructive) {
+                                Button("edit".language(), role: .destructive) {
                                     "edit \(selection.title ?? "")".logI()
                                     focusedField = .title
                                     issueStore.editText = selection.title ?? ""
                                     store.dispatch(action: IssuesActions.WillEditAction(item: selection))
                                 }
-                                Button("Delete", role: .destructive) {
+                                Button("delete".language(), role: .destructive) {
                                     "delete \(selection.title ?? "")".logI()
                                     store.dispatch(action: IssuesActions.WillDeleteAction(item: selection))
                                     store.dispatch(action: IssuesActions.Delete(item: selection, completion: { finish in

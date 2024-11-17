@@ -26,11 +26,11 @@ struct GitHubLoginView: View {
                     .frame(width: 40, height: 40)
                     .cornerRadius(8)
                     .padding(.bottom, 10)
-                Text("WelCome")
+                Text("welcome".language())
                     .font(.system(.largeTitle, design: .rounded))
                     .fontWeight(.medium)
                     .padding(.bottom, 1)
-                Text("Please log in with GitHub")
+                Text("log_in_with_gitHub".language())
                     .foregroundColor(Color.init(hex: "4F4F4F"))
                     .font(.subheadline)
                     .padding(.bottom, 30)
@@ -40,7 +40,7 @@ struct GitHubLoginView: View {
                     }) {
                         HStack (spacing: 10) {
                             Image(systemName: "person.fill")
-                            Text("Login with GitHub")
+                            Text("log_with_gitHub".language())
                                 .font(.system(.body, design: .rounded))
                         }
                         .padding()
@@ -64,9 +64,9 @@ struct GitHubLoginView: View {
                     .font(.largeTitle)
                     .fontWeight(.regular)
                     .foregroundColor(.white)
-                item("square.stack.3d.up", leftText: "Repository", rightText: "Workspace")
-                item("menucard", leftText: "Issues", rightText: "Notebook")
-                item("note", leftText: "Comments", rightText: "Note")
+                item("square.stack.3d.up", leftText: "repository".language(), rightText: "workspace".language())
+                item("menucard", leftText: "issues".language(), rightText: "notebook".language())
+                item("note", leftText: "comments".language(), rightText: "note".language())
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(

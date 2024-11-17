@@ -88,3 +88,10 @@ extension String {
         return localDateString
     }
 }
+
+extension String {
+    
+    func language() -> String {
+        NSLocalizedString(self, comment: "")
+    }
+}

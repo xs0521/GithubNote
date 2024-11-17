@@ -16,13 +16,13 @@ struct NoteIssuesHeaderView: View {
     
     var body: some View {
         
-        CustomHeaderView(title: "NoteBook",
+        CustomHeaderView(title: "notebook".language(),
                          isNewSending: $isNewSending,
                          isRefreshing: $isRefreshing) {
             if !enbleAction() {
                 return
             }
-            alertStore.show(desc: "If the content is not available on the remote, syncing will automatically delete the local notes.") {
+            alertStore.show(desc: "download_tip".language()) {
                 isRefreshing = true
                 store.dispatch(action: IssuesActions.FetchList(readCache: false, completion: { finish in
                     isRefreshing = false
@@ -45,7 +45,7 @@ struct NoteIssuesHeaderView: View {
     
     func enbleAction() -> Bool {
         if AppUserDefaults.repo == nil {
-            ToastManager.shared.show("Please select a workspace")
+            ToastManager.shared.show("select_workspace".language())
             return false
         }
         return true

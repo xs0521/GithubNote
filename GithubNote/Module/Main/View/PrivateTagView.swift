@@ -12,7 +12,7 @@ struct PrivateTagView: View {
     @Environment(\.colorScheme) private var colorScheme
     
     var body: some View {
-        Text("Private")
+        Text("private".language())
             .foregroundColor(colorScheme == .dark ? Color.black : Color.white)
             .font(.system(size: 6))
             .padding(EdgeInsets(top: 2, leading: 3, bottom: 2, trailing: 3))

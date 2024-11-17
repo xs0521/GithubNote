@@ -43,11 +43,11 @@ struct NoteContentTableView: View {
                              selectionComment: $selectionComment,
                              selectionIssue: $selectionIssue)
             .tabItem{
-                self.tabbarItem(text: "Note", image: "note")
+                self.tabbarItem(text: "note".language(), image: "note")
             }.tag(Tab.notes)
             NoteIssuesView()
             .tabItem{
-                self.tabbarItem(text: "NoteBook", image: "menucard")
+                self.tabbarItem(text: "notebook".language(), image: "menucard")
             }.tag(Tab.folders)
         }
     }

@@ -1,0 +1,42 @@
+/* 
+  Localizable.strings
+  GithubNote
+
+  Created by xs0521 on 2024/11/17.
+  
+*/
+
+"setting" = "Settings";
+"edit" = "Edit";
+"delete" = "Delete";
+"note" = "Note";
+"notebook" = "NoteBook";
+"insert_image" = "Insert Image";
+"original_text" = "Original Text";
+"workspace" = "WorkSpace";
+"select_workspace" = "Please select a workspace";
+"select_notebook" = "Please select a NoteBook";
+"download_tip" = "If the content is not available on the remote, syncing will automatically delete the local notes.";
+"overwrite_local_content" = "Will overwrite local content?";
+"cancel" = "Cancel";
+"confirm" = "Confirm";
+"select_repo" = "Select Repo";
+"account" = "Account";
+"feedback" = "Feedback";
+"help_center" = "Help Center";
+"log_out" = "Log out";
+"log_export" = "Log export";
+"log_out_tip" = "Are you sure you want to log out?";
+"success" = "success";
+"fail" = "fail";
+"private" = "Private";
+"unknow" = "unknow";
+"copy_image" = "Copy Image";
+"delete_image" = "Delete Image";
+"save_image" = "Save Image";
+"welcome" = "WelCome";
+"log_in_with_gitHub" = "Please log in with GitHub";
+"log_with_gitHub" = "Login with GitHub";
+"repository" = "Repository";
+"issues" = "Issues";
+"comments" = "Comments";

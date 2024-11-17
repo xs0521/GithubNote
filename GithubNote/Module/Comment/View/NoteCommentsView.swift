@@ -65,7 +65,7 @@ struct NoteCommentsView: ConnectedView {
                         })
                         .tag(selection)
                         .contextMenu {
-                            Button("Delete", role: .destructive) {
+                            Button("delete".language(), role: .destructive) {
                                 "delete \(selection.body?.toTitle() ?? "")".logI()
                                 store.dispatch(action: CommentActions.WillDeleteAction(item: selection))
                                 store.dispatch(action: CommentActions.Delete(item: selection, completion: { finish in

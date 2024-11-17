@@ -38,7 +38,7 @@ struct CustomAlert: View {
                     }
                     Divider()
                     HStack {
-                        Button("Cancel") {
+                        Button("cancel".language()) {
                             onCancel()
                             isVisible = false
                         }
@@ -46,7 +46,7 @@ struct CustomAlert: View {
                         .foregroundColor(Color.blue)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         Divider()
-                        Button("Confirm") {
+                        Button("confirm".language()) {
                             onConfirm()
                             isVisible = false
                         }

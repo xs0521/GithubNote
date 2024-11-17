@@ -39,13 +39,13 @@ struct NoteImageBrowserPreViewImagesView: ConnectedView {
                                     let url = props.list[index].imageUrl()
                                     store.dispatch(action: ImagesActions.Copy(url: url))
                                 }) {
-                                    Text("Copy Image")
+                                    Text("copy_image".language())
                                     CustomImage(systemName: "doc.on.doc.fill")
                                 }
                                 Button(action: {
                                     saveImage(url: props.list[index].imageUrl())
                                 }) {
-                                    Text("Save Image")
+                                    Text("save_image".language())
                                     CustomImage(systemName: "square.and.arrow.down")
                                 }
                             }

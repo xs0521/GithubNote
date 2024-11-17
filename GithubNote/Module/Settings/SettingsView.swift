@@ -23,15 +23,15 @@ enum SettingType {
     var title: String {
         switch self {
         case .account:
-            return "Account"
+            return "account".language()
         case .feedback:
-            return "Feedback"
+            return "feedback".language()
         case .help:
-            return "Help Center"
+            return "help_center".language()
         case .logout:
-            return "Log out"
+            return "log_out".language()
         case .log:
-            return "Log export"
+            return "log_export".language()
         }
     }
     
@@ -116,7 +116,7 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Text("Settings")
+                Text("setting".language())
                     .fontWeight(.bold)
                     .padding(.leading, 20)
                     .padding(.top, 16)
@@ -129,7 +129,7 @@ struct SettingsView: View {
                                 if setting == .logout {
 
                                     let account = UserManager.shared.user?.login ?? ""
-                                    alertStore.show(desc: "Are you sure you want to log out?") {
+                                    alertStore.show(desc: "log_out_tip".language()) {
                                         logoutCallBack()
 #if !MOBILE
                                         NSApplication.shared.keyWindow?.close()
@@ -155,7 +155,7 @@ struct SettingsView: View {
                                 if setting == .log {
 #if !MOBILE
                                     LogManager.exportLogs { success in
-                                        toastMessage = "success"
+                                        toastMessage = "success".language()
                                         showToast = true
                                     }
 #endif

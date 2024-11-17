@@ -39,7 +39,7 @@ struct NoteSidebarToolView: ConnectedView {
             }, label: {
                 Label {
                     HStack {
-                        Text(props.selectionRepo?.name ?? "Select Repo")
+                        Text(props.selectionRepo?.name ?? "select_repo".language())
                             .lineLimit(1)
                         if props.selectionRepo?.private == true {
                             PrivateTagView()

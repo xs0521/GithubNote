@@ -93,7 +93,7 @@ struct GithubNoteApp: App {
 #endif
         .commands {
             CommandGroup(replacing: .appSettings) {
-                Button("Settings") {
+                Button("setting".language()) {
                     // 打开设置窗口
                     toggleSettingsWindow()
                 }

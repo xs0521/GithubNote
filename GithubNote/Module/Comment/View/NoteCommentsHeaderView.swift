@@ -16,7 +16,7 @@ struct NoteCommentsHeaderView: View {
     
     var body: some View {
         
-        CustomHeaderView(title: "Note",
+        CustomHeaderView(title: "note".language(),
                          isNewSending: $isNewSending,
                          isRefreshing: $isRefreshing) {
             
@@ -24,7 +24,7 @@ struct NoteCommentsHeaderView: View {
                 return
             }
             
-            alertStore.show(desc: "If the content is not available on the remote, syncing will automatically delete the local notes.") {
+            alertStore.show(desc: "download_tip".language()) {
                 isRefreshing = true
                 store.dispatch(action: CommentActions.FetchList(readCache: false, showTip: true, completion: { finish in
                     isRefreshing = false
@@ -49,7 +49,7 @@ struct NoteCommentsHeaderView: View {
     
     func enbleAction() -> Bool {
         if AppUserDefaults.issue == nil {
-            ToastManager.shared.show("Please select a NoteBook")
+            ToastManager.shared.show("select_notebook".language())
             return false
         }
         return true

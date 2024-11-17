@@ -33,7 +33,7 @@ struct CommentActions {
             
             if AppUserDefaults.issue == nil {
                 if showTip {
-                    ToastManager.shared.show("Please select a NoteBook")
+                    ToastManager.shared.show("select_notebook".language())
                 }
                 completion(false)
                 return
@@ -112,7 +112,7 @@ struct CommentActions {
         func create(completion: @escaping CommonTCallBack<Comment?>) -> Void {
             
             if AppUserDefaults.issue == nil {
-                ToastManager.shared.show("Please select a NoteBook")
+                ToastManager.shared.show("select_notebook".language())
                 completion(nil)
                 return
             }

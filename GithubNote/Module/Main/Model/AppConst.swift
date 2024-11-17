@@ -22,14 +22,14 @@ extension AppConst {
         let dateformatter = DateFormatter()
         dateformatter.dateFormat = "MM-dd HH:mm:ss"
         let time = dateformatter.string(from: Date())
-        return "### Note \(time)"
+        return "### \("note".language()) \(time)"
     }
     
     static var issueMarkdown: String {
         let dateformatter = DateFormatter()
         dateformatter.dateFormat = "MM-dd HH:mm:ss"
         let time = dateformatter.string(from: Date())
-        return "NoteBook \(time)"
+        return "\("notebook".language()) \(time)"
     }
     
     static var issueBodyMarkdown: String {

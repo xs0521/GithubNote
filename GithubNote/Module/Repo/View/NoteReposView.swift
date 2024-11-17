@@ -27,7 +27,7 @@ struct NoteReposView: ConnectedView {
     
     func body(props: Props) -> some View {
         VStack {
-            CustomHeaderView(title: "WORKSPACE",
+            CustomHeaderView(title: "workspace".language(),
                              isNewSending: $isNewSending,
                              isRefreshing: $isRefreshing) {
                 isRefreshing = true
@@ -64,7 +64,7 @@ struct NoteReposView: ConnectedView {
                     ForEach(props.list) { selection in
                         Label(title: {
                             HStack {
-                                Text(selection.name ?? "unknow")
+                                Text(selection.name ?? "unknow".language())
                                     .font(.system(size: 12))
                                 if selection.private == true {
                                     PrivateTagView()

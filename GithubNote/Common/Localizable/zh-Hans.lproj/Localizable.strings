@@ -1,0 +1,42 @@
+/* 
+  Localizable.strings
+  GithubNote
+
+  Created by xs0521 on 2024/11/17.
+  
+*/
+
+"setting" = "设置";
+"edit" = "编辑";
+"delete" = "删除";
+"note" = "笔记";
+"notebook" = "笔记本";
+"insert_image" = "插入图片";
+"original_text" = "原始文本";
+"workspace" = "工作区";
+"select_workspace" = "请选择一个工作区";
+"select_notebook" = "请选择一个笔记本";
+"download_tip" = "如果内容在远程不可用，同步将自动删除本地笔记。";
+"overwrite_local_content" = "将覆盖本地内容？";
+"cancel" = "取消";
+"confirm" = "确认";
+"select_repo" = "选择仓库";
+"account" = "账号";
+"feedback" = "反馈";
+"help_center" = "帮助中心";
+"log_out" = "退出登录";
+"log_export" = "导出日志";
+"log_out_tip" = "确定要退出登录吗？";
+"success" = "成功";
+"fail" = "失败";
+"private" = "私有";
+"unknow" = "未知";
+"copy_image" = "复制图片";
+"delete_image" = "删除图片";
+"save_image" = "保存图片";
+"welcome" = "欢迎";
+"log_in_with_gitHub" = "请使用 GitHub 登录";
+"log_with_gitHub" = "使用 GitHub 登录";
+"repository" = "仓库";
+"issues" = "问题";
+"comments" = "评论";

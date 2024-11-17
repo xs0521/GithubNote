@@ -31,7 +31,7 @@ struct IssuesActions {
         private func requestAllIssue(_ readCache: Bool = true, _ completion: @escaping CommonTCallBack<Bool>) -> Void {
             
             if AppUserDefaults.repo == nil {
-                ToastManager.shared.show("Please select a workspace")
+                ToastManager.shared.show("select_workspace".language())
                 completion(false)
                 return
             }
@@ -152,7 +152,7 @@ struct IssuesActions {
                     }
                 } else {
                     "#issue# update fail".logI()
-                    ToastManager.shared.showFail("fail")
+                    ToastManager.shared.showFail("fail".language())
                     completion(false)
                 }
             }
@@ -185,7 +185,7 @@ struct IssuesActions {
                         }
                     }
                 } else {
-                    ToastManager.shared.showFail("fail")
+                    ToastManager.shared.showFail("fail".language())
                     completion(false)
                 }
             }
