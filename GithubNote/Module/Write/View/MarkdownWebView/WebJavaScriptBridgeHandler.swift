@@ -44,7 +44,9 @@ struct WebJavaScriptBridgeHandler {
         case .update:
             guard let content = dict["content"] as? String else { return }
             writeStore.updateEditText(content, true)
+            #if DEBUG
             "#web# content \(content)".logI()
+            #endif
         }
     }
 }

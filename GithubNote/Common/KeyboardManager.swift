@@ -36,6 +36,9 @@ enum KeyboardType: CaseIterable {
         }
     }
     
+    struct keyCode {
+        static let ESC = 53
+    }
 }
 
 class KeyboardManager {

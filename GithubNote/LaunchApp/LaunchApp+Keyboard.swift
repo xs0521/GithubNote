@@ -27,10 +27,11 @@ extension LaunchApp {
     
     //键盘抬起：(含)普通按键Key——可一直输入的Key按键
     private func keyUp(with event: NSEvent) {
-        let _ = event.keyCode    //类型：CUnsignedShort即UInt16
+        let keyCode = event.keyCode    //类型：CUnsignedShort即UInt16
+        if keyCode == KeyboardType.keyCode.ESC {
+            NotificationCenter.default.post(name: Notification.Name.keyboard, object: event)
+        }
 //        "#keyboard# keyUp-> keyCode:\(keyCode)   event.characters:\(event.characters as Any)".logI()
-//        NotificationCenter.default.post(name: Notification.Name.keyboard, object: event)
-        
     }
     
     //键盘按下：(含)普通按键Key——可一直输入的Key按键

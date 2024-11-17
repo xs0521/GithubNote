@@ -116,6 +116,12 @@ struct NoteIssuesView: ConnectedView {
                             })
                             .tag(selection)
                             .contextMenu {
+                                Button("Edit", role: .destructive) {
+                                    "edit \(selection.title ?? "")".logI()
+                                    focusedField = .title
+                                    issueStore.editText = selection.title ?? ""
+                                    store.dispatch(action: IssuesActions.WillEditAction(item: selection))
+                                }
                                 Button("Delete", role: .destructive) {
                                     "delete \(selection.title ?? "")".logI()
                                     store.dispatch(action: IssuesActions.WillDeleteAction(item: selection))
@@ -125,12 +131,6 @@ struct NoteIssuesView: ConnectedView {
                                         }))
                                     }))
                                 }
-                                Button("Edit", role: .destructive) {
-                                    "edit \(selection.title ?? "")".logI()
-                                    focusedField = .title
-                                    issueStore.editText = selection.title ?? ""
-                                    store.dispatch(action: IssuesActions.WillEditAction(item: selection))
-                                }
                             }
                             .frame(height: AppConst.sideItemHeight)
                         }
@@ -138,11 +138,31 @@ struct NoteIssuesView: ConnectedView {
                 }
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name.keyboard), perform: { notification in
+            if let event = notification.object as? NSEvent {
+                handleKeyDown(event: event, props: props)
+            }
+        })
         .frame(maxHeight: 80)
         .onAppear {
             issueStore.listener.loadPage()
         }
     }
+    
+#if !MOBILE
+    // 键盘事件处理
+    func handleKeyDown(event: NSEvent, props: Props) {
+        
+        let keyCode = event.keyCode    //类型：CUnsignedShort即UInt16
+        if keyCode == KeyboardType.keyCode.ESC {
+            if isEditIssueTitleSending {
+                return
+            }
+            focusedField = nil
+            store.dispatch(action: IssuesActions.WillEditAction(item: nil))
+        }
+    }
+#endif
 }
 
 //#Preview {

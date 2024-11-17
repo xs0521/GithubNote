@@ -149,6 +149,9 @@ struct GitHubLoginView: View {
                 {
                 let accessToken = tokenResponse.accessToken
                 fetchGitHubUserProfile(accessToken: accessToken)
+            } else {
+                isLoading = false
+                "#login# AccessToken error \(error.debugDescription)".logE()
             }
         }.resume()
     }
@@ -159,23 +162,18 @@ struct GitHubLoginView: View {
         request.setValue("token \(accessToken)", forHTTPHeaderField: "Authorization")
         
         URLSession.shared.dataTask(with: request) { data, response, error in
+            
             isLoading = false
+            
+            if error != nil {
+                "#login# UserProfile error \(error.debugDescription)".logE()
+                return
+            }
             
             UserManager.shared.save(data)
             AppUserDefaults.accessToken = accessToken
             LaunchApp.shared.loginSetup()
             loginCallBack()
-            
-//            if let data = data,
-//               let userResponse = try? JSONDecoder().decode(UserModel.self, from: data) {
-//                DispatchQueue.main.async {
-//                    UserDefaults.save(value: userResponse.id, key: AccountType.userID.key)
-//                    UserDefaults.save(value: userResponse.login, key: AccountType.owner.key)
-//                    UserDefaults.save(value: accessToken, key: AccountType.token.key)
-//                    LaunchApp.shared.loginSetup()
-//                    loginCallBack()
-//                }
-//            }
         }.resume()
     }
 }
