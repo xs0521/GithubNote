@@ -90,7 +90,9 @@
           markdown: "", // 默认渲染内容
         });
         // 设置语言
-        // muya.locale(MuyaCore.en)
+        const language = (navigator.browserLanguage || navigator.language).toLowerCase()
+        const isZh = (language === "zh-cn" || language === "zh-tw")
+        muya.locale(isZh ? MuyaCore.zh : MuyaCore.en);
         muya.init();
         muya.on("json-change", (_changes) => {
           // 输入变化
