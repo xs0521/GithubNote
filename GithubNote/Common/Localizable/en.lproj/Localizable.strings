@@ -31,7 +31,7 @@
 "fail" = "fail";
 "private" = "Private";
 "unknow" = "unknow";
-"copy_image" = "Copy Image";
+"copy_image" = "Copy Address";
 "delete_image" = "Delete Image";
 "save_image" = "Save Image";
 "welcome" = "WelCome";

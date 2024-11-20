@@ -36,7 +36,7 @@ class ImageUploader {
         }
     }
     
-    func uploadImage(filePath: URL, completion: @escaping CommonTCallBack<Bool>) -> Void {
+    private func uploadImage(filePath: URL, completion: @escaping CommonTCallBack<Bool>) -> Void {
         
         let imageData = try? Data(contentsOf: filePath)
         guard let imageData = imageData, !imageData.isEmpty else { return }

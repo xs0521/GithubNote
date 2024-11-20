@@ -17,7 +17,7 @@ enum KeyboardType: CaseIterable {
     var character: String {
         switch self {
         case .insertImage:
-            return "i"
+            return "p"
         case .OriginalText:
             return "/"
         case .WorkSpace:
@@ -28,11 +28,11 @@ enum KeyboardType: CaseIterable {
     var title: String {
         switch self {
         case .insertImage:
-            return "Insert Image"
+            return "insert_image".language()
         case .OriginalText:
-            return "Original Text"
+            return "original_text".language()
         case .WorkSpace:
-            return "WorkSpace"
+            return "workspace".language()
         }
     }
     

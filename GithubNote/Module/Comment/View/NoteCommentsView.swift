@@ -14,6 +14,7 @@ struct NoteCommentsView: ConnectedView {
     @EnvironmentObject var commentStore: CommentModelStore
     
     @State private var isTapEmptyLoading: Bool = false
+    @State private var isLoaded: Bool = false
     
     struct Props {
         let editComment: Comment?
@@ -81,7 +82,11 @@ struct NoteCommentsView: ConnectedView {
             }
         }
         .onAppear {
-            commentStore.listener.loadPage()
+            if !isLoaded {
+                commentStore.listener.loadPage()
+                isLoaded = true
+            }
+            
         }
     }
 }

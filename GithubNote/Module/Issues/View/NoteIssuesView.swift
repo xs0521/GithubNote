@@ -35,6 +35,8 @@ struct NoteIssuesView: ConnectedView {
     @State private var isTapEmptyLoading: Bool = false
     @FocusState private var focusedField: Field?
     
+    @State private var isLoaded: Bool = false
+    
     var requestComments: CommonTCallBack<Issue?>?
     
     func map(state: AppState, dispatch: @escaping DispatchFunction) -> Props {
@@ -145,7 +147,10 @@ struct NoteIssuesView: ConnectedView {
         })
         .frame(maxHeight: 80)
         .onAppear {
-            issueStore.listener.loadPage()
+            if !isLoaded {
+                issueStore.listener.loadPage()
+                isLoaded = true
+            }
         }
     }
     

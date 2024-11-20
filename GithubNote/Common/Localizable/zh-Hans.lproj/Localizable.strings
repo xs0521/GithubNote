@@ -31,7 +31,7 @@
 "fail" = "失败";
 "private" = "私有";
 "unknow" = "未知";
-"copy_image" = "复制图片";
+"copy_image" = "复制路径";
 "delete_image" = "删除图片";
 "save_image" = "保存图片";
 "welcome" = "欢迎";

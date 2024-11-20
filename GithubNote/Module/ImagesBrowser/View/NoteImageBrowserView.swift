@@ -45,7 +45,7 @@ struct NoteImageBrowserView: View {
                             appStore.isLoadingVisible = false
                         })
                     case .failure(let error):
-                        print(error.localizedDescription)
+                        error.localizedDescription.logE()
                     }
                 }
                 Button {

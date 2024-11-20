@@ -111,6 +111,14 @@ struct NoteImageBrowserImagesView: ConnectedView {
             .frame(minWidth: 220, maxWidth: .infinity, minHeight: 120, maxHeight: .infinity)
             if props.isPreview {
                 NoteImageBrowserPreViewImagesView()
+            } else {
+                if let name = AppUserDefaults.repo?.name, !name.isEmpty {
+                    VStack {
+                        Text("\(name.uppercased())")
+                            .font(.system(.largeTitle))
+                        Spacer()
+                    }
+                }
             }
         }
         .onAppear(perform: {
@@ -121,6 +129,12 @@ struct NoteImageBrowserImagesView: ConnectedView {
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name.syncNetImagesNotification), perform: { _ in
             appStore.isLoadingVisible = true
             store.dispatch(action: ImagesActions.FetchList(readCache: false, completion: { finish in
+                appStore.isLoadingVisible = false
+            }))
+        })
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name.appendImagesNotification), perform: { _ in
+            appStore.isLoadingVisible = true
+            store.dispatch(action: ImagesActions.FetchList(readCache: true, completion: { finish in
                 appStore.isLoadingVisible = false
             }))
         })
