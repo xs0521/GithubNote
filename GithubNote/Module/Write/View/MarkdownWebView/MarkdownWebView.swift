@@ -7,6 +7,7 @@
 
 import SwiftUI
 import WebKit
+
 #if MOBILE
 import UIKit
 #else
@@ -55,7 +56,9 @@ struct MarkdownWebView: AppViewRepresentable {
         
         let configuration = WKWebViewConfiguration()
         configuration.setValue(true, forKey: "_allowUniversalAccessFromFileURLs")
-        configuration.setURLSchemeHandler(schemeHandler, forURLScheme: AppConst.scheme)
+//        configuration.setURLSchemeHandler(schemeHandler, forURLScheme: AppConst.scheme)
+        configuration.setURLSchemeHandler(schemeHandler, forURLScheme: "http")
+        configuration.setURLSchemeHandler(schemeHandler, forURLScheme: "https")
         configuration.userContentController = contentController
         let webView = WKWebView(frame: .zero, configuration: configuration)
 #if DEBUG
@@ -96,9 +99,9 @@ struct MarkdownWebView: AppViewRepresentable {
             context.coordinator.currentText = markdownText
             "#MD# title \(markdownText.prefix(20))".logI()
             
-            let handleImageMarkdownText = CustomURLSchemeHandler.handleImageText(markdownText)
+//            let handleImageMarkdownText = CustomURLSchemeHandler.handleImageText(markdownText)
     
-            let dictionary: [String: Any] = ["content": handleImageMarkdownText]
+            let dictionary: [String: Any] = ["content": markdownText]
             guard let jsonData = try? JSONSerialization.data(withJSONObject: dictionary, options: []) else { return }
             guard let sendContent = String(data: jsonData, encoding: .utf8) else { return }
             

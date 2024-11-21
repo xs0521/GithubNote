@@ -19,3 +19,11 @@ extension Data {
         return nil
     }
 }
+
+extension Data {
+    // 基于文件的魔数判断 MIME 类型
+    func mimeTypeMagicBytes() -> String {
+        let mimeType = Swime.mimeType(data: self)
+        return mimeType?.mime ?? "application/octet-stream"
+    }
+}

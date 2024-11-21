@@ -43,8 +43,9 @@ struct WebJavaScriptBridgeHandler {
         switch action {
         case .update:
             guard let content = dict["content"] as? String else { return }
-            writeStore.updateEditText(CustomURLSchemeHandler.handleImageText(content, true),
-                                      true)
+//            writeStore.updateEditText(CustomURLSchemeHandler.handleImageText(content, true),
+//                                      true)
+            writeStore.updateEditText(content, true)
             #if DEBUG
             "#web# content \(content)".logI()
             #endif

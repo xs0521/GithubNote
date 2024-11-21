@@ -8,72 +8,67 @@
 import WebKit
 import SDWebImage
 import UniformTypeIdentifiers
+import WebKit
+import ObjectiveC.runtime
 
 class CustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
     
+    private var tokenMap: [String : SDWebImageDownloadToken] = [:]
+    
     func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
         
-        guard var url = urlSchemeTask.request.url?.absoluteString else { return }
+        guard let url = urlSchemeTask.request.url?.absoluteString else { return }
         
-        url = CustomURLSchemeHandler.handleImageText(url, true)
-        
-        guard let Url = URL(string: url) else {
+        guard let _ = URL(string: url) else {
             "#web# url error ".logE()
+            callBack(Data(), nil)
             return
         }
         
-        func callBack(_ data: Data) -> Void {
-            // 创建 HTTP 响应
-            let backResponse = HTTPURLResponse(url: Url,
+        let cache = SDWebImageManager.defaultImageCache as! SDImageCache
+        
+        if let data = cache.diskImageData(forKey: url) {
+            "#web# img load cache \(url)".logI()
+            callBack(data)
+            return
+        }
+        
+        let token = SDWebImageDownloader.shared.downloadImage(with: URL(string: url)) { [weak self] _, data, error, finish in
+            guard let self = self else { return }
+            
+            let currentToken = self.tokenMap[url]
+            guard let response = currentToken?.response else { return }
+            
+            if let data = data, error == nil {
+                cache.storeImageData(toDisk: data, forKey: url)
+                callBack(data, response)
+                "#web# img sccess \(url)".logI()
+            } else {
+                "#web# img fail: \(error?.localizedDescription ?? "")".logE()
+                callBack(Data(), response)
+            }
+        }
+        tokenMap[url] = token
+        
+        func callBack(_ data: Data, _ response: URLResponse? = nil) -> Void {
+            
+            let headerFields: [String: String] = [
+                "Content-Type": response?.mimeType ?? data.mimeTypeMagicBytes(),
+                "Content-Length": "\(data.count)"
+            ]
+            
+            let backResponse = HTTPURLResponse(url: URL(string: url)!,
                                                statusCode: 200,
                                                httpVersion: "HTTP/1.1",
-                                               headerFields: self.getResponseHeaders(url))!
+                                               headerFields: headerFields)!
             
             
             
-            // 将响应和数据返回给 WebView
+            
             urlSchemeTask.didReceive(backResponse)
             urlSchemeTask.didReceive(data)
             urlSchemeTask.didFinish()
         }
-        
-        if url.isImage() {
-            "#web# img is image \(url)".logI()
-            let key = url
-            
-            let cache = SDWebImageManager.defaultImageCache as! SDImageCache
-            
-            if let data = cache.diskImageData(forKey: key) {
-                "#web# img load cache \(url)".logI()
-                callBack(data)
-                return
-            }
-            
-            SDWebImageDownloader.shared.downloadImage(with: Url) { _, data, error, finish in
-                if let data = data, error == nil {
-                    cache.storeImageData(toDisk: data, forKey: key)
-                    callBack(data)
-                    "#web# img sccess \(url)".logI()
-                } else {
-                    "#web# img fail: \(error?.localizedDescription ?? "")".logE()
-                }
-            }
-            return
-        }
-        
-        let session = URLSession.shared
-        let task = session.dataTask(with: urlSchemeTask.request) { data, response, error in
-            if let data = data, let _ = response {
-                callBack(data)
-                "#web# file \(url)".logI()
-            } else if let error = error {
-                // 如果出错，通知 WebView
-                urlSchemeTask.didFailWithError(error)
-                "#web# file fail \(error.localizedDescription)".logE()
-            }
-        }
-        
-        task.resume()
     }
     
     func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
@@ -81,11 +76,11 @@ class CustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
     }
     
     // 获取响应头
-    func getResponseHeaders(_ url: String) -> [String: String] {
+    func getResponseHeaders(_ data: Data) -> [String: String] {
         return [
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Headers": "Content-Type",
-            "Content-Type": fileMIMETypeWithCAPI(at: url)
+            "Content-Type": data.mimeTypeMagicBytes()
         ]
     }
     
@@ -97,7 +92,7 @@ class CustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
         }
         return text.replacingOccurrences(of: github, with: replace)
     }
-
+    
 }
 
 func fileMIMETypeWithCAPI(at filePath: String) -> String {
@@ -116,4 +111,32 @@ func fileMIMETypeWithCAPI(at filePath: String) -> String {
     
     // 默认返回值
     return "application/octet-stream"
+}
+
+extension CustomURLSchemeHandler: Setupable {
+    
+    static func setup() {
+        WKWebView.swizzleHandlesURLScheme
+    }
+}
+
+extension WKWebView {
+    
+    static let swizzleHandlesURLScheme: Void = {
+        let originalSelector = #selector(handlesURLScheme(_:))
+        let swizzledSelector = #selector(swizzledHandlesURLScheme(_:))
+        
+        if let originalMethod = class_getClassMethod(WKWebView.self, originalSelector),
+           let swizzledMethod = class_getClassMethod(WKWebView.self, swizzledSelector) {
+            method_exchangeImplementations(originalMethod, swizzledMethod)
+        }
+    }()
+    
+    @objc class func swizzledHandlesURLScheme(_ urlScheme: String) -> Bool {
+        if urlScheme == "http" || urlScheme == "https" {
+            return false  // 这里返回 NO，避免系统处理，使用自定义 handler 处理
+        } else {
+            return swizzledHandlesURLScheme(urlScheme)  // 调用原始实现
+        }
+    }
 }
