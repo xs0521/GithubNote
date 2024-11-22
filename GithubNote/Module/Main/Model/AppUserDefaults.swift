@@ -36,6 +36,7 @@ public struct UserDefault<T: Codable> {
 
 
 struct AppUserDefaults {
+    
     @UserDefault("com.githubnote.repo", defaultValue: nil)
     public static var repo: RepoModel?
         
@@ -47,6 +48,9 @@ struct AppUserDefaults {
     
     @UserDefault("com.githubnote.accessToken", defaultValue: "")
     public static var accessToken: String
+    
+    @UserDefault("com.githubnote.font.size", defaultValue: 1.0)
+    public static var fontSize: CGFloat
 
     static func reset() -> Void {
         self.repo = nil

@@ -27,6 +27,7 @@
 "log_out" = "Log out";
 "log_export" = "Log export";
 "log_out_tip" = "Are you sure you want to log out?";
+"font_size" = "Text Size";
 "success" = "success";
 "fail" = "fail";
 "private" = "Private";

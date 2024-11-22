@@ -95,24 +95,6 @@ class CustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
     
 }
 
-func fileMIMETypeWithCAPI(at filePath: String) -> String {
-    // 获取文件的扩展名
-    let fileExtension = (filePath as NSString).pathExtension
-    
-#if !MOBILE
-    // 根据扩展名获取 UTI
-    if let utType = UTType(filenameExtension: fileExtension) {
-        // 根据 UTI 获取 MIME 类型
-        if let mimeType = utType.preferredMIMEType {
-            return mimeType
-        }
-    }
-#endif
-    
-    // 默认返回值
-    return "application/octet-stream"
-}
-
 extension CustomURLSchemeHandler: Setupable {
     
     static func setup() {

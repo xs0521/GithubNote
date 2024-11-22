@@ -15,4 +15,5 @@ extension Notification.Name {
     static let logNotification = Notification.Name(rawValue: "app.github.log")
     static let keyboard = Notification.Name(rawValue: "app.github.keyboard")
     static let mouse = Notification.Name(rawValue: "app.github.mouse")
+    static let fontSize = Notification.Name(rawValue: "app.github.font.size")
 }

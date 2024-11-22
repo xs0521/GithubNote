@@ -65,6 +65,12 @@ struct MarkdownWebView: AppViewRepresentable {
         webView.isInspectable = true
 #endif
         webView.navigationDelegate = context.coordinator
+        
+        NotificationCenter.default.addObserver(forName: NSNotification.Name.fontSize, object: nil, queue: OperationQueue.main) { notification in
+            let zoomScript = "document.body.style.zoom = '\(AppUserDefaults.fontSize)'"
+            webView.evaluateJavaScript(zoomScript, completionHandler: nil)
+        }
+        
         return webView
     }
     
@@ -133,6 +139,8 @@ struct MarkdownWebView: AppViewRepresentable {
         // Called when the WKWebView finishes loading content
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             "#MD# didFinish".logI()
+            let zoomScript = "document.body.style.zoom = '\(AppUserDefaults.fontSize)'"
+            webView.evaluateJavaScript(zoomScript, completionHandler: nil)
             isDidFinish = true
         }
         

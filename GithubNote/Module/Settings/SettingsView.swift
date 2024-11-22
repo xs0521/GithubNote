@@ -19,6 +19,7 @@ enum SettingType {
     case help
     case logout
     case log
+    case fontsize
     
     var title: String {
         switch self {
@@ -32,6 +33,8 @@ enum SettingType {
             return "log_out".language()
         case .log:
             return "log_export".language()
+        case .fontsize:
+            return "font_size".language()
         }
     }
     
@@ -47,6 +50,8 @@ enum SettingType {
             return "rectangle.portrait.and.arrow.right"
         case .log:
             return "filemenu.and.selection"
+        case .fontsize:
+            return "a.square"
         }
     }
     
@@ -68,6 +73,7 @@ struct Setting: Hashable {
 
 let settings: Array<SettingType> = [
     .account,
+    .fontsize,
     .feedback,
     .help,
     .log,
@@ -127,8 +133,6 @@ struct SettingsView: View {
                             Button(action: {
                                 "#Setting# tap \(setting.title)".logI()
                                 if setting == .logout {
-
-                                    let account = UserManager.shared.user?.login ?? ""
                                     alertStore.show(desc: "log_out_tip".language()) {
                                         logoutCallBack()
 #if !MOBILE
@@ -167,6 +171,11 @@ struct SettingsView: View {
                                             .frame(width: 16, height: 16)
                                         Text(setting.title)
                                         Spacer()
+                                        if setting == .fontsize {
+                                            FontSizeSliderView()
+                                                .frame(width: 200, height: 44)
+//                                                .background(Color.blue)
+                                        }
                                         if !setting.detail.isEmpty {
                                             Text(setting.detail)
                                                 .foregroundStyle(Color.gray)
@@ -213,9 +222,11 @@ struct SettingsView: View {
     }
 }
 
-//struct ContentView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        SettingsView()
-//    }
-//}
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        SettingsView(isLogined: .constant(true), logoutCallBack: {
+            
+        })
+    }
+}
 

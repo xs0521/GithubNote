@@ -26,6 +26,7 @@
 "help_center" = "帮助中心";
 "log_out" = "退出登录";
 "log_export" = "导出日志";
+"font_size" = "字体大小";
 "log_out_tip" = "确定要退出登录吗？";
 "success" = "成功";
 "fail" = "失败";

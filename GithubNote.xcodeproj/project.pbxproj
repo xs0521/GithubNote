@@ -206,6 +206,8 @@
 		B1F507892CEF8C4C00F09942 /* MimeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F507862CEF8C4C00F09942 /* MimeType.swift */; };
 		B1F5078A2CEF8C4C00F09942 /* Swime.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F507872CEF8C4C00F09942 /* Swime.swift */; };
 		B1F5078B2CEF8C4C00F09942 /* Swime.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F507872CEF8C4C00F09942 /* Swime.swift */; };
+		B1F5078D2CF0D9A100F09942 /* FontSizeSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F5078C2CF0D9A100F09942 /* FontSizeSliderView.swift */; };
+		B1F5078E2CF0D9A100F09942 /* FontSizeSliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1F5078C2CF0D9A100F09942 /* FontSizeSliderView.swift */; };
 		B1FE674E2C45767600970DA0 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FE674D2C45767600970DA0 /* Common.swift */; };
 		B1FE67502C46B72400970DA0 /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FE674F2C46B72400970DA0 /* View+Extension.swift */; };
 		B1FE67542C480B0200970DA0 /* NoteImageBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1FE67532C480B0200970DA0 /* NoteImageBrowserView.swift */; };
@@ -343,6 +345,7 @@
 		B1F507822CE99A2400F09942 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		B1F507862CEF8C4C00F09942 /* MimeType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MimeType.swift; sourceTree = "<group>"; };
 		B1F507872CEF8C4C00F09942 /* Swime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Swime.swift; sourceTree = "<group>"; };
+		B1F5078C2CF0D9A100F09942 /* FontSizeSliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontSizeSliderView.swift; sourceTree = "<group>"; };
 		B1FE674D2C45767600970DA0 /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		B1FE674F2C46B72400970DA0 /* View+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
 		B1FE67532C480B0200970DA0 /* NoteImageBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteImageBrowserView.swift; sourceTree = "<group>"; };
@@ -764,6 +767,7 @@
 			isa = PBXGroup;
 			children = (
 				B1EBBD962C9E93EE005FB760 /* SettingsView.swift */,
+				B1F5078C2CF0D9A100F09942 /* FontSizeSliderView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1367,6 +1371,7 @@
 				B18505722CD279B1002007FA /* WriteActions.swift in Sources */,
 				B14983EA2CBB632E00CDAB6F /* MarkdownWebView.swift in Sources */,
 				B14983EB2CBB632E00CDAB6F /* bool+Extension.swift in Sources */,
+				B1F5078E2CF0D9A100F09942 /* FontSizeSliderView.swift in Sources */,
 				B1F5078B2CEF8C4C00F09942 /* Swime.swift in Sources */,
 				B14983EC2CBB632E00CDAB6F /* NoteCommentsHeaderView.swift in Sources */,
 				B14983ED2CBB632E00CDAB6F /* View+Extension.swift in Sources */,
@@ -1478,6 +1483,7 @@
 				B14EA4E62CC7E89D00F55A4D /* SQLModelable.swift in Sources */,
 				B1EBBDC42CB23818005FB760 /* SQLManager.swift in Sources */,
 				B185057E2CD29096002007FA /* ImagesModelStore.swift in Sources */,
+				B1F5078D2CF0D9A100F09942 /* FontSizeSliderView.swift in Sources */,
 				B1B5AAF02CC36B85003F4E71 /* NoteImageBrowserPreViewImagesView.swift in Sources */,
 				B1E55A422BBF96B7000209ED /* IssuesModel.swift in Sources */,
 				B139AF3B2CD10E6B002F101A /* IssuesActions.swift in Sources */,
