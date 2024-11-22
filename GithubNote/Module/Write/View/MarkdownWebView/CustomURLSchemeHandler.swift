@@ -75,15 +75,6 @@ class CustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
         // 停止任务的逻辑 (如果需要)
     }
     
-    // 获取响应头
-    func getResponseHeaders(_ data: Data) -> [String: String] {
-        return [
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Headers": "Content-Type",
-            "Content-Type": data.mimeTypeMagicBytes()
-        ]
-    }
-    
     static func handleImageText(_ text: String, _  recover: Bool = false) -> String {
         let github = "https://raw.githubusercontent.com"
         let replace = "\(AppConst.scheme)://raw.githubusercontent.com"

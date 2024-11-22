@@ -122,12 +122,12 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Text("setting".language())
+                VStack {
+                    Text("setting".language())
                     .fontWeight(.bold)
                     .padding(.leading, 20)
                     .padding(.top, 16)
                     .padding(.bottom, 4)
-                VStack {
                     Section(content: {
                         ForEach(settings, id: \.self) { setting in
                             Button(action: {
@@ -174,7 +174,6 @@ struct SettingsView: View {
                                         if setting == .fontsize {
                                             FontSizeSliderView()
                                                 .frame(width: 200, height: 44)
-//                                                .background(Color.blue)
                                         }
                                         if !setting.detail.isEmpty {
                                             Text(setting.detail)
@@ -197,12 +196,13 @@ struct SettingsView: View {
                         
                     })
                     .padding(.horizontal, 20)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 4, style: .continuous)
+                            .stroke(colorScheme == .dark ? Color.init(hex: "#373737") : Color.init(hex: "DADADA"),
+                                    lineWidth: colorScheme == .dark ? 1.5 : 0.5)
+                    )
                 }
-                .overlay(
-                    RoundedRectangle(cornerRadius: 4, style: .continuous)
-                        .stroke(colorScheme == .dark ? Color.init(hex: "#373737") : Color.init(hex: "DADADA"), 
-                                lineWidth: colorScheme == .dark ? 1.5 : 0.5)
-                )
+                
                 .padding(.bottom, 30)
                 .padding(.horizontal, 20)
             }

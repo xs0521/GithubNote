@@ -1,3 +1,10 @@
+//
+//  Swime.swift
+//
+//  https://github.com/sendyhalim/Swime
+//
+
+
 import Foundation
 
 public struct Swime {

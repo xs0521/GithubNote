@@ -46,9 +46,9 @@ struct WebJavaScriptBridgeHandler {
 //            writeStore.updateEditText(CustomURLSchemeHandler.handleImageText(content, true),
 //                                      true)
             writeStore.updateEditText(content, true)
-            #if DEBUG
+#if DEBUG
             "#web# content \(content)".logI()
-            #endif
+#endif
         }
     }
 }
