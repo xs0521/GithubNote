@@ -56,6 +56,7 @@ struct CustomHeaderView: View {
             }
         }
         .padding(.horizontal, 12)
+        .background(Color.init(hex: "E0E0DF"))
     }
     
     

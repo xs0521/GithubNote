@@ -18,19 +18,20 @@ import AppKit
 struct NoteSidebarView: ConnectedView {
     
     @Environment(\.colorScheme) private var colorScheme
-    
     @EnvironmentObject var alertStore: AlertModelStore
     
     struct Props {
         let isReposVisible: Bool
         let isIssuesVisible: Bool
         let isImageBrowserVisible: Bool
+        let issuesHeight: CGFloat
     }
     
     func map(state: AppState, dispatch: @escaping DispatchFunction) -> Props {
         return Props(isReposVisible: state.sideStates.isReposVisible, 
                      isIssuesVisible: state.sideStates.isIssuesVisible,
-                     isImageBrowserVisible: state.imagesState.isImageBrowserVisible)
+                     isImageBrowserVisible: state.imagesState.isImageBrowserVisible,
+                     issuesHeight: state.issuesStates.issuesHeight)
     }
     
     func body(props: Props) -> some View {
@@ -39,13 +40,23 @@ struct NoteSidebarView: ConnectedView {
                 VStack (spacing: 0) {
                     NoteIssuesHeaderView()
                     NoteIssuesView()
-                    Spacer()
                     NoteCommentsHeaderView()
+                        .gesture(
+                            DragGesture()
+                                .onChanged { value in
+                                    let newHeight = props.issuesHeight + value.translation.height
+                                    let issuesHeight = min(800, max(115, newHeight))
+                                    store.dispatch(action: IssuesActions.HeightAction(value: issuesHeight))
+                                }
+                                .onEnded { value in
+                                    "Drag ended, final height: \(props.issuesHeight)".logI()
+                                }
+                        )
                     NoteCommentsView()
                 }
-    #if !MOBILE
+#if !MOBILE
                 .frame(minWidth: 200)
-    #endif
+#endif
                 if props.isIssuesVisible {
                     NoteIssuesView()
                 }

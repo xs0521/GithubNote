@@ -12,4 +12,5 @@ struct IssuesState: FluxState, Codable {
     var items: [Issue] = []
     var editItem: Issue?
     var deleteItem: Issue?
+    var issuesHeight: CGFloat = AppUserDefaults.sideOffsetY
 }

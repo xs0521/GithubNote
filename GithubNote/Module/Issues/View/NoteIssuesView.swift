@@ -29,6 +29,7 @@ struct NoteIssuesView: ConnectedView {
         let issueGroups: [Issue]
         let selectionRepo: RepoModel?
         let showReposView: Bool = false
+        let issuesHeight: CGFloat
     }
     
     @State private var isEditIssueTitleSending: Bool = false
@@ -43,7 +44,8 @@ struct NoteIssuesView: ConnectedView {
         return Props(editIssue: state.issuesStates.editItem,
                      deleteIssue: state.issuesStates.deleteItem,
                      issueGroups: state.issuesStates.items,
-                     selectionRepo: state.sideStates.selectionRepo)
+                     selectionRepo: state.sideStates.selectionRepo,
+                     issuesHeight: state.issuesStates.issuesHeight)
     }
     
     func body(props: Props) -> some View {
@@ -145,7 +147,7 @@ struct NoteIssuesView: ConnectedView {
                 handleKeyDown(event: event, props: props)
             }
         })
-        .frame(maxHeight: 80)
+        .frame(height: props.issuesHeight)
         .onAppear {
             if !isLoaded {
                 issueStore.listener.loadPage()

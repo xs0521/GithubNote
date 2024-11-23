@@ -60,6 +60,8 @@ func IssuesStateReducer(state: IssuesState, action: Action) -> IssuesState {
         state.editItem = action.item
     case let action as IssuesActions.WillDeleteAction:
         state.deleteItem = action.item
+    case let action as IssuesActions.HeightAction:
+        state.issuesHeight = action.value
     default:
         break
     }

@@ -51,6 +51,9 @@ struct AppUserDefaults {
     
     @UserDefault("com.githubnote.font.size", defaultValue: 1.0)
     public static var fontSize: CGFloat
+    
+    @UserDefault("com.githubnote.side.offset.y", defaultValue: 80)
+    public static var sideOffsetY: CGFloat
 
     static func reset() -> Void {
         self.repo = nil

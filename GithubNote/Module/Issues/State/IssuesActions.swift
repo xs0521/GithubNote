@@ -203,4 +203,8 @@ struct IssuesActions {
     struct WillDeleteAction: Action {
         let item: Issue?
     }
+    
+    struct HeightAction: Action {
+        let value: CGFloat
+    }
 }
