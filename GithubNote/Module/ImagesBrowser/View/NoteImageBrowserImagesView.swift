@@ -12,8 +12,6 @@ import SwiftUIFlux
 
 struct NoteImageBrowserImagesView: ConnectedView {
     
-    @Environment(\.colorScheme) var colorScheme
-    
     @EnvironmentObject var appStore: AppModelStore
     @EnvironmentObject var imagesStore: ImagesModelStore
     

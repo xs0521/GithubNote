@@ -11,8 +11,6 @@ import SwiftUIFlux
 
 struct NoteWritePannelTitleView: View {
     
-    @Environment(\.colorScheme) private var colorScheme
-    
     @EnvironmentObject var commentStore: CommentModelStore
     @EnvironmentObject var repoStore: RepoModelStore
     @EnvironmentObject var issueStore: IssueModelStore
@@ -31,7 +29,7 @@ struct NoteWritePannelTitleView: View {
         }
         .font(.system(size: 12))
         .monospacedDigit()
-        .foregroundColor(colorScheme == .dark ? Color(hex: "#DDDDDD") : Color(hex: "#8C919E"))
+        .foregroundColor([Color(hex: "#DDDDDD"), Color(hex: "#8C919E")])
     }
     
     func itemView(title: String, icon: String, isFirst: Bool = false) -> some View {

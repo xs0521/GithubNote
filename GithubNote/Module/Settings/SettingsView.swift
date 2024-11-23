@@ -81,13 +81,15 @@ let settings: Array<SettingType> = [
 ]
 
 struct SettingImage: View {
-    let color: Color
+    
+    @Environment(\.colorScheme) var colorScheme
+    
     let imageName: String
     
     var body: some View {
         Image(systemName: imageName)
             .resizable()
-            .foregroundStyle(color)
+            .foregroundStyle(colorScheme == .dark ? Color.gray : Color.init(hex: "#1A1A1A"))
             .frame(width: 16, height: 16)
     }
 }
@@ -167,7 +169,7 @@ struct SettingsView: View {
                             }, label: {
                                 ZStack {
                                     HStack {
-                                        SettingImage(color: colorScheme == .dark ? Color.gray : Color.init(hex: "#1A1A1A"), imageName: setting.icon)
+                                        SettingImage(imageName: setting.icon)
                                             .frame(width: 16, height: 16)
                                         Text(setting.title)
                                         Spacer()

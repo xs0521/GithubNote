@@ -50,7 +50,7 @@ struct NoteWritePannelView: ConnectedView {
                             .transparentScrolling()
                             .font(.system(size: 14))
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
+                            .background([Color.markdownBackground, Color.white])
                     }
                     if !writeStore.cache.isEmpty {
                         netItemView()
@@ -77,7 +77,7 @@ struct NoteWritePannelView: ConnectedView {
 //                }
                 
             }
-            .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
+            .background([Color.markdownBackground, Color.white])
             .toolbar {
                 ToolbarItemGroup () {
                     if commentStore.select != nil && !props.isImageBrowserVisible! {
@@ -132,7 +132,7 @@ extension NoteWritePannelView {
                         .padding(.trailing, 5)
                     Text(commentStore.select?.cacheUpdate?.localTime() ?? "")
                         .font(.system(size: 10))
-                        .foregroundColor(colorScheme == .dark ? Color(hex: "#DDDDDD") : Color(hex: "#8C919E"))
+                        .foregroundColor([Color(hex: "#DDDDDD"), Color(hex: "#8C919E")])
                 }
             }
             .padding(EdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10))
@@ -149,7 +149,6 @@ extension NoteWritePannelView {
             HStack {
                 Spacer()
                 Button {
-                    
                     alertStore.show(desc: "overwrite_local_content".language()) {
                         writeStore.markdownString = writeStore.body
                         writeStore.updateEditText(writeStore.body, true)
@@ -162,12 +161,12 @@ extension NoteWritePannelView {
                     Text(writeStore.updateAt?.localTime() ?? "")
                 }
                 .font(.system(size: 8))
-                .foregroundColor(colorScheme == .dark ? Color.init(hex: "#D4D4D4") : Color.init(hex: "#737372"))
+                .foregroundColor([Color.init(hex: "#D4D4D4"), Color.init(hex: "#737372")])
                 .buttonStyle(.plain)
                 .padding(EdgeInsets(top: 5, leading: 8, bottom: 5, trailing: 8))
                 .background {
                     Capsule()
-                        .foregroundColor(colorScheme == .dark ? Color.init(hex: "#41403F") : Color.init(hex: "#F7F7F7"))
+                        .foregroundColor([Color.init(hex: "#41403F"), Color.init(hex: "#F7F7F7")])
                         .shadow(color: colorScheme == .dark ? Color.white.opacity(0.2) : Color.black.opacity(0.2), radius: 5, x: 0, y: 2)
                 }
                 .padding(.trailing, 20)

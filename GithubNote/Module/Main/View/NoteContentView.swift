@@ -11,8 +11,6 @@ import SwiftUIFlux
 
 struct NoteContentView: ConnectedView {
     
-    @Environment(\.colorScheme) private var colorScheme
-    
     @EnvironmentObject var commentStore: CommentModelStore
     @EnvironmentObject var appStore: AppModelStore
     
@@ -72,7 +70,7 @@ struct NoteContentView: ConnectedView {
                 NoteEmptyView(type: .coffee) {
                     
                 }
-                .background(colorScheme == .dark ? Color.markdownBackground : Color.white)
+                .background([Color.markdownBackground, Color.white])
             }
         }
         .background(Color.white)

@@ -17,7 +17,6 @@ import AppKit
 
 struct NoteSidebarView: ConnectedView {
     
-    @Environment(\.colorScheme) private var colorScheme
     @EnvironmentObject var alertStore: AlertModelStore
     
     struct Props {
@@ -74,7 +73,7 @@ struct NoteSidebarView: ConnectedView {
             }
         })
 #if MOBILE
-        .background(colorScheme == .dark ? Color.init(hex: "#1C1C1E") : Color.init(hex: "#F2F2F7"))
+        .background([Color.init(hex: "#1C1C1E"), Color.init(hex: "#F2F2F7")])
 #endif
 //        .safeAreaInset(edge: .bottom) {
 //            NoteSidebarToolView()

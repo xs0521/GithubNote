@@ -9,7 +9,6 @@ import SwiftUI
 
 struct CustomHeaderView: View {
     
-    @Environment(\.colorScheme) private var colorScheme
     @EnvironmentObject var alertStore: AlertModelStore
     
     var title: String
@@ -24,7 +23,7 @@ struct CustomHeaderView: View {
         HStack {
             Text(title)
                 .fontWeight(.bold)
-                .foregroundColor(colorScheme == .dark ? Color.init(hex: "#E0E0E0") : Color.init(hex: "#393835"))
+                .foregroundColor([Color.init(hex: "#E0E0E0"), Color.init(hex: "#393835")])
             Spacer()
             HStack {
                 if isRefreshing {
@@ -56,8 +55,11 @@ struct CustomHeaderView: View {
             }
         }
         .padding(.horizontal, 12)
-        .background(Color.init(hex: "E0E0DF"))
+        .background(
+            Rectangle()
+                .fill(Color.clear)
+                .contentShape(Rectangle()) ///https://stackoverflow.com/questions/72881130/swiftui-how-to-make-a-transparent-rectangle-fill-clear-receive-gestures
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        )
     }
-    
-    
 }

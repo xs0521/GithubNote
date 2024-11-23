@@ -9,14 +9,12 @@ import SwiftUI
 
 struct PrivateTagView: View {
     
-    @Environment(\.colorScheme) private var colorScheme
-    
     var body: some View {
         Text("private".language())
-            .foregroundColor(colorScheme == .dark ? Color.black : Color.white)
+            .foregroundColor([Color.black, Color.white])
             .font(.system(size: 6))
             .padding(EdgeInsets(top: 2, leading: 3, bottom: 2, trailing: 3))
-            .background(colorScheme == .dark ? Color.init(hex: "#DFE1E6") : Color.gray)
+            .background([Color.init(hex: "#DFE1E6"), Color.gray])
             .cornerRadius(5)
     }
 }

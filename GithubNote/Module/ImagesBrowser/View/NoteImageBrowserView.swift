@@ -11,15 +11,13 @@ import AlertToast
 
 struct NoteImageBrowserView: View {
     
-    @Environment(\.colorScheme) var colorScheme
-    
     @EnvironmentObject var appStore: AppModelStore
     @State private var isPresented: Bool = false
     
     var body: some View {
         ZStack {
             NoteImageBrowserImagesView()
-            .background(colorScheme == .dark ? Color.init(hex: "#292929") : Color.init(hex: "#ECECEB"))
+            .background([Color.init(hex: "#292929"), Color.init(hex: "#ECECEB")])
             .onTapGesture {
                 store.dispatch(action: ImagesActions.isImageBrowserVisible(on: false))
             }
