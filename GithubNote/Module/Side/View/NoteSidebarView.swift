@@ -46,6 +46,7 @@ struct NoteSidebarView: ConnectedView {
                                 .onChanged { value in
                                     let newHeight = props.issuesHeight + value.translation.height
                                     let issuesHeight = min(800, max(115, newHeight))
+                                    AppUserDefaults.issuesHeight = issuesHeight
                                     store.dispatch(action: IssuesActions.HeightAction(value: issuesHeight))
                                 }
                                 .onEnded { value in
