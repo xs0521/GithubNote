@@ -20,6 +20,17 @@ struct Comment: APIModelable, Identifiable, Hashable, Equatable {
     var cache: String?
     var cacheUpdate: Int?
     
+    var content: String {
+        if let cache = cache {
+            return cache
+        }
+        if let body = body {
+            return body
+        }
+        return ""
+    }
+    
+    
     public var identifier: String {
         return "\(id ?? 0)-\(uuid ?? "")"
     }

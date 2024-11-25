@@ -52,7 +52,7 @@ struct NoteCommentsView: ConnectedView {
                 List(selection: $commentStore.select) {
                     ForEach(props.list) { selection in
                         Label(title: {
-                            Text(selection.body?.toTitle() ?? "")
+                            Text(selection.content.toTitle())
                                 .font(.system(size: 12))
                         }, icon: {
                             if props.deleteComment?.id == selection.id {
