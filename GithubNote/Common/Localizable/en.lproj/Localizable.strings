@@ -15,6 +15,7 @@
 "original_text" = "Original Text";
 "workspace" = "WorkSpace";
 "select_workspace" = "Please select a workspace";
+"select_workspace_tips" = "Display workspace shortcut keys";
 "select_notebook" = "Please select a NoteBook";
 "download_tip" = "If the content is not available on the remote, syncing will automatically delete the local notes.";
 "overwrite_local_content" = "Will overwrite local content?";

@@ -56,6 +56,9 @@ struct GithubNoteApp: App {
                                 .environmentObject(appStore)
                                 .environmentObject(imagesStore)
                                 .environmentObject(alertStore)
+                            if alertStore.isRepoTipsVisible {
+                                KeyBoardTipsView()
+                            }
                         }
                         .onReceive(NotificationCenter.default.publisher(for: Notification.Name.logoutForceNotification), perform: { _ in
                             loginOutAction()

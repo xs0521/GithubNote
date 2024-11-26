@@ -15,6 +15,8 @@ final class AlertModelStore: ObservableObject {
     @Published private(set) var title: String = ""
     @Published private(set) var message: String = ""
     
+    @Published var isRepoTipsVisible: Bool = false
+    
     private(set) var onConfirm: (() -> Void)?
     private(set) var onCancel: (() -> Void)?
     private(set) var autoDismiss: Bool = true

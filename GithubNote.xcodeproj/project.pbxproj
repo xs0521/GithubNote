@@ -159,6 +159,8 @@
 		B1D7CF542BCA11DE00362C35 /* ImagesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D7CF532BCA11DE00362C35 /* ImagesModel.swift */; };
 		B1DA105B2C9DB6C30074DA32 /* index in Resources */ = {isa = PBXBuildFile; fileRef = B1DA105A2C9DB6C30074DA32 /* index */; };
 		B1DA105D2C9DB6CA0074DA32 /* MarkdownWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1DA105C2C9DB6CA0074DA32 /* MarkdownWebView.swift */; };
+		B1DF7ECF2CF62152008CD1B0 /* KeyBoardTipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1DF7ECE2CF62152008CD1B0 /* KeyBoardTipsView.swift */; };
+		B1DF7ED02CF62152008CD1B0 /* KeyBoardTipsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1DF7ECE2CF62152008CD1B0 /* KeyBoardTipsView.swift */; };
 		B1E538622C43816F00A4B3C4 /* NoteWritePannelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E538612C43816F00A4B3C4 /* NoteWritePannelView.swift */; };
 		B1E55A422BBF96B7000209ED /* IssuesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E55A412BBF96B7000209ED /* IssuesModel.swift */; };
 		B1EBBD942C9E886C005FB760 /* LogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1EBBD932C9E886C005FB760 /* LogManager.swift */; };
@@ -309,6 +311,7 @@
 		B1D7CF532BCA11DE00362C35 /* ImagesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesModel.swift; sourceTree = "<group>"; };
 		B1DA105A2C9DB6C30074DA32 /* index */ = {isa = PBXFileReference; lastKnownFileType = folder; path = index; sourceTree = "<group>"; };
 		B1DA105C2C9DB6CA0074DA32 /* MarkdownWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkdownWebView.swift; sourceTree = "<group>"; };
+		B1DF7ECE2CF62152008CD1B0 /* KeyBoardTipsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyBoardTipsView.swift; sourceTree = "<group>"; };
 		B1E538612C43816F00A4B3C4 /* NoteWritePannelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteWritePannelView.swift; sourceTree = "<group>"; };
 		B1E55A412BBF96B7000209ED /* IssuesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IssuesModel.swift; sourceTree = "<group>"; };
 		B1EBBD932C9E886C005FB760 /* LogManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogManager.swift; sourceTree = "<group>"; };
@@ -738,6 +741,15 @@
 			path = MarkdownWebView;
 			sourceTree = "<group>";
 		};
+		B1DF7ECD2CF6212E008CD1B0 /* KeyBoard */ = {
+			isa = PBXGroup;
+			children = (
+				B1F507692CE79E6900F09942 /* KeyboardManager.swift */,
+				B1DF7ECE2CF62152008CD1B0 /* KeyBoardTipsView.swift */,
+			);
+			path = KeyBoard;
+			sourceTree = "<group>";
+		};
 		B1E55A472BBFD482000209ED /* Comment */ = {
 			isa = PBXGroup;
 			children = (
@@ -954,12 +966,12 @@
 		B1FE674C2C45766800970DA0 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				B1F507692CE79E6900F09942 /* KeyboardManager.swift */,
 				B1A3FBBF2CC008E900C8ADF7 /* TimeManager.swift */,
 				B1EBBDCB2CB2E718005FB760 /* WebServerManager.swift */,
 				B1FE674D2C45767600970DA0 /* Common.swift */,
 				B1EBBDA32C9FDB28005FB760 /* ToastManager.swift */,
 				B1F5076C2CE7A2CF00F09942 /* AlertStore.swift */,
+				B1DF7ECD2CF6212E008CD1B0 /* KeyBoard */,
 				B1F507852CEF8C2600F09942 /* Swime */,
 				B1F507842CE99A3900F09942 /* Localizable */,
 				B1EBBD9B2C9EF50F005FB760 /* Email */,
@@ -1379,6 +1391,7 @@
 				B1F5078E2CF0D9A100F09942 /* FontSizeSliderView.swift in Sources */,
 				B1F5078B2CEF8C4C00F09942 /* Swime.swift in Sources */,
 				B14983EC2CBB632E00CDAB6F /* NoteCommentsHeaderView.swift in Sources */,
+				B1DF7ED02CF62152008CD1B0 /* KeyBoardTipsView.swift in Sources */,
 				B14983ED2CBB632E00CDAB6F /* View+Extension.swift in Sources */,
 				B139AF452CD12A25002F101A /* CommentState.swift in Sources */,
 				B14983EF2CBB632E00CDAB6F /* NoteSidebarView.swift in Sources */,
@@ -1425,6 +1438,7 @@
 				B11237482CCAAAC00085F9EB /* SideActions.swift in Sources */,
 				B1EBBDD12CB3CD7A005FB760 /* NoteSidebarToolView.swift in Sources */,
 				B1F507702CE7A6D800F09942 /* CustomAlert.swift in Sources */,
+				B1DF7ECF2CF62152008CD1B0 /* KeyBoardTipsView.swift in Sources */,
 				B11237452CCAAA8F0085F9EB /* SideState.swift in Sources */,
 				B1F507882CEF8C4C00F09942 /* MimeType.swift in Sources */,
 				B1A3FBC02CC008E900C8ADF7 /* TimeManager.swift in Sources */,

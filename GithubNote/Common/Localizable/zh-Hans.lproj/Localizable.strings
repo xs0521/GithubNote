@@ -15,6 +15,7 @@
 "original_text" = "原始文本";
 "workspace" = "工作区";
 "select_workspace" = "请选择一个工作区";
+"select_workspace_tips" = "显示工作区的快捷键";
 "select_notebook" = "请选择一个笔记本";
 "download_tip" = "如果内容在远程不可用，同步将自动删除本地笔记。";
 "overwrite_local_content" = "将覆盖本地内容？";

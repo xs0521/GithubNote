@@ -46,6 +46,10 @@ struct NoteIssuesHeaderView: View {
     func enbleAction() -> Bool {
         if AppUserDefaults.repo == nil {
             ToastManager.shared.show("select_workspace".language())
+            alertStore.isRepoTipsVisible  = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0, execute: {
+                alertStore.isRepoTipsVisible  = false
+            })
             return false
         }
         return true
