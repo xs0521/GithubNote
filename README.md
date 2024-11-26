@@ -14,6 +14,9 @@ We hope it becomes the last note-taking software you'll ever need.
 
 <img src="IMG/Web.png" width="800px">
 
+<img src="IMG/Images.png" width="800px">
+
+
 ## Support
 
 System Support：<img src="https://img.shields.io/badge/MacOS-14.0-blue" />
