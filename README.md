@@ -60,3 +60,5 @@ Find a bug or have a feature request? Please file an <a href="https://github.com
 ## Thanks
 
 Edit by [muya](https://github.com/marktext/muya)  
+
+Icon by [rubaitulazad](https://unsplash.com/@rubaitulazad?utm_source=medium&utm_medium=referral)
