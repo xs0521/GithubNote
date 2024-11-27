@@ -54,6 +54,9 @@ struct AppUserDefaults {
     
     @UserDefault("com.githubnote.side.issue.height", defaultValue: 115)
     public static var issuesHeight: CGFloat
+    
+    @UserDefault("com.githubnote.last.check.version", defaultValue: 0)
+    public static var lastCheckVersionTime: Int
 
     static func reset() -> Void {
         self.repo = nil

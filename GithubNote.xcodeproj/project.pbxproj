@@ -153,6 +153,8 @@
 		B1B5AAEE2CC34C0E003F4E71 /* NoteWritePannelTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B5AAEC2CC34C0E003F4E71 /* NoteWritePannelTitleView.swift */; };
 		B1B5AAF02CC36B85003F4E71 /* NoteImageBrowserPreViewImagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B5AAEF2CC36B85003F4E71 /* NoteImageBrowserPreViewImagesView.swift */; };
 		B1B5AAF12CC36B85003F4E71 /* NoteImageBrowserPreViewImagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B5AAEF2CC36B85003F4E71 /* NoteImageBrowserPreViewImagesView.swift */; };
+		B1B931B02CF763B300BFB3A1 /* VersionUpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B931AF2CF763B300BFB3A1 /* VersionUpdateManager.swift */; };
+		B1B931B12CF763B300BFB3A1 /* VersionUpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B931AF2CF763B300BFB3A1 /* VersionUpdateManager.swift */; };
 		B1C01ACA2BCA16BB009E9C20 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = B1C01AC92BCA16BB009E9C20 /* SDWebImageSwiftUI */; };
 		B1CE86582C57EF77002C8335 /* NoteImageBrowserImagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1CE86572C57EF77002C8335 /* NoteImageBrowserImagesView.swift */; };
 		B1CE865B2C5926B8002C8335 /* NotificationNameModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1CE865A2C5926B8002C8335 /* NotificationNameModule.swift */; };
@@ -306,6 +308,7 @@
 		B1B5AAE62CC2AB71003F4E71 /* ImageUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUploader.swift; sourceTree = "<group>"; };
 		B1B5AAEC2CC34C0E003F4E71 /* NoteWritePannelTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteWritePannelTitleView.swift; sourceTree = "<group>"; };
 		B1B5AAEF2CC36B85003F4E71 /* NoteImageBrowserPreViewImagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteImageBrowserPreViewImagesView.swift; sourceTree = "<group>"; };
+		B1B931AF2CF763B300BFB3A1 /* VersionUpdateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionUpdateManager.swift; sourceTree = "<group>"; };
 		B1CE86572C57EF77002C8335 /* NoteImageBrowserImagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteImageBrowserImagesView.swift; sourceTree = "<group>"; };
 		B1CE865A2C5926B8002C8335 /* NotificationNameModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationNameModule.swift; sourceTree = "<group>"; };
 		B1D7CF532BCA11DE00362C35 /* ImagesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesModel.swift; sourceTree = "<group>"; };
@@ -966,6 +969,7 @@
 		B1FE674C2C45766800970DA0 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				B1B931AF2CF763B300BFB3A1 /* VersionUpdateManager.swift */,
 				B1A3FBBF2CC008E900C8ADF7 /* TimeManager.swift */,
 				B1EBBDCB2CB2E718005FB760 /* WebServerManager.swift */,
 				B1FE674D2C45767600970DA0 /* Common.swift */,
@@ -1405,6 +1409,7 @@
 				B1B5AAF12CC36B85003F4E71 /* NoteImageBrowserPreViewImagesView.swift in Sources */,
 				B139AF552CD2613E002F101A /* WriteModelStore.swift in Sources */,
 				B139AF522CD260FF002F101A /* WriteState.swift in Sources */,
+				B1B931B12CF763B300BFB3A1 /* VersionUpdateManager.swift in Sources */,
 				B14983F22CBB632E00CDAB6F /* IssuesModel.swift in Sources */,
 				B139AF482CD12A38002F101A /* CommentActions.swift in Sources */,
 				B14EA4F22CC9505F00F55A4D /* NoteContentHeaderView.swift in Sources */,
@@ -1491,6 +1496,7 @@
 				B1DA105D2C9DB6CA0074DA32 /* MarkdownWebView.swift in Sources */,
 				B1F507672CE5003000F09942 /* CustomHeaderView.swift in Sources */,
 				B1EBBDCE2CB2F31A005FB760 /* bool+Extension.swift in Sources */,
+				B1B931B02CF763B300BFB3A1 /* VersionUpdateManager.swift in Sources */,
 				B1F507762CE840DB00F09942 /* LaunchApp+Mouse.swift in Sources */,
 				B18505742CD28BBA002007FA /* AppModelStore.swift in Sources */,
 				B1EBBDC22CA06CA4005FB760 /* NoteCommentsHeaderView.swift in Sources */,

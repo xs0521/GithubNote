@@ -13,7 +13,8 @@ private let SETUPLIST: [Setupable.Type] = [LogManager.self,
                                            CustomURLSchemeHandler.self]
 
 private let SETUPLISTLOGIN: [Setupable.Type] = [SDWebImageDownloaderSetup.self,
-                                                CacheManager.self]
+                                                CacheManager.self,
+                                                VersionUpdateManagerSetup.self]
 
 class LaunchApp {
     static let shared = LaunchApp()
