@@ -271,7 +271,7 @@
 		B148A5BB2BC154FA00B7FBA8 /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
 		B14983BB2CBAD3C400CDAB6F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		B14983BC2CBAD5BE00CDAB6F /* GitHubLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubLoginView.swift; sourceTree = "<group>"; };
-		B14984022CBB632E00CDAB6F /* GithubNoteMobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GithubNoteMobile.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B14984022CBB632E00CDAB6F /* GitNote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GitNote.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B14984042CBB646000CDAB6F /* Info-mobile.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-mobile.plist"; sourceTree = "<group>"; };
 		B14EA4E22CC7E70400F55A4D /* PrivateTagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateTagView.swift; sourceTree = "<group>"; };
 		B14EA4E52CC7E89D00F55A4D /* SQLModelable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLModelable.swift; sourceTree = "<group>"; };
@@ -289,7 +289,7 @@
 		B18505772CD28E00002007FA /* ImagesState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesState.swift; sourceTree = "<group>"; };
 		B185057A2CD28E0C002007FA /* ImagesActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesActions.swift; sourceTree = "<group>"; };
 		B185057D2CD29096002007FA /* ImagesModelStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesModelStore.swift; sourceTree = "<group>"; };
-		B1922A492BAFF1FB00200828 /* GithubNote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GithubNote.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B1922A492BAFF1FB00200828 /* GitNote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GitNote.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1922A4C2BAFF1FB00200828 /* GithubNoteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubNoteApp.swift; sourceTree = "<group>"; };
 		B1922A502BAFF1FC00200828 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B1922A522BAFF1FC00200828 /* GithubNote.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GithubNote.entitlements; sourceTree = "<group>"; };
@@ -580,10 +580,10 @@
 		B1922A4A2BAFF1FB00200828 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B1922A492BAFF1FB00200828 /* GithubNote.app */,
+				B1922A492BAFF1FB00200828 /* GitNote.app */,
 				B1922A5A2BAFF1FC00200828 /* GithubNoteTests.xctest */,
 				B1922A642BAFF1FC00200828 /* GithubNoteUITests.xctest */,
-				B14984022CBB632E00CDAB6F /* GithubNoteMobile.app */,
+				B14984022CBB632E00CDAB6F /* GitNote.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1019,7 +1019,7 @@
 				B11237292CCA8FC00085F9EB /* SwiftUIFlux */,
 			);
 			productName = GithubNote;
-			productReference = B14984022CBB632E00CDAB6F /* GithubNoteMobile.app */;
+			productReference = B14984022CBB632E00CDAB6F /* GitNote.app */;
 			productType = "com.apple.product-type.application";
 		};
 		B1922A482BAFF1FB00200828 /* GithubNote */ = {
@@ -1042,7 +1042,7 @@
 				B11237272CCA8EDD0085F9EB /* SwiftUIFlux */,
 			);
 			productName = GithubNote;
-			productReference = B1922A492BAFF1FB00200828 /* GithubNote.app */;
+			productReference = B1922A492BAFF1FB00200828 /* GitNote.app */;
 			productType = "com.apple.product-type.application";
 		};
 		B1922A592BAFF1FC00200828 /* GithubNoteTests */ = {
@@ -1599,7 +1599,7 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D MOBILE";
 				PRODUCT_BUNDLE_IDENTIFIER = zerobc.GithubNote;
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = xs0521.app.note;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = GitNote;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1644,7 +1644,7 @@
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -D MOBILE";
 				PRODUCT_BUNDLE_IDENTIFIER = zerobc.GithubNote;
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = xs0521.app.note;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = GitNote;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1804,7 +1804,7 @@
 				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = zerobc.GithubNote;
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = xs0521.app.note;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = GitNote;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = macosx;
@@ -1847,7 +1847,7 @@
 				MARKETING_VERSION = 0.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = zerobc.GithubNote;
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = xs0521.app.note;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = GitNote;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = macosx;
