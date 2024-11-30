@@ -1780,7 +1780,7 @@
 				CODE_SIGN_ENTITLEMENTS = GithubNote/GithubNote.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2411302228;
 				DEVELOPMENT_ASSET_PATHS = "\"GithubNote/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
@@ -1801,7 +1801,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.2.0;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = zerobc.GithubNote;
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = xs0521.app.note;
 				PRODUCT_NAME = GitNote;
@@ -1823,7 +1823,7 @@
 				CODE_SIGN_ENTITLEMENTS = GithubNote/GithubNote.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2411302228;
 				DEVELOPMENT_ASSET_PATHS = "\"GithubNote/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
@@ -1844,7 +1844,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.2.0;
+				MARKETING_VERSION = 0.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = zerobc.GithubNote;
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=macosx*]" = xs0521.app.note;
 				PRODUCT_NAME = GitNote;

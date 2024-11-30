@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B14983BE2CBB632E00CDAB6F"
-               BuildableName = "GithubNoteMobile.app"
+               BuildableName = "GitNote.app"
                BlueprintName = "GithubNoteMobile"
                ReferencedContainer = "container:GithubNote.xcodeproj">
             </BuildableReference>
@@ -44,7 +44,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B14983BE2CBB632E00CDAB6F"
-            BuildableName = "GithubNoteMobile.app"
+            BuildableName = "GitNote.app"
             BlueprintName = "GithubNoteMobile"
             ReferencedContainer = "container:GithubNote.xcodeproj">
          </BuildableReference>
@@ -61,7 +61,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B14983BE2CBB632E00CDAB6F"
-            BuildableName = "GithubNoteMobile.app"
+            BuildableName = "GitNote.app"
             BlueprintName = "GithubNoteMobile"
             ReferencedContainer = "container:GithubNote.xcodeproj">
          </BuildableReference>

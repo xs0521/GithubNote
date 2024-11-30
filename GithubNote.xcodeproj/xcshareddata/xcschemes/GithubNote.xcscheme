@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B1922A482BAFF1FB00200828"
-               BuildableName = "GithubNote.app"
+               BuildableName = "GitNote.app"
                BlueprintName = "GithubNote"
                ReferencedContainer = "container:GithubNote.xcodeproj">
             </BuildableReference>
@@ -68,7 +68,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B1922A482BAFF1FB00200828"
-            BuildableName = "GithubNote.app"
+            BuildableName = "GitNote.app"
             BlueprintName = "GithubNote"
             ReferencedContainer = "container:GithubNote.xcodeproj">
          </BuildableReference>
@@ -85,7 +85,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B1922A482BAFF1FB00200828"
-            BuildableName = "GithubNote.app"
+            BuildableName = "GitNote.app"
             BlueprintName = "GithubNote"
             ReferencedContainer = "container:GithubNote.xcodeproj">
          </BuildableReference>
