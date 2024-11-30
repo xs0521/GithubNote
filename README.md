@@ -1,6 +1,6 @@
-# [GithubNote](https://github.com/xs0521/GithubNote)
+# [GitNote](https://github.com/xs0521/GithubNote)
 
-GithubNote is a personal note-taking software with powerful editing capabilities. 
+GitNote is a personal note-taking software with powerful editing capabilities. 
 
 It supports syncing your data to GitHub, ensuring your data is permanently preserved unless the GitHub platform shuts down or your account is deleted. 
 
@@ -29,13 +29,13 @@ The latest official **installers** and **portable versions** for macOS can be fo
 
 #### Application Signing
 
-*GithubNote* is not signed (due to its costs) so you will need to use a workaround for the first run. The workaround depends on if you're running an Intel or Apple Silicon chip.
+*GitNote* is not signed (due to its costs) so you will need to use a workaround for the first run. The workaround depends on if you're running an Intel or Apple Silicon chip.
 
 - **Intel Chips**: [Open a Mac app from an unidentified developer](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unidentified-developer-mh40616/mac).
 - **Apple Chips**: Open a terminal and run this command:
 
 ```
-    sudo xattr -r -d com.apple.quarantine /Applications/GithubNote.app
+    sudo xattr -r -d com.apple.quarantine /Applications/GitNote.app
 ```
 
 ## Feedback
