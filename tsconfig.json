@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "incremental": true,
+    "target": "es2022",
+    "module": "node16",
+    "lib": ["dom", "es2022"],
+    "jsx": "react-jsx",
+    "strict": true,
+    "sourceMap": true,
+    "moduleResolution": "node16",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "outDir": ".erb/dll",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["src/renderer/components/*"],
+      "@redux/*": ["src/renderer/redux/*"],
+      "@slice/*": ["src/renderer/slice/*"],
+      "@const/*": ["src/renderer/const/*"],
+      "@db/*": ["src/renderer/db/*"],
+      "@util/*": ["src/renderer/util/*"],
+      "@models/*": ["src/renderer/models/*"]
+    }
+  },
+  "exclude": ["test", "release/build", "release/app/dist", ".erb/dll"]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "gitnote",
+  "version": "1.0.00",
+  "description": "A note-taking app",
+  "license": "MIT",
+  "author": {
+    "name": "xs0521",
+    "email": "zerobc233@gmail.com",
+    "url": "https://github.com/xs0521/"
+  },
+  "main": "./dist/main/main.js",
+  "scripts": {
+    "rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",
+    "postinstall": "npm run rebuild && npm run link-modules",
+    "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts"
+  },
+  "dependencies": {}
+}
