@@ -29,15 +29,9 @@ A **powerful and focused editor** designed for structured notes, long-form writi
 
 Your notes are stored in a **GitHub repository you own**.
 
-They will **never be lost** —
+They will **never be lost**, unless **GitHub shuts down** or **your account is deleted**.
 
-unless **GitHub shuts down** or **your account is deleted**.
-
-No proprietary cloud.
-
-No lock-in.
-
-Your data, forever.
+No proprietary cloud. No lock-in. Your data, forever.
 
 ### **🌍 Online Access Anywhere**
 
