@@ -9,6 +9,7 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
+import fs from 'fs';
 import { app, BrowserWindow, shell, ipcMain, session } from 'electron';
 import AppUpdateCheck from './app-update-check';
 import log from 'electron-log';
@@ -29,14 +30,27 @@ import {
   CHANNEL_ACTION_UPDATE_AVAILABLE,
 } from '@/shared/constants';
 
+const gotSingleInstanceLock = app.requestSingleInstanceLock();
+if (!gotSingleInstanceLock) {
+  app.quit();
+}
+
 interface UserInfo {
   access_token: string;
   username: string;
 }
 
 class AppUpdater {
+  private static hasRun = false;
+
   constructor() {
+    if (AppUpdater.hasRun) {
+      log.info('AppUpdater skipped (already ran)', { pid: process.pid });
+      return;
+    }
+    AppUpdater.hasRun = true;
     log.transports.file.level = 'info';
+    log.info('AppUpdater init', { pid: process.pid, isPackaged: app.isPackaged });
     const checker = new AppUpdateCheck((info) => {
       sendToMainRenderer(CHANNEL_COMMON, [
         CHANNEL_ACTION_UPDATE_AVAILABLE,
@@ -234,6 +248,20 @@ app.on('second-instance', (event, commandLine) => {
 app
   .whenReady()
   .then(() => {
+    log.info('Single instance lock acquired', { pid: process.pid });
+    const buildNumber = (() => {
+      try {
+        const pkgPath = path.join(app.getAppPath(), 'package.json');
+        const raw = fs.readFileSync(pkgPath, 'utf8');
+        const pkg = JSON.parse(raw);
+        return pkg?.buildNumber || pkg?.build?.buildNumber || 'unknown';
+      } catch (error) {
+        return 'unknown';
+      }
+    })();
+    log.info('Build number', { buildNumber });
+    console.log('Build number', buildNumber);
+
     // 注册自定义协议
     registerCustomProtocol();
 
