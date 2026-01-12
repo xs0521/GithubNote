@@ -99,6 +99,15 @@ export async function saveRepositories(
   await db.repositories.bulkPut(repositories);
 }
 
+export async function deleteRepositoryById(
+  repositoryId: string,
+): Promise<void> {
+  if (!isInitialized) {
+    return;
+  }
+  await db.repositories.delete(String(repositoryId));
+}
+
 export async function getIssuesByRepo(
   userId: number,
   repositoryId: string,
@@ -117,6 +126,22 @@ export async function saveIssues(issues: Issue[]): Promise<void> {
     return;
   }
   await db.issues.bulkPut(issues);
+}
+
+export async function deleteIssuesByRepositoryId(
+  userId: number,
+  repositoryId: string,
+): Promise<void> {
+  if (!isInitialized) {
+    return;
+  }
+  const ids = await db.issues
+    .where('[user_id+repository_id]')
+    .equals([userId, repositoryId])
+    .primaryKeys();
+  if (ids.length > 0) {
+    await db.issues.bulkDelete(ids);
+  }
 }
 
 export async function getCommentsByIssue(
@@ -140,6 +165,23 @@ export async function saveComments(comments: Comment[]): Promise<void> {
   await db.comments.bulkPut(comments);
 }
 
+export async function deleteCommentsByRepositoryId(
+  userId: number,
+  repositoryId: string,
+): Promise<void> {
+  if (!isInitialized) {
+    return;
+  }
+  const ids = await db.comments
+    .where('repository_id')
+    .equals(repositoryId)
+    .and((item) => item.user_id === userId)
+    .primaryKeys();
+  if (ids.length > 0) {
+    await db.comments.bulkDelete(ids);
+  }
+}
+
 export async function deleteCommentByIdOrUuid(
   comment: Comment,
 ): Promise<void> {
@@ -160,6 +202,23 @@ export async function deleteIssueById(issueId: string): Promise<void> {
     return;
   }
   await db.issues.delete(String(issueId));
+}
+
+export async function deleteSyncMetaByRepositoryId(
+  userId: number,
+  repositoryId: string,
+): Promise<void> {
+  if (!isInitialized) {
+    return;
+  }
+  const ids = await db.sync_meta
+    .where('repository_id')
+    .equals(repositoryId)
+    .and((item) => item.user_id === userId)
+    .primaryKeys();
+  if (ids.length > 0) {
+    await db.sync_meta.bulkDelete(ids);
+  }
 }
 
 export async function updateCommentByIdOrUuid(

@@ -91,21 +91,6 @@ function App() {
   return (
     <>
       {user.userInfo.id ? <SidebarExampleSidebar /> : <Login />}
-      {user.userInfo.id && isDev && (
-        <div className="fixed left-5 bottom-5 z-50 app-region-no-drag">
-          <button
-            onClick={() =>
-              setUpdateInfo({
-                version: '0.1.1',
-                url: 'https://github.com/xs0521/GithubNote/releases',
-              })
-            }
-            className="px-3 py-1 text-xs text-white bg-blue-600 rounded-md hover:bg-blue-500"
-          >
-            Simulate Update
-          </button>
-        </div>
-      )}
       {updateInfo && (
         <div className="fixed left-1/2 bottom-5 z-50 -translate-x-1/2 app-region-no-drag">
           <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white px-3 py-2 shadow-lg">

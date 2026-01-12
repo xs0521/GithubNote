@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { GridRow, GridColumn, Grid, Button, Icon } from 'semantic-ui-react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import {
   updateSelectedComment,
   updateSelectedIssue,
@@ -21,9 +21,12 @@ import {
 } from '@/shared/constants';
 import { apiPost } from '@/renderer/server/API';
 import * as db from '@db/index';
+import { getSyncManager } from '@/renderer/sync';
 
 function Workspace() {
   const dispatch = useDispatch<AppDispatch>();
+  const store = useStore<RootState>();
+  const syncManager = getSyncManager(dispatch, () => store.getState());
   const isWindows = window.electron?.platform === 'win32';
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [repoName, setRepoName] = useState('');
@@ -66,6 +69,13 @@ function Workspace() {
   const onCreateRepoClick = () => {
     setIsCreateOpen(true);
     setCreateError('');
+  };
+
+  const onSyncReposClick = () => {
+    if (!userInfo || !userInfo.access_token) {
+      return;
+    }
+    syncManager.syncRepositoriesFull(true);
   };
 
   const onCreateCancel = () => {
@@ -195,6 +205,16 @@ function Workspace() {
           }}
         >
           <Icon name="plus square" size="big" />
+        </Button>
+        <Button
+          onClick={onSyncReposClick}
+          className="app-region-no-drag"
+          style={{
+            backgroundColor: 'transparent',
+          }}
+          disabled={isRepositoriesLoading}
+        >
+          <Icon name="sync alternate" size="big" />
         </Button>
       </div>
       {isWindows && (

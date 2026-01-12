@@ -7,6 +7,8 @@ import {
   updateIssues,
   updateComments,
   updateSelectedComment,
+  updateSelectedIssue,
+  updateSelectedRepository,
 } from '@slice/content-slice';
 import {
   updateIsRepositoriesLoading,
@@ -14,6 +16,7 @@ import {
   updateIsCommentsLoading,
   updateLastSyncAt,
 } from '@slice/setting-slice';
+import { updateWorkspace } from '@slice/setting-slice';
 import { isDeletedComment } from './deleted-comment-cache';
 
 const SYNC_SCOPE_REPO_ISSUES = 'repo_issues';
@@ -71,6 +74,7 @@ export class SyncManager {
   private getState: () => RootState;
   private timer: NodeJS.Timeout | null = null;
   private isSyncing = false;
+  private hasSyncedRepositories = false;
 
   constructor(dispatch: AppDispatch, getState: () => RootState) {
     this.dispatch = dispatch;
@@ -82,6 +86,7 @@ export class SyncManager {
       return;
     }
     this.loadAppLastSyncAt();
+    this.syncRepositoriesOnce();
     this.runSync();
     this.timer = setInterval(() => {
       this.runSync();
@@ -111,6 +116,20 @@ export class SyncManager {
         id: String(selectedRepository.id),
       },
     );
+  }
+
+  async syncRepositoriesFull(
+    removeMissing: boolean = false,
+  ): Promise<void> {
+    const state = this.getState();
+    const userInfo = state.userData.userInfo;
+    if (!userInfo || !userInfo.access_token) {
+      return;
+    }
+    await this.syncRepositories(userInfo.access_token, userInfo.id, {
+      removeMissing,
+      showLoading: true,
+    });
   }
 
   async syncSelectedIssue(): Promise<void> {
@@ -157,8 +176,6 @@ export class SyncManager {
 
     this.isSyncing = true;
     try {
-      await this.syncRepositories(userInfo.access_token, userInfo.id);
-
       const selectedRepository = this.getState().contentData.selectedRepository;
       if (selectedRepository) {
         await this.syncIssuesForRepo(
@@ -200,8 +217,12 @@ export class SyncManager {
   private async syncRepositories(
     accessToken: string,
     userId: number,
+    options: { removeMissing?: boolean; showLoading?: boolean } = {},
   ): Promise<void> {
-    this.dispatch(updateIsRepositoriesLoading(true));
+    const { removeMissing = false, showLoading = true } = options;
+    if (showLoading) {
+      this.dispatch(updateIsRepositoriesLoading(true));
+    }
     try {
       const repositories = await fetchPaged<Repository>(
         '/user/repos',
@@ -216,11 +237,55 @@ export class SyncManager {
       }));
       await db.saveRepositories(rows);
 
+      if (removeMissing) {
+        const currentRows = await db.getRepositoriesByUser(userId);
+        const remoteIds = new Set(rows.map((item) => String(item.id)));
+        const removed = currentRows.filter(
+          (item) => !remoteIds.has(String(item.id)),
+        );
+        for (const repo of removed) {
+          await db.deleteCommentsByRepositoryId(userId, String(repo.id));
+          await db.deleteIssuesByRepositoryId(userId, String(repo.id));
+          await db.deleteSyncMetaByRepositoryId(userId, String(repo.id));
+          await db.deleteRepositoryById(String(repo.id));
+        }
+        const selectedRepository = this.getState().contentData.selectedRepository;
+        if (
+          selectedRepository &&
+          !remoteIds.has(String(selectedRepository.id))
+        ) {
+          this.dispatch(updateSelectedRepository(null));
+          this.dispatch(updateSelectedIssue(null));
+          this.dispatch(updateSelectedComment(null));
+          this.dispatch(updateIssues([]));
+          this.dispatch(updateComments([]));
+          this.dispatch(updateWorkspace(true));
+        }
+      }
+
       const dbRows = await db.getRepositoriesByUser(userId);
       this.dispatch(updateRepositories(dbRows));
     } finally {
-      this.dispatch(updateIsRepositoriesLoading(false));
+      if (showLoading) {
+        this.dispatch(updateIsRepositoriesLoading(false));
+      }
     }
+  }
+
+  private async syncRepositoriesOnce(): Promise<void> {
+    if (this.hasSyncedRepositories) {
+      return;
+    }
+    const state = this.getState();
+    const userInfo = state.userData.userInfo;
+    if (!userInfo || !userInfo.access_token) {
+      return;
+    }
+    this.hasSyncedRepositories = true;
+    await this.syncRepositories(userInfo.access_token, userInfo.id, {
+      removeMissing: false,
+      showLoading: true,
+    });
   }
 
   private async syncIssuesForRepo(
