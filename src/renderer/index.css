@@ -26,6 +26,14 @@ code {
     source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
+/* Hide scrollbars globally */
+* {
+  scrollbar-width: none;
+}
+*::-webkit-scrollbar {
+  display: none;
+}
+
 /* Electron 窗口拖拽样式 */
 .app-region-drag {
   -webkit-app-region: drag;

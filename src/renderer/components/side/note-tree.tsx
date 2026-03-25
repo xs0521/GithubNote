@@ -8,7 +8,7 @@ import {
   updateSelectedComment,
   updateComments,
 } from '@slice/content-slice';
-import { getCommentTitle, formatTwitterTime } from '@util/index';
+import { getCommentTitle } from '@util/index';
 import * as db from '@db/index';
 
 type TreeNode = {
@@ -124,7 +124,6 @@ function CommentNode({
   node: NodeApi<TreeNode>;
   isSelected: boolean;
 }) {
-  const comment = node.data.comment!;
   return (
     <div className={`flex items-center gap-1.5 w-full min-w-0 pl-1 ${isSelected ? 'bg-[#e8e8e8]' : ''}`}>
       <span className="text-gray-300 flex-shrink-0 text-[10px]">📄</span>
@@ -134,9 +133,6 @@ function CommentNode({
         }`}
       >
         {node.data.name}
-      </span>
-      <span className="text-[10px] text-gray-400 flex-shrink-0 pr-1">
-        {formatTwitterTime(comment.updated_at || comment.created_at)}
       </span>
     </div>
   );
@@ -242,7 +238,7 @@ function NoteTree({ onDeleteComment }: NoteTreeProps) {
   );
 
   return (
-    <div ref={containerRef} className="flex-1 overflow-hidden">
+    <div ref={containerRef} className="flex-1 overflow-hidden note-tree-container">
       <Tree
         ref={treeRef}
         data={treeData}
