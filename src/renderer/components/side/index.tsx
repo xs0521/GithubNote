@@ -135,17 +135,17 @@ function Side() {
     <div className="flex w-full flex-col h-full bg-gray-50 border-r border-gray-200">
       {/* Toolbar */}
       <div
-        className={`flex items-center justify-between border-b border-gray-200 bg-[#F9FAFB] px-3 ${
+        className={`flex items-center justify-between border-b border-gray-200 bg-[#F9FAFB] px-3 app-region-drag ${
           isWindows ? 'py-2' : 'pt-[37px] pb-2'
         }`}
       >
-        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider app-region-no-drag">
           {selectedRepository?.name ?? 'Notes'}
         </span>
         <button
           onClick={onAddClick}
           disabled={!selectedIssue}
-          className="p-1 text-gray-400 hover:text-gray-700 disabled:opacity-30 transition-colors"
+          className="p-1 text-gray-400 hover:text-gray-700 disabled:opacity-30 transition-colors app-region-no-drag"
           title="New Note"
         >
           <Icon name="pen square" size="large" className="!m-0" />
