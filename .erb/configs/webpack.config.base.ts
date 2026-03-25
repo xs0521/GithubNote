@@ -23,8 +23,8 @@ const configuration: webpack.Configuration = {
             // Remove this line to enable type checking in webpack builds
             transpileOnly: true,
             compilerOptions: {
-              module: 'nodenext',
-              moduleResolution: 'nodenext',
+              module: 'esnext',
+              moduleResolution: 'bundler',
             },
           },
         },

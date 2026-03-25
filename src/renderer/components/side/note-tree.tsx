@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Tree, NodeApi } from 'react-arborist';
+import { Icon } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '@redux/index';
 import type { Comment, Issue } from '@const/index';
@@ -83,7 +84,7 @@ function buildTree(
 function LabelNode({ node }: { node: NodeApi<TreeNode> }) {
   return (
     <div className="flex items-center gap-1.5 w-full min-w-0">
-      <span className="text-gray-400 flex-shrink-0 text-sm">📁</span>
+      <Icon name="folder" className="!m-0 !text-gray-400" size="small" />
       <span className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider truncate">
         {node.data.name}
       </span>
@@ -102,7 +103,7 @@ function IssueNode({
 }) {
   return (
     <div className="flex items-center gap-1.5 w-full min-w-0">
-      <span className="text-gray-400 flex-shrink-0 text-sm">📂</span>
+      <Icon name="folder" className="!m-0 !text-gray-400" size="small" />
       <span
         className={`text-[13px] truncate flex-1 ${
           isSelected ? 'text-gray-900 font-semibold' : 'text-gray-700'
