@@ -24,6 +24,12 @@ export enum IssueStatus {
   CLOSED = 'closed',
 }
 
+export interface Label {
+  id: string;
+  name: string;
+  color: string;
+}
+
 export interface Issue {
   id: string;
   number: number;
@@ -34,6 +40,7 @@ export interface Issue {
   repository_id: string;
   created_at: string;
   updated_at: string;
+  labels?: Label[];
 }
 
 export interface Comment {

@@ -1,18 +1,16 @@
-import { Button, Icon } from 'semantic-ui-react';
-import NoteBookSearch from '@components/side/note-book-search';
+import { Icon } from 'semantic-ui-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@redux/index';
-import { type Comment } from '@const/index';
+import { type Comment, generateCommentBody } from '@const/index';
 import { updateWorkspace } from '@slice/setting-slice';
 import { clearUserData } from '@slice/user-slice';
-import PlaceholderAnimationLine from '@components/placeholder';
 import { useDataCommentFetchModel } from '@/renderer/models';
-import { type OptionsType } from '@right-menu/core';
 import DeleteAlert from '@components/side/delete-alert';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { type FetchCommentsConfig } from '@models/model';
-import IndexItem from '@components/side/index-item';
+import NoteTree from '@components/side/note-tree';
 import { clearDeletedComments } from '@/renderer/sync/deleted-comment-cache';
+import { createLocalComment, saveCommentsDB } from '@slice/content-comment-slice';
 
 function Side() {
   const dispatch = useDispatch<AppDispatch>();
@@ -31,13 +29,6 @@ function Side() {
 
   const userInfo = useSelector((state: RootState) => state.userData.userInfo);
 
-  const comments = useSelector(
-    (state: RootState) => state.contentData.comments,
-  );
-
-  const isCommentsLoading = useSelector(
-    (state: RootState) => state.settingData.isCommentsLoading,
-  );
   const isWindows = window.electron?.platform === 'win32';
 
   const [showDeleteConfirmAlert, setShowDeleteConfirmAlert] = useState(false);
@@ -90,28 +81,30 @@ function Side() {
     return alertContent ?? selectedComment ?? null;
   }, [alertContent, selectedComment]);
 
-  const handleDeleteRequest = useCallback(() => {
-    const target = getActiveComment();
-    if (!target) {
-      return;
-    }
-    setAlertContent(target);
-    setShowDeleteConfirmAlert(true);
-  }, [getActiveComment]);
-
-  const options = useMemo<OptionsType>(
-    () => [
-      {
-        type: 'li',
-        text: 'DEL',
-        class: 'right-menu-delete',
-        callback: () => {
-          handleDeleteRequest();
-        },
-      },
-    ],
-    [handleDeleteRequest],
+  const handleDeleteRequest = useCallback(
+    (comment?: Comment) => {
+      const target = comment ?? getActiveComment();
+      if (!target) return;
+      setAlertContent(target);
+      setShowDeleteConfirmAlert(true);
+    },
+    [getActiveComment],
   );
+
+  const onAddClick = async () => {
+    if (!selectedRepository || !userInfo || !selectedIssue) return;
+    const result = await dispatch(
+      createLocalComment({
+        issueId: selectedIssue.id,
+        body: generateCommentBody(),
+        userId: userInfo.id,
+        repositoryId: selectedRepository.id,
+      }),
+    ).unwrap();
+    if (result !== null) {
+      dispatch(saveCommentsDB([result]));
+    }
+  };
 
   const handleDeleteCancel = () => {
     setShowDeleteConfirmAlert(false);
@@ -138,18 +131,25 @@ function Side() {
     setAlertContent(null);
   };
 
-  const isSelected = (item: Comment) => {
-    return item.id === selectedComment?.id;
-  };
-
   return (
     <div className="flex w-full flex-col h-full bg-gray-50 border-r border-gray-200">
+      {/* Toolbar */}
       <div
-        className={`border-b border-gray-200 bg-[#F9FAFB] shadow-sm p-4 ${
-          isWindows ? 'pt-4' : 'pt-[37px]'
+        className={`flex items-center justify-between border-b border-gray-200 bg-[#F9FAFB] px-3 ${
+          isWindows ? 'py-2' : 'pt-[37px] pb-2'
         }`}
       >
-        <NoteBookSearch />
+        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+          {selectedRepository?.name ?? 'Notes'}
+        </span>
+        <button
+          onClick={onAddClick}
+          disabled={!selectedIssue}
+          className="p-1 text-gray-400 hover:text-gray-700 disabled:opacity-30 transition-colors"
+          title="New Note"
+        >
+          <Icon name="pen square" size="large" className="!m-0" />
+        </button>
       </div>
 
       {DeleteAlert(
@@ -194,30 +194,7 @@ function Side() {
         </div>
       )}
 
-      {isCommentsLoading ? (
-        <div className="p-4">
-          <PlaceholderAnimationLine style={{ width: '100%' }} />
-        </div>
-      ) : (
-        <ul className="flex-1 overflow-y-auto py-2 list-none m-0 p-0">
-          {comments.map((item) => (
-            <li
-              key={item.id}
-              className={`
-                    group mx-3 my-1 rounded-lg transition-all duration-200
-                    ${isSelected(item) ? 'bg-[#e8e8e8]' : 'hover:bg-gray-100'}
-                `}
-            >
-              <IndexItem
-                item={item}
-                setAlertContent={setAlertContent}
-                options={options}
-                isSelected={isSelected}
-              />
-            </li>
-          ))}
-        </ul>
-      )}
+      <NoteTree onDeleteComment={handleDeleteRequest} />
 
       <div className="p-4 border-t border-gray-200 bg-white mt-auto">
         <div className="flex items-center justify-between">

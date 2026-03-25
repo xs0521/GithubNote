@@ -48,12 +48,17 @@ export const fetchIssues = createAsyncThunk(
         },
       },
     );
-    const rows = issues.map((item: Issue) => ({
+    const rows = issues.map((item: any) => ({
       ...item,
       id: String(item.id),
       body: item.body || '',
       user_id: userId,
       repository_id: String(repositoryId),
+      labels: (item.labels ?? []).map((l: any) => ({
+        id: String(l.id),
+        name: l.name,
+        color: l.color,
+      })),
     }));
     return rows;
   },
