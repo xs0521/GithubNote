@@ -14,27 +14,9 @@ importers:
       '@floating-ui/react':
         specifier: ^0.27.13
         version: 0.27.19(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
-      '@milkdown/core':
+      '@milkdown/crepe':
         specifier: ^7.19.2
-        version: 7.19.2
-      '@milkdown/plugin-history':
-        specifier: ^7.19.2
-        version: 7.19.2
-      '@milkdown/plugin-listener':
-        specifier: ^7.19.2
-        version: 7.19.2
-      '@milkdown/plugin-upload':
-        specifier: ^7.19.2
-        version: 7.19.2
-      '@milkdown/preset-commonmark':
-        specifier: ^7.19.2
-        version: 7.19.2
-      '@milkdown/preset-gfm':
-        specifier: ^7.19.2
-        version: 7.19.2
-      '@milkdown/react':
-        specifier: ^7.19.2
-        version: 7.19.2(@codemirror/language@6.12.2)(@codemirror/state@6.6.0)(@codemirror/view@6.40.0)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3)
+        version: 7.19.2(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.7)(typescript@5.9.3)
       '@milkdown/utils':
         specifier: ^7.19.2
         version: 7.19.2
@@ -1540,12 +1522,6 @@ packages:
 
   '@milkdown/prose@7.19.2':
     resolution: {integrity: sha512-XWwUx3khzJREQiv3At/1Hx0e5xNbn9+u7F37NKfcbuhwWoPGVrs6BY9Yoyf6Bkdq7K9/TBnO0Kx0yZwfooD+fw==}
-
-  '@milkdown/react@7.19.2':
-    resolution: {integrity: sha512-eTiukeUmxGqlzJRgghb7yIruius2ni3CMm7wbQ+6oklvtXa1jJQSgEg29r5Ui7ErQz1jYK3FgMETUoXr1nMCqQ==}
-    peerDependencies:
-      react: '*'
-      react-dom: '*'
 
   '@milkdown/transformer@7.19.2':
     resolution: {integrity: sha512-DBPDTPQ/kbQJSqfMWhsxWGfKwSW4HZV70xmcpbMkRm/PFj98g753BGfvW7K8qQUIIS0+cOwxxyeEXmpoK+hyrQ==}
@@ -9804,22 +9780,6 @@ snapshots:
       prosemirror-tables: 1.8.5
       prosemirror-transform: 1.11.0
       prosemirror-view: 1.41.7
-
-  '@milkdown/react@7.19.2(@codemirror/language@6.12.2)(@codemirror/state@6.6.0)(@codemirror/view@6.40.0)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.7)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3)':
-    dependencies:
-      '@milkdown/crepe': 7.19.2(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.7)(typescript@5.9.3)
-      '@milkdown/kit': 7.19.2(@codemirror/language@6.12.2)(@codemirror/state@6.6.0)(@codemirror/view@6.40.0)(typescript@5.9.3)
-      react: 19.2.4
-      react-dom: 19.2.4(react@19.2.4)
-    transitivePeerDependencies:
-      - '@codemirror/language'
-      - '@codemirror/state'
-      - '@codemirror/view'
-      - prosemirror-model
-      - prosemirror-state
-      - prosemirror-view
-      - supports-color
-      - typescript
 
   '@milkdown/transformer@7.19.2':
     dependencies:
