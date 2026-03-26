@@ -202,6 +202,7 @@ export class SyncManager {
               ...selectedRepository,
               id: String(selectedRepository.id),
             },
+            false,
           );
         }
 
@@ -339,8 +340,11 @@ export class SyncManager {
     owner: string,
     userId: number,
     repository: Repository,
+    showLoading: boolean = true,
   ): Promise<void> {
-    this.dispatch(updateIsIssuesLoading(true));
+    if (showLoading) {
+      this.dispatch(updateIsIssuesLoading(true));
+    }
     try {
       const lastSyncAt = normalizeSince(
         await getLastSyncAt(
@@ -413,7 +417,9 @@ export class SyncManager {
         );
       }
     } finally {
-      this.dispatch(updateIsIssuesLoading(false));
+      if (showLoading) {
+        this.dispatch(updateIsIssuesLoading(false));
+      }
     }
   }
 

@@ -31,7 +31,7 @@ Issues 和 Comments 都用 `since` 参数做增量同步，但 Repositories 每�
 
 ---
 
-### 4. Issues 加载状态每 30 秒触发一次 UI 更新
+### 4. ✅ Issues 加载状态每 30 秒触发一次 UI 更新（已修复）
 
 `syncIssuesForRepo` 没有 `showLoading` 参数控制，每次调用都会 dispatch `updateIsIssuesLoading(true/false)`，
 包括后台自动同步，每 30 秒触发一次 Redux 状态变化和 UI re-render。
