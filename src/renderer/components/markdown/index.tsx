@@ -1,13 +1,10 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { Crepe, CrepeFeature } from '@milkdown/crepe';
 import '@milkdown/crepe/theme/common/style.css';
-import '@milkdown/crepe/theme/frame.css';
 import { replaceAll } from '@milkdown/utils';
-import { useDispatch, useSelector, useStore } from 'react-redux';
-import { debounce } from 'lodash';
-import { AppDispatch, RootState } from '@redux/index';
-import { updateCommentDB } from '@slice/content-comment-slice';
-import { Comment, PLACEHOLDER } from '@const/index';
+import { useSelector } from 'react-redux';
+import { RootState } from '@redux/index';
+import { PLACEHOLDER } from '@const/index';
 import {
   getImageDimensions,
   getImageMarkdown,
@@ -17,23 +14,14 @@ import { useSnackbar } from 'notistack';
 import BottomToastBar, {
   BottomToastBarVariant,
 } from '@/renderer/components/bottomtoastbar';
-import { getSyncManager } from '@/renderer/sync';
-import { updateComments, updateSelectedComment } from '@slice/content-slice';
 import uploadFileToRepo, { UploadResult } from '@/renderer/server/upload';
 
 function Markdown() {
   const containerRef = useRef<HTMLDivElement>(null);
   const crepeRef = useRef<Crepe | null>(null);
-  const isExternalUpdateRef = useRef(false);
 
   const { enqueueSnackbar } = useSnackbar();
-  const dispatch = useDispatch<AppDispatch>();
-  const store = useStore<RootState>();
-
-  const syncManager = useMemo(
-    () => getSyncManager(dispatch, () => store.getState()),
-    [dispatch, store],
-  );
+  const enqueueSnackbarRef = useRef(enqueueSnackbar);
 
   const userInfo = useSelector((state: RootState) => state.userData.userInfo);
   const selectedRepository = useSelector(
@@ -42,63 +30,15 @@ function Markdown() {
   const selectedComment = useSelector(
     (state: RootState) => state.contentData.selectedComment,
   );
-  const comments = useSelector(
-    (state: RootState) => state.contentData.comments,
-  );
 
-  // Stable refs for async callbacks
-  const selectedCommentRef = useRef<Comment | null>(null);
-  const commentsRef = useRef<Comment[]>([]);
-  const syncUploadTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const userInfoRef = useRef(userInfo);
   const selectedRepositoryRef = useRef(selectedRepository);
-  const enqueueSnackbarRef = useRef(enqueueSnackbar);
 
   useEffect(() => {
-    selectedCommentRef.current = selectedComment;
-    commentsRef.current = comments;
     userInfoRef.current = userInfo;
     selectedRepositoryRef.current = selectedRepository;
     enqueueSnackbarRef.current = enqueueSnackbar;
   });
-
-  const handleContentChange = useMemo(
-    () =>
-      debounce((markdown: string) => {
-        const current = selectedCommentRef.current;
-        if (!current || !markdown || markdown === current.body) return;
-
-        const now = new Date().toISOString();
-        const saved: Comment = {
-          ...current,
-          body: markdown,
-          updated_at: now,
-          dirty: true,
-          sync_status: 'pending',
-        };
-
-        dispatch(updateSelectedComment(saved));
-        dispatch(
-          updateComments(
-            commentsRef.current.map((c) => {
-              const match = saved.id
-                ? String(c.id) === String(saved.id)
-                : c.uuid === saved.uuid;
-              return match ? saved : c;
-            }),
-          ),
-        );
-        dispatch(updateCommentDB(saved));
-
-        if (syncUploadTimeoutRef.current)
-          clearTimeout(syncUploadTimeoutRef.current);
-        syncUploadTimeoutRef.current = setTimeout(() => {
-          syncManager.syncSelectedIssue();
-          syncUploadTimeoutRef.current = null;
-        }, 2500);
-      }, 500),
-    [dispatch, syncManager],
-  );
 
   // Initialize Crepe editor once
   useEffect(() => {
@@ -160,7 +100,7 @@ function Markdown() {
 
     const crepe = new Crepe({
       root: containerRef.current,
-      defaultValue: selectedCommentRef.current?.body || PLACEHOLDER,
+      defaultValue: selectedComment?.body || PLACEHOLDER,
       featureConfigs: {
         [CrepeFeature.ImageBlock]: {
           onUpload: handleUpload,
@@ -173,47 +113,26 @@ function Markdown() {
       },
     });
 
-    crepe.on((api) => {
-      api.markdownUpdated((_ctx, markdown) => {
-        if (isExternalUpdateRef.current) return;
-        handleContentChange(markdown);
-      });
-    });
-
     let destroyed = false;
     crepe.create().then(() => {
       if (destroyed) return;
       crepeRef.current = crepe;
-      // Apply latest content in case selectedComment changed during async init
-      const content = selectedCommentRef.current?.body || PLACEHOLDER;
-      isExternalUpdateRef.current = true;
-      crepe.editor.action(replaceAll(content));
-      setTimeout(() => {
-        isExternalUpdateRef.current = false;
-      }, 100);
     });
 
     return () => {
       destroyed = true;
       crepeRef.current = null;
       crepe.destroy();
-      handleContentChange.cancel();
-      if (syncUploadTimeoutRef.current)
-        clearTimeout(syncUploadTimeoutRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [handleContentChange]);
+  }, []);
 
   // Update editor content when selected comment changes
   useEffect(() => {
     const crepe = crepeRef.current;
     if (!crepe) return;
     const content = selectedComment?.body || PLACEHOLDER;
-    isExternalUpdateRef.current = true;
     crepe.editor.action(replaceAll(content));
-    setTimeout(() => {
-      isExternalUpdateRef.current = false;
-    }, 100);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedComment?.id, selectedComment?.uuid]);
 

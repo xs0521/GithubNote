@@ -64,7 +64,16 @@ const configuration: webpack.Configuration = {
           'postcss-loader',
           'sass-loader',
         ],
-        exclude: /\.module\.s?(c|a)ss$/,
+        exclude: [/\.module\.s?(c|a)ss$/, /node_modules/],
+      },
+      // node_modules CSS — skip postcss/Tailwind to preserve third-party styles
+      // sideEffects: true overrides @milkdown/crepe's "sideEffects": false so
+      // webpack does not tree-shake CSS-only imports (which have no JS exports).
+      {
+        test: /\.css$/,
+        sideEffects: true,
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        include: /node_modules/,
       },
       // Fonts
       {
