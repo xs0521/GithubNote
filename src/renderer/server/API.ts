@@ -96,6 +96,7 @@ export async function fetchPaged<T = unknown>(
   url: string,
   accessToken: string,
   params: Record<string, string | number | undefined> = {},
+  shouldStop?: (page: T[]) => boolean,
 ): Promise<T[]> {
   const results: T[] = [];
   let page = 1;
@@ -111,6 +112,9 @@ export async function fetchPaged<T = unknown>(
     });
     results.push(...data);
     if (data.length < perPage) {
+      break;
+    }
+    if (shouldStop?.(data)) {
       break;
     }
     page += 1;

@@ -22,6 +22,7 @@ import { isDeletedComment } from './deleted-comment-cache';
 const SYNC_SCOPE_REPO_ISSUES = 'repo_issues';
 const SYNC_SCOPE_ISSUE_COMMENTS = 'issue_comments';
 const SYNC_SCOPE_APP_LAST = 'app_last_sync';
+const SYNC_SCOPE_APP_REPOS = 'app_repos';
 
 async function getLastSyncAt(
   scope: string,
@@ -100,71 +101,86 @@ export class SyncManager {
     }
   }
 
-  async syncSelectedRepo(): Promise<void> {
-    const state = this.getState();
-    const userInfo = state.userData.userInfo;
-    const selectedRepository = state.contentData.selectedRepository;
-    if (!userInfo || !selectedRepository) {
+  private async withSyncLock(fn: () => Promise<void>): Promise<void> {
+    if (this.isSyncing) {
       return;
     }
-    await this.syncIssuesForRepo(
-      userInfo.access_token,
-      userInfo.login,
-      userInfo.id,
-      {
-        ...selectedRepository,
-        id: String(selectedRepository.id),
-      },
-    );
+    this.isSyncing = true;
+    try {
+      await fn();
+    } finally {
+      this.isSyncing = false;
+    }
+  }
+
+  async syncSelectedRepo(): Promise<void> {
+    await this.withSyncLock(async () => {
+      const state = this.getState();
+      const userInfo = state.userData.userInfo;
+      const selectedRepository = state.contentData.selectedRepository;
+      if (!userInfo || !selectedRepository) {
+        return;
+      }
+      await this.syncIssuesForRepo(
+        userInfo.access_token,
+        userInfo.login,
+        userInfo.id,
+        {
+          ...selectedRepository,
+          id: String(selectedRepository.id),
+        },
+      );
+    });
   }
 
   async syncRepositoriesFull(
     removeMissing: boolean = false,
   ): Promise<void> {
-    const state = this.getState();
-    const userInfo = state.userData.userInfo;
-    if (!userInfo || !userInfo.access_token) {
-      return;
-    }
-    await this.syncRepositories(userInfo.access_token, userInfo.id, {
-      removeMissing,
-      showLoading: true,
+    await this.withSyncLock(async () => {
+      const state = this.getState();
+      const userInfo = state.userData.userInfo;
+      if (!userInfo || !userInfo.access_token) {
+        return;
+      }
+      await this.syncRepositories(userInfo.access_token, userInfo.id, {
+        removeMissing,
+        showLoading: true,
+      });
     });
   }
 
   async syncSelectedIssue(): Promise<void> {
-    const state = this.getState();
-    const userInfo = state.userData.userInfo;
-    const selectedRepository = state.contentData.selectedRepository;
-    const selectedIssue = state.contentData.selectedIssue;
-    if (!userInfo || !selectedRepository || !selectedIssue) {
-      return;
-    }
-    const hasLocalData = await this.loadCommentsFromDB(
-      userInfo.id,
-      selectedRepository,
-      {
-        ...selectedIssue,
-        id: String(selectedIssue.id),
-      },
-    );
-    await this.syncCommentsForIssue(
-      userInfo.access_token,
-      userInfo.login,
-      userInfo.id,
-      selectedRepository,
-      {
-        ...selectedIssue,
-        id: String(selectedIssue.id),
-      },
-      !hasLocalData,
-    );
+    await this.withSyncLock(async () => {
+      const state = this.getState();
+      const userInfo = state.userData.userInfo;
+      const selectedRepository = state.contentData.selectedRepository;
+      const selectedIssue = state.contentData.selectedIssue;
+      if (!userInfo || !selectedRepository || !selectedIssue) {
+        return;
+      }
+      const hasLocalData = await this.loadCommentsFromDB(
+        userInfo.id,
+        selectedRepository,
+        {
+          ...selectedIssue,
+          id: String(selectedIssue.id),
+        },
+      );
+      await this.syncCommentsForIssue(
+        userInfo.access_token,
+        userInfo.login,
+        userInfo.id,
+        selectedRepository,
+        {
+          ...selectedIssue,
+          id: String(selectedIssue.id),
+        },
+        !hasLocalData,
+      );
+    });
   }
 
   private async runSync(): Promise<void> {
-    if (this.isSyncing) {
-      return;
-    }
     const state = this.getState();
     if (!state.settingData.isDBInitialized) {
       return;
@@ -174,44 +190,43 @@ export class SyncManager {
       return;
     }
 
-    this.isSyncing = true;
-    try {
-      const selectedRepository = this.getState().contentData.selectedRepository;
-      if (selectedRepository) {
-        await this.syncIssuesForRepo(
-          userInfo.access_token,
-          userInfo.login,
-          userInfo.id,
-          {
-            ...selectedRepository,
-            id: String(selectedRepository.id),
-          },
-        );
-      }
+    await this.withSyncLock(async () => {
+      try {
+        const selectedRepository = this.getState().contentData.selectedRepository;
+        if (selectedRepository) {
+          await this.syncIssuesForRepo(
+            userInfo.access_token,
+            userInfo.login,
+            userInfo.id,
+            {
+              ...selectedRepository,
+              id: String(selectedRepository.id),
+            },
+          );
+        }
 
-      const selectedIssue = this.getState().contentData.selectedIssue;
-      if (selectedRepository && selectedIssue) {
-        await this.syncCommentsForIssue(
-          userInfo.access_token,
-          userInfo.login,
-          userInfo.id,
-          selectedRepository,
-          {
-            ...selectedIssue,
-            id: String(selectedIssue.id),
-          },
-          false,
-        );
-      }
+        const selectedIssue = this.getState().contentData.selectedIssue;
+        if (selectedRepository && selectedIssue) {
+          await this.syncCommentsForIssue(
+            userInfo.access_token,
+            userInfo.login,
+            userInfo.id,
+            selectedRepository,
+            {
+              ...selectedIssue,
+              id: String(selectedIssue.id),
+            },
+            false,
+          );
+        }
 
-      const now = new Date();
-      this.dispatch(updateLastSyncAt(now.toISOString()));
-      await setLastSyncAt(SYNC_SCOPE_APP_LAST, userInfo.id, '', '', now);
-    } catch (error) {
-      console.error('Auto sync failed', error);
-    } finally {
-      this.isSyncing = false;
-    }
+        const now = new Date();
+        this.dispatch(updateLastSyncAt(now.toISOString()));
+        await setLastSyncAt(SYNC_SCOPE_APP_LAST, userInfo.id, '', '', now);
+      } catch (error) {
+        console.error('Auto sync failed', error);
+      }
+    });
   }
 
   private async syncRepositories(
@@ -224,24 +239,45 @@ export class SyncManager {
       this.dispatch(updateIsRepositoriesLoading(true));
     }
     try {
+      // removeMissing requires a full list to diff — skip incremental in that case
+      const lastSyncAt = removeMissing
+        ? null
+        : normalizeSince(
+            await getLastSyncAt(SYNC_SCOPE_APP_REPOS, userId, '', ''),
+          );
+
       const repositories = await fetchPaged<Repository>(
         '/user/repos',
         accessToken,
-        {},
+        { sort: 'updated', direction: 'desc' },
+        lastSyncAt
+          ? (page) =>
+              page.some((repo) => toDate(repo.updated_at) <= lastSyncAt)
+          : undefined,
       );
-      const rows = repositories.map((item) => ({
+
+      // Only save repos that changed since last sync (or all if full fetch)
+      const changed = lastSyncAt
+        ? repositories.filter((repo) => toDate(repo.updated_at) > lastSyncAt)
+        : repositories;
+
+      const rows = changed.map((item) => ({
         ...item,
         id: String(item.id),
         language: item.language || 'unknown',
         user_id: userId,
       }));
-      await db.saveRepositories(rows);
+      if (rows.length > 0) {
+        await db.saveRepositories(rows);
+      }
 
       if (removeMissing) {
+        const allRemoteIds = new Set(
+          repositories.map((item) => String(item.id)),
+        );
         const currentRows = await db.getRepositoriesByUser(userId);
-        const remoteIds = new Set(rows.map((item) => String(item.id)));
         const removed = currentRows.filter(
-          (item) => !remoteIds.has(String(item.id)),
+          (item) => !allRemoteIds.has(String(item.id)),
         );
         for (const repo of removed) {
           await db.deleteCommentsByRepositoryId(userId, String(repo.id));
@@ -249,10 +285,11 @@ export class SyncManager {
           await db.deleteSyncMetaByRepositoryId(userId, String(repo.id));
           await db.deleteRepositoryById(String(repo.id));
         }
-        const selectedRepository = this.getState().contentData.selectedRepository;
+        const selectedRepository =
+          this.getState().contentData.selectedRepository;
         if (
           selectedRepository &&
-          !remoteIds.has(String(selectedRepository.id))
+          !allRemoteIds.has(String(selectedRepository.id))
         ) {
           this.dispatch(updateSelectedRepository(null));
           this.dispatch(updateSelectedIssue(null));
@@ -261,6 +298,15 @@ export class SyncManager {
           this.dispatch(updateComments([]));
           this.dispatch(updateWorkspace(true));
         }
+      }
+
+      // Update last_sync_at to the most recent updated_at seen
+      const maxUpdatedAt = repositories.reduce<Date | null>((max, item) => {
+        const current = toDate(item.updated_at);
+        return !max || current > max ? current : max;
+      }, lastSyncAt);
+      if (maxUpdatedAt) {
+        await setLastSyncAt(SYNC_SCOPE_APP_REPOS, userId, '', '', maxUpdatedAt);
       }
 
       const dbRows = await db.getRepositoriesByUser(userId);
@@ -281,11 +327,11 @@ export class SyncManager {
     if (!userInfo || !userInfo.access_token) {
       return;
     }
-    this.hasSyncedRepositories = true;
     await this.syncRepositories(userInfo.access_token, userInfo.id, {
-      removeMissing: false,
+      removeMissing: true,
       showLoading: true,
     });
+    this.hasSyncedRepositories = true;
   }
 
   private async syncIssuesForRepo(
