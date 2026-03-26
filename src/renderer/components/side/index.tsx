@@ -11,6 +11,7 @@ import { type FetchCommentsConfig } from '@models/model';
 import NoteTree from '@components/side/note-tree';
 import { clearDeletedComments } from '@/renderer/sync/deleted-comment-cache';
 import { createLocalComment, saveCommentsDB } from '@slice/content-comment-slice';
+import { resetSyncManager } from '@/renderer/sync';
 
 function Side() {
   const dispatch = useDispatch<AppDispatch>();
@@ -73,6 +74,7 @@ function Side() {
     if (userInfo?.id) {
       clearDeletedComments(userInfo.id);
     }
+    resetSyncManager();
     dispatch(updateWorkspace(false));
     dispatch(clearUserData());
   };

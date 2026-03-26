@@ -1,7 +1,7 @@
 import { AppDispatch, RootState } from '@redux/index';
 import { Repository, Issue, Comment } from '@const/index';
 import * as db from '@db/index';
-import { apiPatch, apiPost, fetchPaged } from '@/renderer/server/API';
+import { apiPatch, apiPost, fetchPaged, RateLimitError } from '@/renderer/server/API';
 import {
   updateRepositories,
   updateIssues,
@@ -17,7 +17,10 @@ import {
   updateLastSyncAt,
 } from '@slice/setting-slice';
 import { updateWorkspace } from '@slice/setting-slice';
-import { isDeletedComment } from './deleted-comment-cache';
+import {
+  isDeletedComment,
+  loadDeletedCommentsFromDB,
+} from './deleted-comment-cache';
 
 const SYNC_SCOPE_REPO_ISSUES = 'repo_issues';
 const SYNC_SCOPE_ISSUE_COMMENTS = 'issue_comments';
@@ -76,6 +79,7 @@ export class SyncManager {
   private timer: NodeJS.Timeout | null = null;
   private isSyncing = false;
   private hasSyncedRepositories = false;
+  private rateLimitResetAt: Date | null = null;
 
   constructor(dispatch: AppDispatch, getState: () => RootState) {
     this.dispatch = dispatch;
@@ -87,6 +91,7 @@ export class SyncManager {
       return;
     }
     this.loadAppLastSyncAt();
+    this.loadDeletedCommentsCache();
     this.syncRepositoriesOnce();
     this.runSync();
     this.timer = setInterval(() => {
@@ -105,9 +110,20 @@ export class SyncManager {
     if (this.isSyncing) {
       return;
     }
+    if (this.rateLimitResetAt && new Date() < this.rateLimitResetAt) {
+      return;
+    }
+    this.rateLimitResetAt = null;
     this.isSyncing = true;
     try {
       await fn();
+    } catch (error) {
+      if (error instanceof RateLimitError) {
+        this.rateLimitResetAt = error.resetAt;
+        console.warn('Rate limit hit, pausing sync until', error.resetAt.toISOString());
+      } else {
+        throw error;
+      }
     } finally {
       this.isSyncing = false;
     }
@@ -495,13 +511,12 @@ export class SyncManager {
 
       const rowsToSave = filteredComments.map((item) => {
         const existing = existingMap.get(String(item.id));
-        const updatedAt = toDate(item.updated_at);
         if (existing) {
-          const existingUpdatedAt = toDate(existing.updated_at);
-          if (existing.dirty && existingUpdatedAt >= updatedAt) {
+          // dirty means local has unpushed changes — always win regardless of timestamps
+          if (existing.dirty) {
             return null;
           }
-          if (existingUpdatedAt >= updatedAt) {
+          if (toDate(existing.updated_at) >= toDate(item.updated_at)) {
             return null;
           }
         }
@@ -758,6 +773,14 @@ export class SyncManager {
       this.dispatch(updateLastSyncAt(lastSyncAt.toISOString()));
     }
   }
+
+  private async loadDeletedCommentsCache(): Promise<void> {
+    const userInfo = this.getState().userData.userInfo;
+    if (!userInfo?.id) {
+      return;
+    }
+    await loadDeletedCommentsFromDB(userInfo.id);
+  }
 }
 
 let sharedSyncManager: SyncManager | null = null;
@@ -770,4 +793,9 @@ export function getSyncManager(
     sharedSyncManager = new SyncManager(dispatch, getState);
   }
   return sharedSyncManager;
+}
+
+export function resetSyncManager(): void {
+  sharedSyncManager?.stop();
+  sharedSyncManager = null;
 }

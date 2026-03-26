@@ -10,6 +10,16 @@ export interface ApiRequestOptions<T = unknown> extends AxiosRequestConfig<T> {
   accessToken?: string;
 }
 
+export class RateLimitError extends Error {
+  resetAt: Date;
+
+  constructor(resetAt: Date) {
+    super('GitHub API rate limit exceeded');
+    this.name = 'RateLimitError';
+    this.resetAt = resetAt;
+  }
+}
+
 export async function apiRequest<T = unknown>({
   accessToken,
   headers,
@@ -39,6 +49,15 @@ export async function apiRequest<T = unknown>({
     }
     if (status === 404) {
       return [] as T;
+    }
+    if (status === 403 || status === 429) {
+      const headers = (error as any)?.response?.headers ?? {};
+      const resetUnix =
+        headers['x-ratelimit-reset'] ?? headers['retry-after'];
+      const resetAt = resetUnix
+        ? new Date(Number(resetUnix) * 1000)
+        : new Date(Date.now() + 60_000);
+      throw new RateLimitError(resetAt);
     }
     log.error('API request failed', {
       url: config.url,

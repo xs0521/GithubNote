@@ -2,7 +2,6 @@ import Dexie, { Table } from 'dexie';
 import { Repository, Issue, Comment } from '@const/index';
 
 const DB_NAME = 'gitnoteDB';
-const DB_VERSION = 1;
 
 export interface SyncMeta {
   id: string;
@@ -11,6 +10,12 @@ export interface SyncMeta {
   issue_id: string;
   last_sync_at: string;
   scope: string;
+}
+
+export interface DeletedComment {
+  id: string; // `${userId}:${commentId}`
+  user_id: number;
+  comment_id: string;
 }
 
 class GitnoteDB extends Dexie {
@@ -22,9 +27,11 @@ class GitnoteDB extends Dexie {
 
   sync_meta!: Table<SyncMeta, string>;
 
+  deleted_comments!: Table<DeletedComment, string>;
+
   constructor() {
     super(DB_NAME);
-    this.version(DB_VERSION).stores({
+    this.version(1).stores({
       repositories: 'id, user_id, updated_at, [user_id+id]',
       issues:
         'id, user_id, repository_id, state, updated_at, [user_id+repository_id], [user_id+repository_id+state]',
@@ -32,6 +39,9 @@ class GitnoteDB extends Dexie {
         'id, uuid, user_id, repository_id, issue_id, updated_at, [user_id+repository_id+issue_id]',
       sync_meta:
         'id, user_id, repository_id, issue_id, scope, [user_id+repository_id+issue_id+scope]',
+    });
+    this.version(2).stores({
+      deleted_comments: 'id, user_id',
     });
   }
 }
@@ -265,4 +275,32 @@ export async function setSyncMeta(meta: SyncMeta): Promise<void> {
     return;
   }
   await db.sync_meta.put(meta);
+}
+
+export async function saveDeletedComment(
+  userId: number,
+  commentId: string,
+): Promise<void> {
+  if (!isInitialized) {
+    return;
+  }
+  const id = `${userId}:${commentId}`;
+  await db.deleted_comments.put({ id, user_id: userId, comment_id: commentId });
+}
+
+export async function loadDeletedCommentIds(
+  userId: number,
+): Promise<string[]> {
+  if (!isInitialized) {
+    return [];
+  }
+  const rows = await db.deleted_comments.where('user_id').equals(userId).toArray();
+  return rows.map((r) => r.comment_id);
+}
+
+export async function clearDeletedCommentsFromDB(userId: number): Promise<void> {
+  if (!isInitialized) {
+    return;
+  }
+  await db.deleted_comments.where('user_id').equals(userId).delete();
 }

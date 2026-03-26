@@ -1,3 +1,5 @@
+import * as db from '@db/index';
+
 const deletedCommentsByUser = new Map<number, Set<string>>();
 
 export function markDeletedComment(userId: number, commentId: string): void {
@@ -8,9 +10,26 @@ export function markDeletedComment(userId: number, commentId: string): void {
   const existing = deletedCommentsByUser.get(userId);
   if (existing) {
     existing.add(key);
+  } else {
+    deletedCommentsByUser.set(userId, new Set([key]));
+  }
+  // persist to DB — fire and forget
+  db.saveDeletedComment(userId, key).catch((err) =>
+    console.error('Failed to persist deleted comment', err),
+  );
+}
+
+export async function loadDeletedCommentsFromDB(userId: number): Promise<void> {
+  const ids = await db.loadDeletedCommentIds(userId);
+  if (ids.length === 0) {
     return;
   }
-  deletedCommentsByUser.set(userId, new Set([key]));
+  const existing = deletedCommentsByUser.get(userId);
+  if (existing) {
+    ids.forEach((id) => existing.add(id));
+  } else {
+    deletedCommentsByUser.set(userId, new Set(ids));
+  }
 }
 
 export function isDeletedComment(userId: number, commentId: string): boolean {
@@ -23,6 +42,9 @@ export function isDeletedComment(userId: number, commentId: string): boolean {
 export function clearDeletedComments(userId?: number): void {
   if (typeof userId === 'number') {
     deletedCommentsByUser.delete(userId);
+    db.clearDeletedCommentsFromDB(userId).catch((err) =>
+      console.error('Failed to clear deleted comments from DB', err),
+    );
     return;
   }
   deletedCommentsByUser.clear();
