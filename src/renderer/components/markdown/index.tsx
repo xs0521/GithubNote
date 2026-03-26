@@ -40,6 +40,7 @@ function Markdown() {
   const selectedCommentRef = useRef(selectedComment);
   const isUpdatingRef = useRef(false);
   const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const pendingContentRef = useRef<string | null>(null);
 
   useEffect(() => {
     userInfoRef.current = userInfo;
@@ -129,6 +130,16 @@ function Markdown() {
       if (destroyed) return;
       crepeRef.current = crepe;
 
+      // Apply content that arrived before the editor finished initializing
+      if (pendingContentRef.current !== null) {
+        isUpdatingRef.current = true;
+        crepe.editor.action(replaceAll(pendingContentRef.current));
+        pendingContentRef.current = null;
+        requestAnimationFrame(() => {
+          isUpdatingRef.current = false;
+        });
+      }
+
       crepe.on((api) => {
         api.markdownUpdated((_ctx, markdown) => {
           if (isUpdatingRef.current) return;
@@ -163,9 +174,13 @@ function Markdown() {
 
   // Update editor content when selected comment changes
   useEffect(() => {
-    const crepe = crepeRef.current;
-    if (!crepe) return;
     const content = selectedComment?.body || PLACEHOLDER;
+    const crepe = crepeRef.current;
+    if (!crepe) {
+      // Editor not ready yet — store content to apply once it initializes
+      pendingContentRef.current = content;
+      return;
+    }
     isUpdatingRef.current = true;
     crepe.editor.action(replaceAll(content));
     requestAnimationFrame(() => {
