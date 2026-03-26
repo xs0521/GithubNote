@@ -24,16 +24,20 @@ type TreeNode = {
 function makeIssueNode(
   issue: Issue,
   issueComments: Record<string, Comment[]>,
+  labelKey?: string,
 ): TreeNode {
   const loaded = issueComments[issue.id];
+  // Include labelKey in IDs to ensure uniqueness when the same issue appears
+  // under multiple label folders (an issue with N labels has N tree nodes).
+  const idPrefix = labelKey !== undefined ? `label:${labelKey}:` : '';
   return {
-    id: `issue:${issue.id}`,
+    id: `${idPrefix}issue:${issue.id}`,
     name: issue.title,
     type: 'issue' as const,
     issue,
     children: loaded
       ? loaded.map((comment) => ({
-          id: `comment:${comment.id || comment.uuid}`,
+          id: `${idPrefix}comment:${comment.id || comment.uuid}`,
           name: getCommentTitle(comment.body) || 'New Note',
           type: 'comment' as const,
           comment,
@@ -77,7 +81,7 @@ function buildTree(
     id: `label:${key}`,
     name: key === '__none__' ? 'No Label' : key,
     type: 'label' as const,
-    children: labelIssues.map((issue) => makeIssueNode(issue, issueComments)),
+    children: labelIssues.map((issue) => makeIssueNode(issue, issueComments, key)),
   }));
 }
 
@@ -194,7 +198,16 @@ function NoteTree({ onDeleteComment }: NoteTreeProps) {
   // Auto-open selected issue node in tree
   useEffect(() => {
     if (selectedIssue && treeRef.current) {
-      treeRef.current.open(`issue:${selectedIssue.id}`);
+      const labels = selectedIssue.labels;
+      if (labels && labels.length > 0) {
+        // Issue appears under each of its label folders — open all instances
+        labels.forEach((label) => {
+          treeRef.current.open(`label:${label.name}:issue:${selectedIssue.id}`);
+        });
+      } else {
+        // Flat list (no labels)
+        treeRef.current.open(`issue:${selectedIssue.id}`);
+      }
     }
   }, [selectedIssue?.id]);
 
@@ -230,7 +243,9 @@ function NoteTree({ onDeleteComment }: NoteTreeProps) {
 
   const handleToggle = useCallback(
     (id: string) => {
-      const issueId = id.startsWith('issue:') ? id.slice(6) : null;
+      // Handles "issue:X" (flat list) and "label:L:issue:X" (labeled list)
+      const match = id.match(/:issue:(.+)$/) ?? id.match(/^issue:(.+)$/);
+      const issueId = match ? match[1] : null;
       if (!issueId) return;
       const issue = issues.find((i: Issue) => i.id === issueId);
       if (issue) loadIssueComments(issue);
