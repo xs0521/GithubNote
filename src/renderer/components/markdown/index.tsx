@@ -101,6 +101,9 @@ function Markdown() {
     const crepe = new Crepe({
       root: containerRef.current,
       defaultValue: selectedComment?.body || PLACEHOLDER,
+      features: {
+        [CrepeFeature.Latex]: false,
+      },
       featureConfigs: {
         [CrepeFeature.ImageBlock]: {
           onUpload: handleUpload,
