@@ -244,7 +244,9 @@ export async function updateCommentByIdOrUuid(
     if (updated > 0) {
       log.info('db update comment by id', {
         id: String(comment.id),
-        changes,
+        body: changes.body?.split('\n')[0],
+        dirty: changes.dirty,
+        sync_status: changes.sync_status,
       });
       return;
     }
@@ -252,7 +254,9 @@ export async function updateCommentByIdOrUuid(
   if (comment.uuid) {
     log.info('db update comment by uuid', {
       uuid: comment.uuid,
-      changes,
+      body: changes.body?.split('\n')[0],
+      dirty: changes.dirty,
+      sync_status: changes.sync_status,
     });
     await db.comments.where('uuid').equals(comment.uuid).modify(changes);
   }

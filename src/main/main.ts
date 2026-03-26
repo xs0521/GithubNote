@@ -12,7 +12,8 @@ import path from 'path';
 import fs from 'fs';
 import { app, BrowserWindow, shell, ipcMain, session } from 'electron';
 import AppUpdateCheck from './app-update-check';
-import log from 'electron-log';
+import log from 'electron-log/main';
+log.initialize();
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import {

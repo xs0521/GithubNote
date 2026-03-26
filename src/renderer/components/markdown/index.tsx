@@ -2,8 +2,8 @@ import { useEffect, useRef } from 'react';
 import { Crepe, CrepeFeature } from '@milkdown/crepe';
 import '@milkdown/crepe/theme/common/style.css';
 import { replaceAll } from '@milkdown/utils';
-import { useSelector } from 'react-redux';
-import { RootState } from '@redux/index';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@redux/index';
 import { PLACEHOLDER } from '@const/index';
 import {
   getImageDimensions,
@@ -15,10 +15,14 @@ import BottomToastBar, {
   BottomToastBarVariant,
 } from '@/renderer/components/bottomtoastbar';
 import uploadFileToRepo, { UploadResult } from '@/renderer/server/upload';
+import { updateCommentDB } from '@slice/content-comment-slice';
+import { updateSelectedComment } from '@slice/content-slice';
 
 function Markdown() {
   const containerRef = useRef<HTMLDivElement>(null);
   const crepeRef = useRef<Crepe | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const dispatchRef = useRef(dispatch);
 
   const { enqueueSnackbar } = useSnackbar();
   const enqueueSnackbarRef = useRef(enqueueSnackbar);
@@ -33,10 +37,14 @@ function Markdown() {
 
   const userInfoRef = useRef(userInfo);
   const selectedRepositoryRef = useRef(selectedRepository);
+  const selectedCommentRef = useRef(selectedComment);
+  const isUpdatingRef = useRef(false);
+  const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     userInfoRef.current = userInfo;
     selectedRepositoryRef.current = selectedRepository;
+    selectedCommentRef.current = selectedComment;
     enqueueSnackbarRef.current = enqueueSnackbar;
   });
 
@@ -120,11 +128,34 @@ function Markdown() {
     crepe.create().then(() => {
       if (destroyed) return;
       crepeRef.current = crepe;
+
+      crepe.on((api) => {
+        api.markdownUpdated((_ctx, markdown) => {
+          if (isUpdatingRef.current) return;
+          const comment = selectedCommentRef.current;
+          if (!comment) return;
+          if (markdown === (comment.body || PLACEHOLDER)) return;
+
+          if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+          saveTimerRef.current = setTimeout(() => {
+            const updated = {
+              ...comment,
+              body: markdown,
+              updated_at: new Date().toISOString(),
+              dirty: true,
+              sync_status: 'pending' as const,
+            };
+            dispatchRef.current(updateSelectedComment(updated));
+            dispatchRef.current(updateCommentDB(updated));
+          }, 500);
+        });
+      });
     });
 
     return () => {
       destroyed = true;
       crepeRef.current = null;
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
       crepe.destroy();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -135,7 +166,11 @@ function Markdown() {
     const crepe = crepeRef.current;
     if (!crepe) return;
     const content = selectedComment?.body || PLACEHOLDER;
+    isUpdatingRef.current = true;
     crepe.editor.action(replaceAll(content));
+    requestAnimationFrame(() => {
+      isUpdatingRef.current = false;
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedComment?.id, selectedComment?.uuid]);
 
