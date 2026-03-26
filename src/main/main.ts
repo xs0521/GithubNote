@@ -71,8 +71,8 @@ ipcMain.on(CHANNEL_COMMON, async (event, arg) => {
   if (arg[0] === CHANNEL_ACTION_GITHUB_TOKEN) {
     const token = arg[1];
     const userName = arg[2];
-    console.log('receive github token', token);
-    console.log('receive github user name', userName);
+    log.info('receive github token', '[REDACTED]');
+    log.info('receive github user name', userName);
     userInfo = {
       access_token: token,
       username: userName,
@@ -94,7 +94,7 @@ ipcMain.on(CHANNEL_COMMON, async (event, arg) => {
   const action = arg[0] ?? 'unknown';
   const msgTemplate = (pingPong: string) =>
     `IPC Receive: ${action} ${pingPong}`;
-  console.log(msgTemplate(arg));
+  log.info(msgTemplate('ping'));
   event.reply(CHANNEL_COMMON, msgTemplate('pong'));
 });
 
@@ -120,7 +120,7 @@ const installExtensions = async () => {
       extensions.map((name) => {
         const extension = installer[name];
         if (!extension) {
-          console.warn(`Extension ${name} not found`);
+          log.warn(`Extension ${name} not found`);
           return Promise.resolve();
         }
         return installer.default(extension, forceDownload);
@@ -129,14 +129,14 @@ const installExtensions = async () => {
 
     results.forEach((result, index) => {
       if (result.status === 'rejected') {
-        console.warn(
+        log.warn(
           `Failed to install extension ${extensions[index]}:`,
           result.reason,
         );
       }
     });
   } catch (error) {
-    console.warn('Failed to install extensions:', error);
+    log.warn('Failed to install extensions:', error);
   }
 };
 
@@ -223,7 +223,7 @@ app.on('window-all-closed', () => {
 // 处理自定义协议回调
 app.on('open-url', (event, url) => {
   event.preventDefault();
-  console.log('App opened with URL:', url);
+  log.info('App opened with URL (protocol callback)');
   handleProtocolCallback(url);
 });
 
@@ -240,7 +240,7 @@ app.on('second-instance', (event, commandLine) => {
     arg.startsWith('githubnote://'),
   );
   if (protocolUrl) {
-    console.log('Protocol callback from second instance:', protocolUrl);
+    log.info('Protocol callback from second instance');
     handleProtocolCallback(protocolUrl);
   }
 });
@@ -260,7 +260,6 @@ app
       }
     })();
     log.info('Build number', { buildNumber });
-    console.log('Build number', buildNumber);
 
     // 注册自定义协议
     registerCustomProtocol();
@@ -302,6 +301,6 @@ app
       if (mainWindow === null) createWindow();
     });
   })
-  .catch(console.log);
+  .catch(log.error);
 
 export { mainWindow };

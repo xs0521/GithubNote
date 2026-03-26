@@ -1,5 +1,6 @@
 import { BrowserWindow, app } from 'electron';
 import path from 'path';
+import log from 'electron-log';
 
 import { mainWindow, sendToMainRenderer } from './main';
 import {
@@ -27,15 +28,15 @@ export function registerCustomProtocol() {
 
 // 处理自定义协议回调
 export function handleProtocolCallback(url: string) {
-  console.log('Protocol callback received:', url);
+  log.info('Protocol callback received');
 
   // 解析 URL 中的 code 参数
   const urlObj = new URL(url);
   const code = urlObj.searchParams.get('code');
   const error = urlObj.searchParams.get('error');
 
-  console.log('Code:', code);
-  console.log('Error:', error);
+  log.info('OAuth code received:', Boolean(code));
+  log.info('OAuth error:', error);
 
   if (code) {
     // 发送成功消息到渲染进程
@@ -48,7 +49,7 @@ export function handleProtocolCallback(url: string) {
       authWindow = null;
     }
   } else if (error) {
-    console.error('GitHub auth error:', error);
+    log.error('GitHub auth error:', error);
     if (mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.webContents.send(CHANNEL_GITHUB_LOGIN_ERROR, error);
     }
@@ -85,13 +86,13 @@ export async function createAuthWindow() {
       allow_signup: 'true',
     }).toString();
 
-  console.log('Loading auth URL:', authUrl);
+  log.info('Loading auth URL');
 
   // 添加错误处理
   authWindow.webContents.on(
     'did-fail-load',
     (event, errorCode, errorDescription, validatedURL) => {
-      console.error(
+      log.error(
         'Failed to load auth URL:',
         errorCode,
         errorDescription,
@@ -101,18 +102,18 @@ export async function createAuthWindow() {
   );
 
   authWindow.webContents.on('did-finish-load', () => {
-    console.log('Auth window loaded successfully');
+    log.info('Auth window loaded successfully');
   });
 
   authWindow.webContents.on('render-process-gone', (event, details) => {
-    console.error('Auth window render process gone:', details);
+    log.error('Auth window render process gone:', details);
   });
 
   try {
     await authWindow.loadURL(authUrl);
     authWindow.show();
   } catch (error) {
-    console.error('Error loading auth URL:', error);
+    log.error('Error loading auth URL:', error);
   }
 
   // 处理回调 URL
@@ -120,7 +121,7 @@ export async function createAuthWindow() {
     const codeMatch = /code=([^&]*)/.exec(url) || null;
     const code = codeMatch && codeMatch.length > 1 ? codeMatch[1] : null;
     const error = /\?error=(.+)$/.exec(url);
-    console.log('handleCallback - code:', code);
+    log.info('handleCallback - code received:', Boolean(code));
 
     // 如果有 code，获取 token
     if (code) {
@@ -134,7 +135,7 @@ export async function createAuthWindow() {
         authWindow = null;
       }
     } else if (error) {
-      console.error('GitHub auth error:', error);
+      log.error('GitHub auth error:', error);
       if (mainWindow && !mainWindow.isDestroyed()) {
         sendToMainRenderer(CHANNEL_GITHUB_LOGIN_ERROR, error);
       }
@@ -148,7 +149,7 @@ export async function createAuthWindow() {
   // 监听导航事件
   // @ts-ignore
   authWindow.webContents.on('will-navigate', (event: Event, url: string) => {
-    console.log('will-navigate:', url);
+    log.info('will-navigate');
     handleCallback(url);
   });
 
@@ -158,7 +159,7 @@ export async function createAuthWindow() {
     // @ts-ignore
     'did-get-redirect-request',
     (event: Event, oldUrl: string, newUrl: string) => {
-      console.log('did-get-redirect-request:', newUrl);
+      log.info('did-get-redirect-request');
       handleCallback(newUrl);
     },
   );

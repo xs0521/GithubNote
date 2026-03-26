@@ -1,4 +1,5 @@
 import * as db from '@db/index';
+import log from 'electron-log/renderer';
 
 const deletedCommentsByUser = new Map<number, Set<string>>();
 
@@ -15,7 +16,7 @@ export function markDeletedComment(userId: number, commentId: string): void {
   }
   // persist to DB — fire and forget
   db.saveDeletedComment(userId, key).catch((err) =>
-    console.error('Failed to persist deleted comment', err),
+    log.error('Failed to persist deleted comment', err),
   );
 }
 
@@ -43,7 +44,7 @@ export function clearDeletedComments(userId?: number): void {
   if (typeof userId === 'number') {
     deletedCommentsByUser.delete(userId);
     db.clearDeletedCommentsFromDB(userId).catch((err) =>
-      console.error('Failed to clear deleted comments from DB', err),
+      log.error('Failed to clear deleted comments from DB', err),
     );
     return;
   }

@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import * as db from '@db/index';
 import { Comment } from '@const/index';
 import { apiDelete, apiGet, apiPatch, apiPost } from '@/renderer/server/API';
+import log from 'electron-log/renderer';
 
 interface CreateCommentParams {
   issueNumber: number;
@@ -27,7 +28,7 @@ export const createComment = createAsyncThunk(
     repositoryId,
   }: CreateCommentParams) => {
     if (!accessToken || !owner || !repositoryName || !issueNumber) {
-      console.warn('Missing required configuration to create comment');
+      log.warn('Missing required configuration to create comment');
       return null;
     }
     const comment = await apiPost<Comment>(
@@ -93,7 +94,7 @@ export const fetchCommentsFromDB = createAsyncThunk(
     try {
       return await db.getCommentsByIssue(userId, repositoryId, issueId);
     } catch (error) {
-      console.error('Error fetching comments from DB', error);
+      log.error('Error fetching comments from DB', error);
       return [];
     }
   },
@@ -119,23 +120,23 @@ export const fetchComments = createAsyncThunk(
     issueId: string;
   }) => {
     if (!accessToken) {
-      console.warn('No access token found', repositoryName);
+      log.warn('No access token found', { repositoryName });
       return [];
     }
     if (!owner) {
-      console.warn('No owner found', repositoryName);
+      log.warn('No owner found', { repositoryName });
       return [];
     }
     if (!repositoryName) {
-      console.warn('No repositoryName found', repositoryName);
+      log.warn('No repositoryName found');
       return [];
     }
     if (!issueNumber) {
-      console.warn('No issueNumber found', repositoryName);
+      log.warn('No issueNumber found', { repositoryName });
       return [];
     }
     if (!userId) {
-      console.warn('No userId found', repositoryName);
+      log.warn('No userId found', { repositoryName });
       return [];
     }
     const page = 1;
@@ -171,7 +172,7 @@ export const saveCommentsDB = createAsyncThunk(
       await db.saveComments(comments);
       return comments;
     } catch (error) {
-      console.error('Error saving comments', error);
+      log.error('Error saving comments', error);
       return [];
     }
   },
@@ -196,7 +197,7 @@ export const fetchCommentNetWork = async ({
       accessToken,
     );
   } catch (error) {
-    console.error('Error fetching comment from network', error);
+    log.error('Error fetching comment from network', error);
     return null;
   }
 };
@@ -207,7 +208,7 @@ export const deleteCommentDB = createAsyncThunk(
     try {
       await db.deleteCommentByIdOrUuid(comment);
     } catch (error) {
-      console.error('Failed to delete comment from local DB', error);
+      log.error('Failed to delete comment from local DB', error);
       return [];
     }
     return comment;
@@ -238,7 +239,7 @@ export const deleteCommentNetwork = createAsyncThunk(
         accessToken,
       );
     } catch (error) {
-      console.error('Failed to delete comment from network', error);
+      log.error('Failed to delete comment from network', error);
       return null;
     }
     return comment;
@@ -270,7 +271,7 @@ export const updateCommentNetwork = createAsyncThunk(
         accessToken,
       );
     } catch (error) {
-      console.error('Failed to update comment from network', error);
+      log.error('Failed to update comment from network', error);
       return null;
     }
     return comment;
@@ -288,7 +289,7 @@ export const updateCommentDB = createAsyncThunk(
         sync_status: comment.sync_status ?? 'synced',
       });
     } catch (error) {
-      console.error('Failed to update comment from local DB', error);
+      log.error('Failed to update comment from local DB', error);
       return [];
     }
     return comment;

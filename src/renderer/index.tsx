@@ -1,4 +1,5 @@
 import { createRoot } from 'react-dom/client';
+import log from 'electron-log/renderer';
 import store, { persist } from '@redux/index';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -24,8 +25,7 @@ root.render(
 
 // calling IPC exposed from preload script
 window.electron?.ipcRenderer.once(CHANNEL_COMMON, (arg) => {
-  // eslint-disable-next-line no-console
-  console.log('receive main to renderer message', arg);
+  log.info('receive main to renderer message', arg);
 });
 
 window.electron?.ipcRenderer.sendMessage(CHANNEL_COMMON, ['ping']);

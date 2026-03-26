@@ -1,5 +1,6 @@
 import { AppDispatch, RootState } from '@redux/index';
 import { Repository, Issue, Comment } from '@const/index';
+import log from 'electron-log/renderer';
 import * as db from '@db/index';
 import { apiPatch, apiPost, fetchPaged, RateLimitError } from '@/renderer/server/API';
 import {
@@ -60,7 +61,7 @@ function normalizeSince(lastSyncAt: Date | null): Date | null {
   }
   const now = new Date();
   if (lastSyncAt.getTime() > now.getTime()) {
-    console.warn('sync since is in the future, ignoring', {
+    log.warn('sync since is in the future, ignoring', {
       since: lastSyncAt.toISOString(),
       now: now.toISOString(),
     });
@@ -120,7 +121,7 @@ export class SyncManager {
     } catch (error) {
       if (error instanceof RateLimitError) {
         this.rateLimitResetAt = error.resetAt;
-        console.warn('Rate limit hit, pausing sync until', error.resetAt.toISOString());
+        log.warn('Rate limit hit, pausing sync until', error.resetAt.toISOString());
       } else {
         throw error;
       }
@@ -241,7 +242,7 @@ export class SyncManager {
         this.dispatch(updateLastSyncAt(now.toISOString()));
         await setLastSyncAt(SYNC_SCOPE_APP_LAST, userInfo.id, '', '', now);
       } catch (error) {
-        console.error('Auto sync failed', error);
+        log.error('Auto sync failed', error);
       }
     });
   }
@@ -451,7 +452,7 @@ export class SyncManager {
       this.dispatch(updateIsCommentsLoading(true));
     }
     try {
-      console.log('sync comments start', {
+      log.info('sync comments start', {
         repo: repository.name,
         issueId: issue.id,
         issueNumber: issue.number,
@@ -481,7 +482,7 @@ export class SyncManager {
           since: lastSyncAt ? lastSyncAt.toISOString() : undefined,
         },
       );
-      console.log('sync comments fetched', {
+      log.info('sync comments fetched', {
         count: comments.length,
         since: lastSyncAt?.toISOString() || null,
       });
@@ -499,7 +500,7 @@ export class SyncManager {
       const filteredComments = comments.filter((item) => {
         const commentId = String(item.id);
         if (isDeletedComment(userId, commentId)) {
-          console.error('sync comments skip deleted comment', {
+          log.warn('sync comments skip deleted comment', {
             id: commentId,
             repositoryId: repository.id,
             issueId: issue.id,
@@ -535,7 +536,7 @@ export class SyncManager {
       const filteredRows = rowsToSave.filter(Boolean) as Comment[];
       if (filteredRows.length > 0) {
         await db.saveComments(filteredRows);
-        console.log('sync comments saved', { count: filteredRows.length });
+        log.info('sync comments saved', { count: filteredRows.length });
       }
 
       const dbRows = await db.getCommentsByIssue(
@@ -556,7 +557,7 @@ export class SyncManager {
         );
       });
       this.updateCommentsIfChanged(sortedRows);
-      console.log('sync comments list', { count: sortedRows.length });
+      log.info('sync comments list', { count: sortedRows.length });
 
       const maxUpdatedAt = comments.reduce<Date | null>((max, item) => {
         const current = toDate(item.updated_at);
@@ -627,16 +628,16 @@ export class SyncManager {
     );
 
     if (pendingRows.length === 0) {
-      console.log('sync pending comments empty');
+      log.info('sync pending comments empty');
       return;
     }
-    console.log('sync pending comments', { count: pendingRows.length });
+    log.info('sync pending comments', { count: pendingRows.length });
 
     for (const comment of pendingRows) {
       try {
         const hasRemoteId =
           Boolean(comment.id) && !String(comment.id).startsWith('local:');
-        console.log('sync pending comment attempt', {
+        log.info('sync pending comment attempt', {
           id: comment.id,
           uuid: comment.uuid,
           hasRemoteId,
@@ -654,7 +655,7 @@ export class SyncManager {
             );
 
         const payload = response as Comment;
-        console.log('sync pending comment success', {
+        log.info('sync pending comment success', {
           id: payload.id,
           uuid: comment.uuid,
         });
@@ -679,7 +680,7 @@ export class SyncManager {
         };
         await db.saveComments([updatedRow]);
       } catch (error) {
-        console.error('Failed to push pending comment', error);
+        log.error('Failed to push pending comment', error);
         const failedRow: Comment = {
           ...comment,
           id: comment.id,

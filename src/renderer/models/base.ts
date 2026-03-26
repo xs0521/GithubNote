@@ -1,5 +1,6 @@
 import { AppDispatch, RootState } from '@redux/index';
 import { FetchDataType } from '@models/model';
+import log from 'electron-log/renderer';
 
 // 数据获取模型类
 export class DataFetchModel {
@@ -27,10 +28,7 @@ export class DataFetchModel {
     updateData: (data: T[]) => any,
   ): Promise<void> {
     if (!this.isDBInitialized()) {
-      console.log(
-        `fetch ${dataType} data failed, isDBInitialized`,
-        this.isDBInitialized(),
-      );
+      log.warn(`fetch ${dataType} data failed, isDBInitialized: false`);
       return;
     }
 
@@ -42,7 +40,7 @@ export class DataFetchModel {
     }
 
     const dbData = await fetchDBData();
-    console.log(`db${dataType} count`, dbData.length);
+    log.info(`db${dataType} count`, dbData.length);
 
     if (dbData.length > 0) {
       this.dispatch(updateData(dbData));

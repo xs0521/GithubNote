@@ -1,4 +1,5 @@
 import { DataFetchModel } from '@models/base';
+import log from 'electron-log/renderer';
 import { FetchDataType, FetchReposConfig } from '@models/model';
 import { updateIsRepositoriesLoading } from '@slice/setting-slice';
 import {
@@ -22,7 +23,7 @@ class DataRepoFetchModel extends DataFetchModel {
       }),
     ).unwrap();
     this.dispatch(updateIsRepositoriesLoading(false));
-    console.log('fetchNetworkReposData result count', fetchedRepos.length);
+    log.info('fetchNetworkReposData result count', fetchedRepos.length);
     return fetchedRepos;
   }
 

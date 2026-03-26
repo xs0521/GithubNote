@@ -2,6 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Issue } from '@const/index';
 import * as db from '@db/index';
 import { apiGet } from '@/renderer/server/API';
+import log from 'electron-log/renderer';
 
 export const fetchIssues = createAsyncThunk(
   'contentData/fetchIssues',
@@ -19,23 +20,23 @@ export const fetchIssues = createAsyncThunk(
     repositoryId: string;
   }) => {
     if (!accessToken) {
-      console.warn('No access token found', repositoryName);
+      log.warn('No access token found', { repositoryName });
       return [];
     }
     if (!owner) {
-      console.warn('No owner found', repositoryName);
+      log.warn('No owner found', { repositoryName });
       return [];
     }
     if (!userId) {
-      console.warn('No userId found', repositoryName);
+      log.warn('No userId found', { repositoryName });
       return [];
     }
     if (!repositoryId) {
-      console.warn('No repositoryId found', repositoryName);
+      log.warn('No repositoryId found', { repositoryName });
       return [];
     }
     if (!repositoryName) {
-      console.warn('No repositoryName found');
+      log.warn('No repositoryName found');
       return [];
     }
     const issues = await apiGet<Issue[]>(
@@ -74,11 +75,11 @@ export const fetchIssuesFromDB = createAsyncThunk(
     repositoryId: string;
   }) => {
     if (!userId) {
-      console.warn('User ID is required');
+      log.warn('User ID is required');
       return [];
     }
     if (!repositoryId) {
-      console.warn('Repository ID is required');
+      log.warn('Repository ID is required');
       return [];
     }
 
@@ -86,7 +87,7 @@ export const fetchIssuesFromDB = createAsyncThunk(
       const rows = await db.getIssuesByRepo(userId, repositoryId);
       return rows.filter((item) => item.state === 'open');
     } catch (error) {
-      console.error('Error fetching issues from DB', error);
+      log.error('Error fetching issues from DB', error);
       return [];
     }
   },
@@ -99,7 +100,7 @@ export const saveIssues = createAsyncThunk(
       await db.saveIssues(issues);
       return issues;
     } catch (error) {
-      console.error('Error saving issues', error);
+      log.error('Error saving issues', error);
       return [];
     }
   },

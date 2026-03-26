@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@redux/index';
+import log from 'electron-log/renderer';
 import './index.css';
 
 import Login from '@components/login';
@@ -32,8 +33,7 @@ function App() {
   useEffect(() => {
     // 监听 GitHub 登录成功消息
     window.electron?.ipcRenderer.on(CHANNEL_GITHUB_LOGIN_SUCCESS, (code) => {
-      // eslint-disable-next-line no-console
-      console.log('receive github login success message', code);
+      log.info('receive github login success message');
       if (code) {
         dispatch(fetchAccessToken(code as unknown as string));
       }
@@ -41,8 +41,7 @@ function App() {
 
     // 监听 GitHub 登录错误消息
     window.electron?.ipcRenderer.on(CHANNEL_GITHUB_LOGIN_ERROR, (arg) => {
-      // eslint-disable-next-line no-console
-      console.log('receive github login error message', arg);
+      log.warn('receive github login error message', arg);
     });
 
     const offCommon = window.electron?.ipcRenderer.on(
@@ -74,16 +73,16 @@ function App() {
   useEffect(() => {
     const startInitDB = async () => {
       const isDBInitialized = await dispatch(initDB()).unwrap();
-      console.log('isDBInitialized', isDBInitialized);
+      log.info('isDBInitialized', isDBInitialized);
       dispatch(updateIsDBInitialized(isDBInitialized));
     };
     startInitDB();
     if (user.userInfo.id) {
-      console.log('user.userInfo', user.userInfo);
+      log.info('user.userInfo loaded', { id: user.userInfo.id, login: user.userInfo.login });
       return;
     }
     if (user.userInfo.access_token) {
-      console.log('start fetchUserInfo', user.userInfo.access_token);
+      log.info('start fetchUserInfo');
       dispatch(fetchUserInfo(user.userInfo.access_token));
     }
   }, [dispatch, user.userInfo, user.userInfo.access_token]);

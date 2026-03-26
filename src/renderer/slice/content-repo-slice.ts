@@ -2,16 +2,17 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Repository } from '@const/index';
 import * as db from '@db/index';
 import { apiGet } from '@/renderer/server/API';
+import log from 'electron-log/renderer';
 
 export const fetchRepositories = createAsyncThunk(
   'contentData/fetchRepositories',
   async ({ accessToken, userId }: { accessToken: string; userId: number }) => {
     if (!accessToken) {
-      console.warn('No access token found');
+      log.warn('No access token found');
       return [];
     }
     if (!userId) {
-      console.warn('No userId found', accessToken);
+      log.warn('No userId found');
       return [];
     }
     const repositories = await apiGet<Repository[]>('/user/repos', accessToken);
@@ -29,13 +30,13 @@ export const fetchRepositoriesFromDB = createAsyncThunk(
   'contentData/fetchRepositoriesFromDB',
   async (userId: number | null) => {
     if (!userId) {
-      console.warn('User ID is required');
+      log.warn('User ID is required');
       return [];
     }
     try {
       return await db.getRepositoriesByUser(userId);
     } catch (error) {
-      console.error('Error fetching repositories from DB', error);
+      log.error('Error fetching repositories from DB', error);
       return [];
     }
   },
@@ -48,7 +49,7 @@ export const saveRepositories = createAsyncThunk(
       await db.saveRepositories(repositories);
       return repositories;
     } catch (error) {
-      console.error('Error saving repositories', error);
+      log.error('Error saving repositories', error);
       return [];
     }
   },

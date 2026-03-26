@@ -3,6 +3,7 @@
 
 import { uploadFileToRepo } from './upload';
 import { useSelector } from 'react-redux';
+import log from 'electron-log/renderer';
 import { RootState } from '../redux';
 
 // 示例1：在React组件中使用，从Redux store获取access token
@@ -54,10 +55,10 @@ export const exampleUsage = async () => {
   );
 
   if (result.success) {
-    console.log('File upload success:', result.url);
+    log.info('File upload success:', result.url);
     // 返回的URL可以直接在markdown中使用
   } else {
-    console.error('File upload failed:', result.error);
+    log.error('File upload failed:', result.error);
   }
 };
 

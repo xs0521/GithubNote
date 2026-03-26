@@ -1,4 +1,5 @@
 import { Comment } from '@const/index';
+import log from 'electron-log/renderer';
 import { type OptionsType } from '@right-menu/core';
 import RightMenu from '@right-menu/react';
 import {
@@ -58,13 +59,13 @@ function IndexItem({
       repositoryName: selectedRepository.name,
     })) as Comment;
     if (!remoteComment) {
-      console.warn('remoteComment is null');
+      log.warn('remoteComment is null');
       return;
     }
     if (remoteComment.body === item.body) {
       return;
     }
-    console.log('comment had new content');
+    log.info('comment had new content');
     const newComment = {
       ...item,
       body: remoteComment.body,

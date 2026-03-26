@@ -1,4 +1,5 @@
 import { DataFetchModel } from '@models/base';
+import log from 'electron-log/renderer';
 import { FetchCommentsConfig, FetchDataType } from '@models/model';
 import {
   fetchComments,
@@ -17,7 +18,7 @@ class DataCommentFetchModel extends DataFetchModel {
   private async fetchNetworkCommentsData(
     config: FetchCommentsConfig,
   ): Promise<Comment[]> {
-    console.log('fetchNetworkCommentsData', config.issueNumber);
+    log.info('fetchNetworkCommentsData', { issueNumber: config.issueNumber });
     this.dispatch(updateIsCommentsLoading(true));
     const fetchedComments = await this.dispatch(
       fetchComments({
@@ -31,10 +32,7 @@ class DataCommentFetchModel extends DataFetchModel {
       }),
     ).unwrap();
     this.dispatch(updateIsCommentsLoading(false));
-    console.log(
-      'fetchNetworkCommentsData result count',
-      fetchedComments.length,
-    );
+    log.info('fetchNetworkCommentsData result count', fetchedComments.length);
     return fetchedComments;
   }
 
@@ -97,17 +95,17 @@ class DataCommentFetchModel extends DataFetchModel {
       } catch (error: any) {
         const status = error?.response?.status;
         if (status !== 404) {
-          console.error('Failed to delete comment from GitHub', error);
+          log.error('Failed to delete comment from GitHub', error);
           return;
         }
-        console.warn('Comment already removed on GitHub, continue local delete');
+        log.warn('Comment already removed on GitHub, continue local delete');
       }
     }
 
     try {
       await db.deleteCommentByIdOrUuid(comment);
     } catch (error) {
-      console.error('Failed to delete comment from local DB', error);
+      log.error('Failed to delete comment from local DB', error);
     }
 
     const state = this.getState();
@@ -149,7 +147,7 @@ class DataCommentFetchModel extends DataFetchModel {
     }
 
     if (!accessToken || !owner || !repositoryName) {
-      console.warn('Missing required configuration to upload comment');
+      log.warn('Missing required configuration to upload comment');
       return;
     }
 
@@ -218,7 +216,7 @@ class DataCommentFetchModel extends DataFetchModel {
         this.dispatch(updateSelectedComment(normalizedComment));
       }
     } catch (error) {
-      console.error('Failed to upload comment to GitHub', error);
+      log.error('Failed to upload comment to GitHub', error);
     }
   }
 }

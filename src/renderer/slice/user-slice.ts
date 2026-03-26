@@ -1,6 +1,7 @@
 // store/userDataSlice.js
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import log from 'electron-log/renderer';
 import {
   GITHUB_CLIENT_ID,
   GITHUB_CLIENT_SECRET,
@@ -101,18 +102,18 @@ export const userDataSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchAccessToken.pending, (state) => {
-      console.log('fetchAccessToken.pending');
+      log.info('fetchAccessToken.pending');
       state.isLoading = true;
     });
     builder.addCase(fetchAccessToken.fulfilled, (state, action) => {
-      console.log('fetchAccessToken.fulfilled,', action.payload);
+      log.info('fetchAccessToken.fulfilled');
       const accessToken = action.payload.split('&')[0].split('=')[1];
       state.userInfo.access_token = accessToken;
     });
     builder.addCase(fetchUserInfo.fulfilled, (state, action) => {
       const accessToken = state.userInfo.access_token;
       state.userInfo = { ...action.payload, access_token: accessToken };
-      console.log('fetchUserInfo.fulfilled,', state.userInfo);
+      log.info('fetchUserInfo.fulfilled', { id: state.userInfo?.id, login: state.userInfo?.login });
       state.isLoading = false;
     });
   },

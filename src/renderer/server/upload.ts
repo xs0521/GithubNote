@@ -1,4 +1,5 @@
 import { apiGet, apiPut } from '@/renderer/server/API';
+import log from 'electron-log/renderer';
 
 // GitHub上传配置接口 - 使用已有的access_token
 interface GitHubUploadConfig {
@@ -45,7 +46,7 @@ class GitHubUploader {
       await apiGet('/user', this.accessToken);
       return true;
     } catch (error) {
-      console.error('Token validation failed:', error);
+      log.error('Token validation failed:', error);
       return false;
     }
   }
@@ -123,7 +124,7 @@ class GitHubUploader {
         };
       }
     } catch (error: any) {
-      console.error('File upload failed:', error);
+      log.error('File upload failed:', error);
       return {
         success: false,
         error:

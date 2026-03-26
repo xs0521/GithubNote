@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import log from 'electron-log/renderer';
 import { GridRow, GridColumn, Grid, Button, Icon } from 'semantic-ui-react';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import {
@@ -136,7 +137,7 @@ function Workspace() {
       dispatch(updateWorkspace(false));
       onCreateCancel();
     } catch (error) {
-      console.warn('Failed to create repository', error);
+      log.warn('Failed to create repository', error);
       setCreateError('Create repository failed. Please try again.');
       setIsCreating(false);
     }

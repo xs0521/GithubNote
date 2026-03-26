@@ -1,4 +1,5 @@
 import { DataFetchModel } from '@models/base';
+import log from 'electron-log/renderer';
 import { FetchDataType, FetchIssuesConfig } from '@models/model';
 import { Issue } from '@const/index';
 import {
@@ -14,7 +15,7 @@ class DataIssueFetchModel extends DataFetchModel {
   private async fetchNetworkIssuesData(
     config: FetchIssuesConfig,
   ): Promise<Issue[]> {
-    console.log('fetchNetworkIssuesData', config.repositoryName);
+    log.info('fetchNetworkIssuesData', { repositoryName: config.repositoryName });
     this.dispatch(updateIsIssuesLoading(true));
     const fetchedIssues = await this.dispatch(
       fetchIssues({
@@ -26,7 +27,7 @@ class DataIssueFetchModel extends DataFetchModel {
       }),
     ).unwrap();
     this.dispatch(updateIsIssuesLoading(false));
-    console.log('fetchNetworkIssuesData result count', fetchedIssues.length);
+    log.info('fetchNetworkIssuesData result count', fetchedIssues.length);
     return fetchedIssues;
   }
 

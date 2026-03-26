@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import log from 'electron-log/renderer';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   createLocalComment,
@@ -69,7 +70,7 @@ function NoteBookSearch() {
   const onDropdownItemClick = (value: string) => {
     const issue = issues.find((item) => item.id === value);
     if (issue) {
-      console.log('selected issue', issue);
+      log.info('selected issue', { id: issue?.id, title: issue?.title });
       dispatch(updateSelectedIssue(issue as Issue));
       dispatch(updateSelectedComment(null));
       dispatch(updateComments([]));
@@ -130,7 +131,7 @@ function NoteBookSearch() {
       setNewNotebookName('');
       setCreateError('');
     } catch (error) {
-      console.warn('Failed to create notebook', error);
+      log.warn('Failed to create notebook', error);
       setCreateError('Create notebook failed. Please try again.');
     }
   };
@@ -167,7 +168,7 @@ function NoteBookSearch() {
         userInfo.access_token,
       );
     } catch (error) {
-      console.warn('Failed to close notebook on GitHub', error);
+      log.warn('Failed to close notebook on GitHub', error);
       setDeleteError('Delete notebook failed. Please try again.');
       return;
     }
@@ -249,7 +250,7 @@ function NoteBookSearch() {
       }
       onRenameCancel();
     } catch (error) {
-      console.warn('Failed to rename notebook', error);
+      log.warn('Failed to rename notebook', error);
       setRenameError('Rename notebook failed. Please try again.');
     }
   };

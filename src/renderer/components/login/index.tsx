@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Icon } from 'semantic-ui-react';
+import log from 'electron-log/renderer';
 
 import {
   CHANNEL_ACTION_OPEN_GITHUB_LOGIN,
@@ -17,17 +18,17 @@ const Login = () => {
 
   const onPressLogin = () => {
     try {
-      console.log('Attempting to open GitHub login...');
+      log.info('Attempting to open GitHub login...');
       if (window.electron?.ipcRenderer) {
         window.electron.ipcRenderer.sendMessage(CHANNEL_COMMON, [
           CHANNEL_ACTION_OPEN_GITHUB_LOGIN,
         ]);
-        console.log('Login request sent successfully');
+        log.info('Login request sent successfully');
       } else {
-        console.error('Electron IPC renderer not available');
+        log.error('Electron IPC renderer not available');
       }
     } catch (error) {
-      console.error('Error opening GitHub login:', error);
+      log.error('Error opening GitHub login:', error);
     }
   };
 

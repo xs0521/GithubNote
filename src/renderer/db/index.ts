@@ -1,5 +1,6 @@
 import Dexie, { Table } from 'dexie';
 import { Repository, Issue, Comment } from '@const/index';
+import log from 'electron-log/renderer';
 
 const DB_NAME = 'gitnoteDB';
 
@@ -57,10 +58,10 @@ export async function initDB(): Promise<boolean> {
     }
     await db.open();
     isInitialized = true;
-    console.log('Database initialized successfully');
+    log.info('Database initialized successfully');
     return true;
   } catch (error) {
-    console.error('Failed to initialize database:', error);
+    log.error('Failed to initialize database:', error);
     return false;
   }
 }
@@ -70,10 +71,10 @@ export async function close(): Promise<void> {
     if (isInitialized) {
       db.close();
       isInitialized = false;
-      console.log('Database closed successfully');
+      log.info('Database closed successfully');
     }
   } catch (error) {
-    console.error('Failed to close database:', error);
+    log.error('Failed to close database:', error);
     throw error;
   }
 }
@@ -241,7 +242,7 @@ export async function updateCommentByIdOrUuid(
   if (comment.id) {
     const updated = await db.comments.update(String(comment.id), changes);
     if (updated > 0) {
-      console.log('db update comment by id', {
+      log.info('db update comment by id', {
         id: String(comment.id),
         changes,
       });
@@ -249,7 +250,7 @@ export async function updateCommentByIdOrUuid(
     }
   }
   if (comment.uuid) {
-    console.log('db update comment by uuid', {
+    log.info('db update comment by uuid', {
       uuid: comment.uuid,
       changes,
     });
